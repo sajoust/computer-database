@@ -1,4 +1,4 @@
-package com.excilys.formation.CDB.DAO;
+package com.excilys.formation.CDB.service;
 import java.sql.*;
 
 public class Connexion {
@@ -17,6 +17,7 @@ public class Connexion {
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
