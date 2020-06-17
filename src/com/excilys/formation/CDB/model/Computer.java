@@ -1,17 +1,19 @@
 package com.excilys.formation.CDB.model;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 public class Computer {
 
-	private long id;
+	private Long id;
 	private String name;
-	private LocalDate introduced;
-	private LocalDate discontinued;
-	private long companyID;
+	private Date introduced;
+	private Date discontinued;
+	private Long companyID;
 	
-	
-	public Computer(String name, LocalDate introduced, LocalDate discontinued, long companyID) {
+	public Computer() {
+		
+	}
+	public Computer(String name, Date introduced, Date discontinued, Long companyID) {
 		super();
 		this.name = name;
 		this.introduced = introduced;
@@ -20,7 +22,7 @@ public class Computer {
 	}
 	
 	
-	public Computer(long id, String name, LocalDate introduced, LocalDate discontinued, long companyID) {
+	public Computer(Long id, String name, Date introduced, Date discontinued, Long companyID) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -30,12 +32,12 @@ public class Computer {
 	}
 
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -50,32 +52,32 @@ public class Computer {
 	}
 
 
-	public LocalDate getIntroduced() {
+	public Date getIntroduced() {
 		return introduced;
 	}
 
 
-	public void setIntroduced(LocalDate introduced) {
+	public void setIntroduced(Date introduced) {
 		this.introduced = introduced;
 	}
 
 
-	public LocalDate getDiscontinued() {
+	public Date getDiscontinued() {
 		return discontinued;
 	}
 
 
-	public void setDiscontinued(LocalDate discontinued) {
+	public void setDiscontinued(Date discontinued) {
 		this.discontinued = discontinued;
 	}
 
 
-	public long getCompanyID() {
+	public Long getCompanyID() {
 		return companyID;
 	}
 
 
-	public void setCompanyID(long companyID) {
+	public void setCompanyID(Long companyID) {
 		this.companyID = companyID;
 	}
 
