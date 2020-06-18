@@ -16,13 +16,17 @@ public class ComputerDAO extends DAO<Computer> {
 	private final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
 	private final String DELETE_QUERY = " DELETE FROM computer WHERE id=?";
 	private final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
-	//private final String GET_LAST_QUERY = "SELECT MAX(id) FROM computer";
+	private final  String COUNT_QUERY = "SELECT COUNT(*) FROM computer";
+	
+	
 	
 	private ComputerMapper mapper;
 
 	public ComputerDAO() {
 		super();
 		mapper = new ComputerMapper();
+		
+		
 	}
 	/**
 	 * Ajoute un ordinateur a la BDD
@@ -112,7 +116,6 @@ public class ComputerDAO extends DAO<Computer> {
 			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
 			stmt.setInt(1, nbLines);
 			stmt.setInt(2, nbLines*pageEnCours);
-			System.out.println(stmt.toString());
 			ResultSet resultSet = stmt.executeQuery();
 			
 			while (resultSet.next()) {
@@ -186,6 +189,28 @@ public class ComputerDAO extends DAO<Computer> {
 			// TODO: handle exception
 		}
 		return null;
+	}
+	
+	public int countEntries() {
+		
+		try {
+			Connection conn = Connexion.getConnection();
+			PreparedStatement stmt = conn.prepareStatement(COUNT_QUERY);
+			ResultSet resultSet = stmt.executeQuery();
+			int entriesCount=0;
+			
+			while(resultSet.next()){
+				entriesCount = mapper.countResults(resultSet);
+			}
+			conn.close();
+			
+			return entriesCount;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
 	}
 
 

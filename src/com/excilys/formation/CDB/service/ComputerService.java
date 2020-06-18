@@ -51,6 +51,10 @@ public class ComputerService {
 		
 	}
 	
+	public int countEntries() {
+		return computerDAO.countEntries();
+	}
+	
 
 	
 

@@ -29,4 +29,14 @@ public class ComputerMapper {
 		
 	}
 	
+	public int countResults(ResultSet resultSet) {
+		try {
+			return resultSet.getInt(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
 }

@@ -8,22 +8,24 @@ import com.excilys.formation.CDB.service.ComputerService;
 public class PageComputer {
 
 	private int nbLines;
-	private int pageEnCours = 0;
+	private int pageEnCours = 1;
 	private ArrayList<String> results;
+	private ComputerService computerService;
+	private int nbPages;
 
 	public PageComputer(int nbLines) {
 		super();
 		this.nbLines = nbLines;
 		results = new ArrayList<String>();
+		computerService = new ComputerService();
+		nbPages = (computerService.countEntries()/nbLines)+1;
 	}
 
 	public void loadPage() {
 
 		Scanner pageNav = new Scanner(System.in);
-		ComputerService computerService = new ComputerService();
 		String choix = "";
 		while (!choix.equals("x")) {
-			System.out.println("coucou");
 			results = computerService.getAll(nbLines, pageEnCours);
 			for (String string : results) {
 				System.out.println(string);
@@ -33,6 +35,9 @@ public class PageComputer {
 			switch (choix) {
 			case "z":
 				pageEnCours++;
+				if (pageEnCours>=nbPages) {
+					pageEnCours=nbPages;
+				}
 				results.clear();
 				results = computerService.getAll(nbLines, pageEnCours);
 				for (String string : results) {
@@ -41,8 +46,8 @@ public class PageComputer {
 				break;
 			case "a":
 				pageEnCours--;
-				if (pageEnCours<0) {
-					pageEnCours=0;
+				if (pageEnCours<1) {
+					pageEnCours=1;
 				}
 				results.clear();
 				results = computerService.getAll(nbLines, pageEnCours);
@@ -61,7 +66,7 @@ public class PageComputer {
 
 	public void menu() {
 
-		System.out.println("page " + (pageEnCours + 1) + "	next: z		previous: a 	quit: x");
+		System.out.println("page " + pageEnCours +"/"+nbPages+ "	next: z		previous: a 	quit: x");
 	}
 
 }

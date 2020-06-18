@@ -14,7 +14,7 @@ public class CLI_UI {
 	private static ComputerService computerService;
 	
 	
-	private final static int NB_LINES=20;
+	private final static int NB_LINES=100;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -134,7 +134,7 @@ public class CLI_UI {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 
-			System.err.println("pas bieng");
+			System.err.println("erreur de saisie de données");
 		}
 
 		return null;
