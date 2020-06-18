@@ -18,7 +18,7 @@ public class PageComputer {
 		this.nbLines = nbLines;
 		results = new ArrayList<String>();
 		computerService = new ComputerService();
-		nbPages = (computerService.countEntries()/nbLines)+1;
+		nbPages = (computerService.countEntries()/nbLines)+1; //=6
 	}
 
 	public void loadPage() {
@@ -30,12 +30,12 @@ public class PageComputer {
 			for (String string : results) {
 				System.out.println(string);
 			}
-			menu();
-			choix = pageNav.nextLine();
+			
+			
 			switch (choix) {
 			case "z":
 				pageEnCours++;
-				if (pageEnCours>=nbPages) {
+				if (pageEnCours>nbPages) {
 					pageEnCours=nbPages;
 				}
 				results.clear();
@@ -58,6 +58,8 @@ public class PageComputer {
 			default:
 				break;
 			}
+			menu();
+			choix = pageNav.nextLine();
 
 		}
 		pageNav.close();
@@ -66,7 +68,7 @@ public class PageComputer {
 
 	public void menu() {
 
-		System.out.println("page " + pageEnCours +"/"+nbPages+ "	next: z		previous: a 	quit: x");
+		System.out.println("page " + (pageEnCours) +"/"+nbPages+ "	next: z		previous: a 	quit: x");
 	}
 
 }

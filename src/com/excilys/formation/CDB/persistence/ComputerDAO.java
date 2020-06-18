@@ -115,7 +115,7 @@ public class ComputerDAO extends DAO<Computer> {
 
 			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
 			stmt.setInt(1, nbLines);
-			stmt.setInt(2, nbLines*pageEnCours);
+			stmt.setInt(2, nbLines*(pageEnCours-1));
 			ResultSet resultSet = stmt.executeQuery();
 			
 			while (resultSet.next()) {
