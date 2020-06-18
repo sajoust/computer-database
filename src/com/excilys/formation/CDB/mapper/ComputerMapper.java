@@ -3,33 +3,38 @@ package com.excilys.formation.CDB.mapper;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import com.excilys.formation.CDB.model.Computer;
 
 public class ComputerMapper {
 
-	
-	public Computer processResults(ResultSet resultSet) {
-		
-		try {
-				long ID = resultSet.getLong(1);
-				String name = resultSet.getString("name");
-				Date ldIntroduced = resultSet.getDate("introduced");
-				Date ldDiscontinued = resultSet.getDate("discontinued");
-				Long company_ID = resultSet.getLong("company_id");
+	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-				Computer c = new Computer(ID, name, ldIntroduced, ldDiscontinued, company_ID);
-				return c;
-			
+	public static Computer processResults(ResultSet resultSet) {
+
+		try {
+			long ID = resultSet.getLong(1);
+			String name = resultSet.getString("name");
+			LocalDate ldIntroduced = (resultSet.getString("introduced") == null) ? null
+					: LocalDate.parse(resultSet.getString("introduced"), dateFormatter);
+			LocalDate ldDiscontinued = (resultSet.getString("discontinued")== null)? null:
+					LocalDate.parse(resultSet.getString("discontinued"), dateFormatter);
+			Long company_ID = resultSet.getLong("company_id");
+
+			Computer c = new Computer(ID, name, ldIntroduced, ldDiscontinued, company_ID);
+			return c;
+
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 		}
 		return null;
-		
+
 	}
-	
-	public int countResults(ResultSet resultSet) {
+
+	public static  int countResults(ResultSet resultSet) {
 		try {
 			return resultSet.getInt(1);
 		} catch (SQLException e) {
@@ -38,5 +43,28 @@ public class ComputerMapper {
 		}
 		return 0;
 	}
-	
+
+	public static Computer stringTabToComputer(String[] computerInfo) {
+
+		if (computerInfo.length != 4) {
+			System.out.println("probleme dans computerInfo pas 4 elements");
+		}
+		String name = computerInfo[0];
+
+		LocalDate introduced = (computerInfo[1] == null) ? null : LocalDate.parse(computerInfo[1], dateFormatter);
+
+		LocalDate discontinued = (computerInfo[2] == null) ? null : LocalDate.parse(computerInfo[2], dateFormatter);
+
+		Long company_id = (computerInfo[3] == null) ? null : Long.parseLong(computerInfo[3]);
+
+		return new Computer(name, introduced, discontinued, company_id);
+
+	}
+
+	public static Date stringToDate(String sDate) {
+
+		return (sDate == null) ? null : Date.valueOf(sDate);
+
+	}
+
 }

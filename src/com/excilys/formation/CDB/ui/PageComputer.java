@@ -62,7 +62,7 @@ public class PageComputer {
 			choix = pageNav.nextLine();
 
 		}
-		pageNav.close();
+
 
 	}
 

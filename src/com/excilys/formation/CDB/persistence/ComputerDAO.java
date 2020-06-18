@@ -1,13 +1,15 @@
 package com.excilys.formation.CDB.persistence;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
-
-
 
 import com.excilys.formation.CDB.mapper.ComputerMapper;
 import com.excilys.formation.CDB.model.Computer;
-import com.excilys.formation.CDB.service.Connexion;
+import com.excilys.formation.CDB.service.ConnectionSingleton;
 
 public class ComputerDAO extends DAO<Computer> {
 
@@ -16,84 +18,67 @@ public class ComputerDAO extends DAO<Computer> {
 	private final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
 	private final String DELETE_QUERY = " DELETE FROM computer WHERE id=?";
 	private final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
-	private final  String COUNT_QUERY = "SELECT COUNT(*) FROM computer";
-	
-	
-	
-	private ComputerMapper mapper;
+	private final String COUNT_QUERY = "SELECT COUNT(*) FROM computer";
+
+	//private ComputerMapper ComputerMapper;
 
 	public ComputerDAO() {
 		super();
-		mapper = new ComputerMapper();
-		
-		
+		//ComputerMapper = new ComputerMapper();
+
 	}
+
 	/**
 	 * Ajoute un ordinateur a la BDD
+	 * 
 	 * @param computerToAdd
 	 * @return affiche l'ordinateur entré
 	 */
-	public Computer add(Computer computerToAdd) {
-		
+	public Computer add(String[] computerInfo) {
 
 		try {
 
-			Connection conn = Connexion.getConnection();
+			Connection conn = ConnectionSingleton.getInstance().getConnection();
+			//Connection conn = Connexion.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(ADD_QUERY);
-			
-			Date introduced;
-			if (computerToAdd.getIntroduced()!=null) {
-				introduced = computerToAdd.getIntroduced();
-			}else {
-				introduced = null;
-			}
-			Date discontinued;
-			if (computerToAdd.getDiscontinued()!=null) {
-				discontinued = computerToAdd.getDiscontinued();
-			}else {
-				discontinued = null;
-			}
-			
-			stmt.setString(1, computerToAdd.getName());
-			stmt.setDate(2, introduced);
-			stmt.setDate(3, discontinued);
-			if (computerToAdd.getCompanyID()==null) {
+
+
+			stmt.setString(1, computerInfo[0]);
+			stmt.setDate(2, ComputerMapper.stringToDate(computerInfo[1]));
+			stmt.setDate(3, ComputerMapper.stringToDate(computerInfo[2]));
+			if (computerInfo[3] == null) {
 				stmt.setNull(4, Types.BIGINT);
-			}else {
-				stmt.setLong(4, computerToAdd.getCompanyID());
+			} else {
+				stmt.setLong(4, Long.parseLong(computerInfo[3]));
 			}
 
-			
 			stmt.execute();
-			
+			System.out.println("computer added");
 			conn.close();
-			
-			
-
+			return ComputerMapper.stringTabToComputer(computerInfo);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
-		
-		
+
 	}
-	
+
 	@Override
 	public Computer get(String id) {
 
 		try {
 			Computer computer = new Computer();
-			
-			Connection conn = Connexion.getConnection();
+			Connection conn = ConnectionSingleton.getInstance().getConnection();
+
+			//Connection conn = Connexion.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(GET_BY_ID_QUERY);
 			stmt.setString(1, id);
 			ResultSet resultSet = stmt.executeQuery();
-			
-			
+
 			while (resultSet.next()) {
-				computer = mapper.processResults(resultSet);
+				computer = ComputerMapper.processResults(resultSet);
 			}
 			conn.close();
 			return computer;
@@ -106,24 +91,24 @@ public class ComputerDAO extends DAO<Computer> {
 
 	@Override
 	public ArrayList<Computer> getAll(int nbLines, int pageEnCours) {
-		
-		ArrayList<Computer> computerList=new ArrayList<Computer>();
-		
-		try {
 
-			Connection conn = Connexion.getConnection();
+		ArrayList<Computer> computerList = new ArrayList<Computer>();
+
+		try {
+			Connection conn = ConnectionSingleton.getInstance().getConnection();
+
+			//Connection conn = Connexion.getConnection();
 
 			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
 			stmt.setInt(1, nbLines);
-			stmt.setInt(2, nbLines*(pageEnCours-1));
+			stmt.setInt(2, nbLines * (pageEnCours - 1));
 			ResultSet resultSet = stmt.executeQuery();
-			
+
 			while (resultSet.next()) {
-				
-				computerList.add(mapper.processResults(resultSet));
+
+				computerList.add(ComputerMapper.processResults(resultSet));
 			}
-			
-			
+
 			conn.close();
 			return computerList;
 
@@ -135,17 +120,18 @@ public class ComputerDAO extends DAO<Computer> {
 
 	}
 
-
 	public Computer deleteComputer(String id) {
 		try {
-			Connection conn = Connexion.getConnection();
+			Connection conn = ConnectionSingleton.getInstance().getConnection();
+
+			//Connection conn = Connexion.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(DELETE_QUERY);
 			stmt.setString(1, id);
-			Computer computerToDelete=get(id);
+			Computer computerToDelete = get(id);
 			stmt.execute();
-			
+
 			conn.close();
-			
+
 			return computerToDelete;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -153,65 +139,57 @@ public class ComputerDAO extends DAO<Computer> {
 		return null;
 	}
 
-	public Computer update(String id, Computer computerToUpdate) {
-		
+	public Computer update(String id, String[] computerToUpdateInfo) {
+
 		try {
-			Connection conn = Connexion.getConnection();
+			//Connection conn = Connexion.getConnection();
+			Connection conn = ConnectionSingleton.getInstance().getConnection();
+
 			PreparedStatement stmt = conn.prepareStatement(UPDATE_QUERY);
-			
-			Date introduced;
-			if (computerToUpdate.getIntroduced()!=null) {
-				introduced = computerToUpdate.getIntroduced();
-			}else {
-				introduced = null;
-			}
-			Date discontinued;
-			if (computerToUpdate.getDiscontinued()!=null) {
-				discontinued = computerToUpdate.getDiscontinued();
-			}else {
-				discontinued = null;
-			}
-			
-			stmt.setString(1, computerToUpdate.getName());
-			stmt.setDate(2, introduced);
-			stmt.setDate(3, discontinued);
-			if (computerToUpdate.getCompanyID()==null) {
+
+
+
+			stmt.setString(1, computerToUpdateInfo[0]);
+			stmt.setDate(2, ComputerMapper.stringToDate(computerToUpdateInfo[1]));
+			stmt.setDate(3, ComputerMapper.stringToDate(computerToUpdateInfo[2]));
+			if (computerToUpdateInfo[3] == null) {
 				stmt.setNull(4, Types.BIGINT);
-			}else {
-				stmt.setLong(4, computerToUpdate.getCompanyID());
+			} else {
+				stmt.setLong(4, Long.parseLong(computerToUpdateInfo[3]));
 			}
 			stmt.setString(5, id);
 			stmt.execute();
 			conn.close();
-			
+
 			return get(id);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		return null;
 	}
-	
+
 	public int countEntries() {
-		
+
 		try {
-			Connection conn = Connexion.getConnection();
+			//Connection conn = Connexion.getConnection();
+			Connection conn = ConnectionSingleton.getInstance().getConnection();
+
 			PreparedStatement stmt = conn.prepareStatement(COUNT_QUERY);
 			ResultSet resultSet = stmt.executeQuery();
-			int entriesCount=0;
-			
-			while(resultSet.next()){
-				entriesCount = mapper.countResults(resultSet);
+			int entriesCount = 0;
+
+			while (resultSet.next()) {
+				entriesCount = ComputerMapper.countResults(resultSet);
 			}
 			conn.close();
-			
+
 			return entriesCount;
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return 0;
 	}
-
 
 }

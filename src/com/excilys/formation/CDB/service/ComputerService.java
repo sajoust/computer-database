@@ -35,9 +35,9 @@ public class ComputerService {
 	}
 	
 	
-	public Computer add(Computer computer) {
+	public Computer add(String[] infoComputer) {
 				
-		return computerDAO.add(computer);
+		return computerDAO.add(infoComputer);
 		
 	}
 	
@@ -45,9 +45,9 @@ public class ComputerService {
 		return computerDAO.deleteComputer(id);
 	}
 
-	public Computer update(String id, Computer computerToUpdate) {
+	public Computer update(String id, String[] computerToUpdateInfo) {
 				
-		return computerDAO.update(id, computerToUpdate);
+		return computerDAO.update(id, computerToUpdateInfo);
 		
 	}
 	

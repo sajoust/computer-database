@@ -10,7 +10,7 @@ public class Connexion {
 	private static String driver = "com.mysql.cj.jdbc.Driver";
 
 	
-	public static Connection getConnection() {
+	public Connection getConnection() {
 		try {
 			Class.forName(driver);
 			return DriverManager.getConnection(dbURL,username,password);

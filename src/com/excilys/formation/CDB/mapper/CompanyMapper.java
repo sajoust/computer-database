@@ -10,7 +10,7 @@ import com.excilys.formation.CDB.model.Company;
 public class CompanyMapper {
 
 	
-	public Company processResults(ResultSet resultSet) {
+	public static Company processResults(ResultSet resultSet) {
 		
 		try {
 				long ID = resultSet.getLong(1);

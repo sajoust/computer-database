@@ -9,23 +9,18 @@ import java.util.ArrayList;
 
 import com.excilys.formation.CDB.mapper.CompanyMapper;
 import com.excilys.formation.CDB.model.Company;
-
-import com.excilys.formation.CDB.service.Connexion;
+import com.excilys.formation.CDB.service.ConnectionSingleton;
 
 public class CompanyDAO extends DAO<Company> {
 
 	private final String VIEW_ALL_QUERY = "SELECT * FROM computer LIMIT ? OFFSET ? ";
 	private final String GET_BY_ID_QUERY = "SELECT * FROM computer WHERE id=?";
 	
-	private CompanyMapper mapper;
 
 	private ArrayList<Company> companyList;
 
 	public CompanyDAO() {
-		super();
-		mapper = new CompanyMapper();
-		
-
+		super();		
 	}
 
 	@Override
@@ -35,7 +30,7 @@ public class CompanyDAO extends DAO<Company> {
 
 		try {
 
-			Connection conn = Connexion.getConnection();
+			Connection conn = ConnectionSingleton.getInstance().getConnection();
 
 			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
 			stmt.setInt(1, nbLines);
@@ -45,7 +40,7 @@ public class CompanyDAO extends DAO<Company> {
 
 			while (resultSet.next()) {
 
-				companyList.add(mapper.processResults(resultSet));
+				companyList.add(CompanyMapper.processResults(resultSet));
 			}
 
 			conn.close();
@@ -63,7 +58,7 @@ public class CompanyDAO extends DAO<Company> {
 	public Company get(String id) {
 
 		try {
-			Connection conn = Connexion.getConnection();
+			Connection conn = ConnectionSingleton.getInstance().getConnection();
 			Statement stmt = conn.createStatement();
 			ResultSet results = stmt.executeQuery(GET_BY_ID_QUERY + "" + id);
 
