@@ -16,9 +16,9 @@ public class ComputerDAO extends DAO<Computer> {
 	private final String VIEW_ALL_QUERY = "SELECT * FROM computer LIMIT ? OFFSET ? ";
 	private final String GET_BY_ID_QUERY = "SELECT * FROM computer WHERE id=?";
 	private final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
-	private final String DELETE_QUERY = " DELETE FROM computer WHERE id=?";
+	private final String DELETE_QUERY = " DELETE FROM computer WHERE id>=?";
 	private final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
-	private final String COUNT_QUERY = "SELECT COUNT(*) FROM computer";
+	private final String COUNT_QUERY = "SELECT COUNT(id) FROM computer";
 
 	//private ComputerMapper ComputerMapper;
 
@@ -33,35 +33,35 @@ public class ComputerDAO extends DAO<Computer> {
 	 * 
 	 * @param computerToAdd
 	 * @return affiche l'ordinateur entré
+	 * @throws SQLException 
 	 */
-	public Computer add(String[] computerInfo) {
+	public void add(String[] computerInfo) throws SQLException {
 
-		try {
+		
 
-			Connection conn = ConnectionSingleton.getInstance().getConnection();
-			//Connection conn = Connexion.getConnection();
-			PreparedStatement stmt = conn.prepareStatement(ADD_QUERY);
+			try(Connection conn = ConnectionSingleton.getInstance().getConnection()) {
+				
 
+				PreparedStatement stmt = conn.prepareStatement(ADD_QUERY);
+				stmt.setString(1, computerInfo[0]);
+				stmt.setObject(2, ComputerMapper.stringToDate(computerInfo[1]));
+				stmt.setObject(3, ComputerMapper.stringToDate(computerInfo[2]));
+				if (computerInfo[3] == null) {
+					stmt.setNull(4, Types.BIGINT);
+				} else {
+					stmt.setLong(4, Long.parseLong(computerInfo[3]));
+				}
 
-			stmt.setString(1, computerInfo[0]);
-			stmt.setDate(2, ComputerMapper.stringToDate(computerInfo[1]));
-			stmt.setDate(3, ComputerMapper.stringToDate(computerInfo[2]));
-			if (computerInfo[3] == null) {
-				stmt.setNull(4, Types.BIGINT);
-			} else {
-				stmt.setLong(4, Long.parseLong(computerInfo[3]));
-			}
-
-			stmt.execute();
-			System.out.println("computer added");
-			conn.close();
-			return ComputerMapper.stringTabToComputer(computerInfo);
+				stmt.execute();
+				System.out.println("computer added");
+				
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		return null;
+		
+			
 
 	}
 
@@ -150,8 +150,8 @@ public class ComputerDAO extends DAO<Computer> {
 
 
 			stmt.setString(1, computerToUpdateInfo[0]);
-			stmt.setDate(2, ComputerMapper.stringToDate(computerToUpdateInfo[1]));
-			stmt.setDate(3, ComputerMapper.stringToDate(computerToUpdateInfo[2]));
+			stmt.setObject(2, ComputerMapper.stringToDate(computerToUpdateInfo[1]));
+			stmt.setObject(3, ComputerMapper.stringToDate(computerToUpdateInfo[2]));
 			if (computerToUpdateInfo[3] == null) {
 				stmt.setNull(4, Types.BIGINT);
 			} else {
@@ -182,7 +182,7 @@ public class ComputerDAO extends DAO<Computer> {
 				entriesCount = ComputerMapper.countResults(resultSet);
 			}
 			conn.close();
-
+			System.out.println("nb entries = "+entriesCount);
 			return entriesCount;
 
 		} catch (SQLException e) {

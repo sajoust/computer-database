@@ -5,9 +5,12 @@ import java.util.Scanner;
 import com.excilys.formation.CDB.model.Computer;
 import com.excilys.formation.CDB.service.ComputerService;
 
+
+
 public class CLI_UI {
 
 	private static ComputerService computerService;
+	
 
 	private final static int NB_LINES = 100;
 

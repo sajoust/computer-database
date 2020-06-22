@@ -1,7 +1,7 @@
 package com.excilys.formation.CDB.service;
 import java.sql.*;
 
-public class ConnectionSingleton {
+public class ConnectionSingleton implements AutoCloseable {
 	
 	
 	private static String dbURL;
@@ -40,6 +40,14 @@ public class ConnectionSingleton {
 		
 		
 		return null;
+		
+	}
+
+
+	@Override
+	public void close() throws Exception {
+		// TODO Auto-generated method stub
+		this.close();
 		
 	}
 	

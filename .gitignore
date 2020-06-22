@@ -1,5 +1,4 @@
-/bin/
 .project
 .classpath
-/WebContent/
-.settings/
+.settings
+/target/

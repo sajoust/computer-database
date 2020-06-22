@@ -1,5 +1,6 @@
 package com.excilys.formation.CDB.service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.excilys.formation.CDB.model.Computer;
@@ -35,9 +36,14 @@ public class ComputerService {
 	}
 	
 	
-	public Computer add(String[] infoComputer) {
+	public void add(String[] infoComputer) {
 				
-		return computerDAO.add(infoComputer);
+		try {
+			computerDAO.add(infoComputer);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

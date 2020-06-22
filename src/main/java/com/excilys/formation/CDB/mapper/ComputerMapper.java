@@ -61,9 +61,9 @@ public class ComputerMapper {
 
 	}
 
-	public static Date stringToDate(String sDate) {
+	public static LocalDate stringToDate(String sDate) {
 
-		return (sDate == null) ? null : Date.valueOf(sDate);
+		return (sDate == null) ? null : LocalDate.parse(sDate);
 
 	}
 
