@@ -19,6 +19,7 @@ public class ComputerDAO extends DAO<Computer> {
 	private final String DELETE_QUERY = " DELETE FROM computer WHERE id>=?";
 	private final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
 	private final String COUNT_QUERY = "SELECT COUNT(id) FROM computer";
+	
 
 	//private ComputerMapper ComputerMapper;
 
@@ -94,8 +95,8 @@ public class ComputerDAO extends DAO<Computer> {
 
 		ArrayList<Computer> computerList = new ArrayList<Computer>();
 
-		try {
-			Connection conn = ConnectionSingleton.getInstance().getConnection();
+		try (Connection conn = ConnectionSingleton.getInstance().getConnection()){
+			
 
 			//Connection conn = Connexion.getConnection();
 
@@ -109,7 +110,7 @@ public class ComputerDAO extends DAO<Computer> {
 				computerList.add(ComputerMapper.processResults(resultSet));
 			}
 
-			conn.close();
+			
 			return computerList;
 
 		} catch (SQLException e) {

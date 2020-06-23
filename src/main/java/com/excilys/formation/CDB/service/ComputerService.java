@@ -2,6 +2,7 @@ package com.excilys.formation.CDB.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.excilys.formation.CDB.model.Computer;
 import com.excilys.formation.CDB.persistence.ComputerDAO;
@@ -9,7 +10,7 @@ import com.excilys.formation.CDB.persistence.ComputerDAO;
 public class ComputerService {
 
 	
-	
+	//h2 = BDD en memoire brut
 	private static ComputerDAO computerDAO;
 	
 	
@@ -20,9 +21,9 @@ public class ComputerService {
 	}
 	
 
-	public ArrayList<String> getAll(int nbLines, int pageEnCours) {
-		ArrayList<String> strList = new ArrayList<String>();
-		ArrayList<Computer> computerList = computerDAO.getAll(nbLines,pageEnCours);
+	public List<String> getAll(int nbLines, int pageEnCours) {
+		List<String> strList = new ArrayList<String>();
+		List<Computer> computerList = computerDAO.getAll(nbLines,pageEnCours);
 		for (Computer computer : computerList) {
 			strList.add(computer.toString());
 		}

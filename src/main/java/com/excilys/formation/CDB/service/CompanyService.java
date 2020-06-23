@@ -1,6 +1,7 @@
 package com.excilys.formation.CDB.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.excilys.formation.CDB.model.Company;
 import com.excilys.formation.CDB.persistence.CompanyDAO;
@@ -17,9 +18,9 @@ private static CompanyDAO companyDAO;
 	}
 	
 
-	public ArrayList<String> getAll(int nbLines, int pageEnCours) {
-		ArrayList<String> strList = new ArrayList<String>();
-		ArrayList<Company> companyList = companyDAO.getAll(nbLines,pageEnCours);
+	public List<String> getAll(int nbLines, int pageEnCours) {
+		List<String> strList = new ArrayList<String>();
+		List<Company> companyList = companyDAO.getAll(nbLines,pageEnCours);
 		for (Company company : companyList) {
 			strList.add(company.toString());
 		}

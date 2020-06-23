@@ -1,7 +1,7 @@
 package com.excilys.formation.CDB.ui;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import java.util.Scanner;
 import com.excilys.formation.CDB.service.ComputerService;
 
@@ -9,7 +9,7 @@ public class PageComputer {
 
 	private int nbLines;
 	private int pageEnCours = 1;
-	private ArrayList<String> results;
+	private List<String> results;
 	private ComputerService computerService;
 	private int nbPages;
 

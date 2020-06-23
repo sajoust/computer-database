@@ -29,6 +29,11 @@ public class ComputerMapperTest {
 	private final String DISCONTINUED = "2197-03-01";
 	private final long COMPANY_ID = 6L;
 	
+	@Before
+	public void setUp() {
+	    MockitoAnnotations.initMocks(this);
+	}
+	
 	@Test
 	public void testProcessResults() {
 		try {
@@ -39,9 +44,29 @@ public class ComputerMapperTest {
 			Mockito.when(rs.getLong("company_id")).thenReturn(COMPANY_ID);
 			
 			
-			Computer c = new Computer (ID, NAME, LocalDate.parse(INTRODUCED),LocalDate.parse(DISCONTINUED),COMPANY_ID);
+			Computer computerExpected = new Computer (ID, NAME, LocalDate.parse(INTRODUCED),LocalDate.parse(DISCONTINUED),COMPANY_ID);
 			
-			assertEquals(c, ComputerMapper.processResults(rs));
+			assertEquals(computerExpected, ComputerMapper.processResults(rs));
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	@Test
+	public void testProcessResultsNull() {
+		try {
+			Mockito.when(rs.getLong(1)).thenReturn(ID);
+			Mockito.when(rs.getString("name")).thenReturn(NAME);
+			Mockito.when(rs.getString("introduced")).thenReturn(null);
+			Mockito.when(rs.getString("discontinued")).thenReturn(null);
+			Mockito.when(rs.getLong("company_id")).thenReturn(COMPANY_ID);
+			
+			
+			Computer computerExpected = new Computer (ID, NAME, null,null,COMPANY_ID);
+			
+			assertEquals(computerExpected, ComputerMapper.processResults(rs));
 			
 			
 		} catch (SQLException e) {
@@ -50,20 +75,15 @@ public class ComputerMapperTest {
 		}
 	}
 	
-	@Before
-	public void setUp() {
-	    MockitoAnnotations.initMocks(this);
-	}
 
-	@Test
-	public void testCountResults() {
 
-	}
 
 	@Test
 	public void testStringToDate() {
+		String sDate = "1997-01-03";
 
-		assertEquals(null, ComputerMapper.stringToDate(null));
+		assertEquals(LocalDate.parse(sDate), ComputerMapper.stringToDate(sDate));
+		
 
 	}
 
