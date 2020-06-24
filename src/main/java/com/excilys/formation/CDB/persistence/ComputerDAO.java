@@ -15,6 +15,7 @@ public class ComputerDAO extends DAO<Computer> {
 
 	private final String VIEW_ALL_QUERY = "SELECT * FROM computer LIMIT ? OFFSET ? ";
 	private final String GET_BY_ID_QUERY = "SELECT * FROM computer WHERE id=?";
+	private final String GET_BY_NAME_QUERY = "SELECT * FROM computer WHERE name=?";
 	private final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
 	private final String DELETE_QUERY = " DELETE FROM computer WHERE id>=?";
 	private final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
@@ -88,6 +89,25 @@ public class ComputerDAO extends DAO<Computer> {
 		}
 
 		return null;
+	}
+	public Computer getByName(String name) {
+		
+		try(Connection conn = ConnectionSingleton.getInstance().getConnection()) {
+			Computer computer = new Computer();
+			PreparedStatement stmt = conn.prepareStatement(GET_BY_NAME_QUERY);
+			stmt.setString(1, name);
+			ResultSet resultSet = stmt.executeQuery();
+			
+			while (resultSet.next()) {
+				computer=ComputerMapper.processResults(resultSet);
+			}
+			return computer;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return null;
+		
 	}
 
 	@Override
