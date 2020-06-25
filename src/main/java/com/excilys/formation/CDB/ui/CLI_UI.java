@@ -23,6 +23,7 @@ public class CLI_UI {
 		while (!choix.equals("x")) {
 
 			showMenu();
+			
 
 			choix = userEntry.nextLine();
 

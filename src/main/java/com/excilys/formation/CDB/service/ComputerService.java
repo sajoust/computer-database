@@ -21,13 +21,15 @@ public class ComputerService {
 	}
 	
 
-	public List<String> getAll(int nbLines, int pageEnCours) {
-		List<String> strList = new ArrayList<String>();
-		List<Computer> computerList = computerDAO.getAll(nbLines,pageEnCours);
-		for (Computer computer : computerList) {
-			strList.add(computer.toString());
-		}
-		return strList;
+	public List<Computer> getAll(int nbLines, int pageEnCours) {
+//		List<String> strList = new ArrayList<String>();
+//		List<Computer> computerList = computerDAO.getAll(nbLines,pageEnCours);
+//		for (Computer computer : computerList) {
+//			strList.add(computer.toString());
+//		}
+//		return strList;
+		
+		return computerDAO.getAll(nbLines,pageEnCours);
 	}
 	
 	public String get(String id) {

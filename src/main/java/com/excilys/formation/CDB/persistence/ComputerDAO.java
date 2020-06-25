@@ -203,7 +203,6 @@ public class ComputerDAO extends DAO<Computer> {
 				entriesCount = ComputerMapper.countResults(resultSet);
 			}
 			conn.close();
-			System.out.println("nb entries = "+entriesCount);
 			return entriesCount;
 
 		} catch (SQLException e) {

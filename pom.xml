@@ -114,6 +114,12 @@
 			<artifactId>protobuf-java</artifactId>
 			<version>3.6.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
 	</dependencies>
 
 

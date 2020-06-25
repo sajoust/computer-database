@@ -1,6 +1,5 @@
 package com.excilys.formation.CDB.service;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -26,7 +25,7 @@ public class ConnectionSingleton implements AutoCloseable {
 
 	public Connection getConnection() {
 		try {
-			// Class.forName(driver);
+			//Class.forName(driver);
 			InputStream inputStream = ConnectionSingleton.class.getClassLoader()
 					.getResourceAsStream("connector.properties");
 
@@ -35,6 +34,8 @@ public class ConnectionSingleton implements AutoCloseable {
 			String url = (String) defaultProperties.get("db.url");
 			String username = (String) defaultProperties.get("db.username");
 			String password = (String) defaultProperties.get("db.password");
+			String driver = (String) defaultProperties.get("db.driver");
+			Class.forName(driver);
 
 			inputStream.close();
 
@@ -44,6 +45,9 @@ public class ConnectionSingleton implements AutoCloseable {
 			e.printStackTrace();
 
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet( name="Servlet", urlPatterns = {"/first", "/"} )
+@WebServlet( name="Servlet", urlPatterns = {"/first"} )
 public class Servlet extends HttpServlet {
 
 	/**
@@ -19,18 +19,11 @@ public class Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		String fruit = request.getParameter("fruit");
 		
-		response.setContentType("text/html; charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		out.println("<!DOCTYPE html>");
-		out.println("<html>");
-		out.println("<head>");
-		out.println("<meta charset=\"utf-8\" />");
-		out.println("<title>Test</title>");
-		out.println("</head>");
-		out.println("<body>");
-		out.println("<p>Ceci est une page générée depuis une servlet.</p>");
-		out.println("</body>");
-		out.println("</html>");
+		String message = "j'aime les fruits en sirop é@Ê$"+((fruit != null)?fruit:"");
+		request.setAttribute("sirop", message);
+		this.getServletContext().getRequestDispatcher( "/WEB-INF/views/First.jsp" ).forward( request, response );
 	}
 }

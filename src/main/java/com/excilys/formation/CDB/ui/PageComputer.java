@@ -3,20 +3,22 @@ package com.excilys.formation.CDB.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import com.excilys.formation.CDB.model.Computer;
 import com.excilys.formation.CDB.service.ComputerService;
 
 public class PageComputer {
 
 	private int nbLines;
 	private int pageEnCours = 1;
-	private List<String> results;
+	private List<Computer> results;
 	private ComputerService computerService;
 	private int nbPages;
 
 	public PageComputer(int nbLines) {
 		super();
 		this.nbLines = nbLines;
-		results = new ArrayList<String>();
+		results = new ArrayList<Computer>();
 		computerService = new ComputerService();
 		nbPages = (computerService.countEntries()/nbLines)+1; //=6
 	}
@@ -27,8 +29,8 @@ public class PageComputer {
 		String choix = "";
 		while (!choix.equals("x")) {
 			results = computerService.getAll(nbLines, pageEnCours);
-			for (String string : results) {
-				System.out.println(string);
+			for (Computer computer : results) {
+				System.out.println(computer.toString());
 			}
 			
 			
@@ -40,8 +42,8 @@ public class PageComputer {
 				}
 				results.clear();
 				results = computerService.getAll(nbLines, pageEnCours);
-				for (String string : results) {
-					System.out.println(string);
+				for (Computer computer : results) {
+					System.out.println(computer.toString());
 				}
 				break;
 			case "a":
@@ -51,8 +53,8 @@ public class PageComputer {
 				}
 				results.clear();
 				results = computerService.getAll(nbLines, pageEnCours);
-				for (String string : results) {
-					System.out.println(string);
+				for (Computer computer : results) {
+					System.out.println(computer.toString());
 				}
 				break;
 			default:
