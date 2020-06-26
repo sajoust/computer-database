@@ -19,7 +19,7 @@ public class PageComputer {
 		super();
 		this.nbLines = nbLines;
 		results = new ArrayList<Computer>();
-		computerService = new ComputerService();
+		computerService = ComputerService.getInstance();
 		nbPages = (computerService.countEntries()/nbLines)+1; //=6
 	}
 

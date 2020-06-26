@@ -1,9 +1,9 @@
 package com.excilys.formation.CDB.service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.excilys.formation.CDB.mapper.ComputerMapper;
 import com.excilys.formation.CDB.model.Computer;
 import com.excilys.formation.CDB.persistence.ComputerDAO;
 
@@ -16,10 +16,17 @@ public class ComputerService {
 	
 	//prend un computer et renvoie string
 	
-	public ComputerService() {
+	private ComputerService() {
 		computerDAO = new ComputerDAO();
 	}
 	
+	private static class ComputerServiceHolder {
+		private final static ComputerService instance = new ComputerService();
+	}
+	
+	public static ComputerService getInstance() {
+		return ComputerServiceHolder.instance;
+	}
 
 	public List<Computer> getAll(int nbLines, int pageEnCours) {
 //		List<String> strList = new ArrayList<String>();
@@ -38,11 +45,15 @@ public class ComputerService {
 		
 	}
 	
+	public Computer getByName(String name) {
+		return computerDAO.getByName(name);
+	}
+	
 	
 	public void add(String[] infoComputer) {
 				
 		try {
-			computerDAO.add(infoComputer);
+			computerDAO.add(ComputerMapper.stringTabToComputer(infoComputer));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

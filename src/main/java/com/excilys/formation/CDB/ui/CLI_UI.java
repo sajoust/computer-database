@@ -16,7 +16,7 @@ public class CLI_UI {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		computerService = new ComputerService();
+		computerService = ComputerService.getInstance();
 
 		Scanner userEntry = new Scanner(System.in);
 		String choix = "";

@@ -12,7 +12,7 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="dashboard.html"> Application -
+			<a class="navbar-brand" href="Dashboard.jsp"> Application -
 				Computer Database</a>
 		</div>
 	</header>
@@ -34,9 +34,8 @@
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addComputer.html">Add
-						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-						onclick="$.fn.toggleEditMode();">Edit</a>
+					<a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a>
+					<a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
 				</div>
 			</div>
 		</div>
@@ -94,20 +93,32 @@
 			<ul class="pagination">
 
 				<c:if test="${pageToDisplay>1}">
-					<li><a href="ntm?pageToDisplay=${pageToDisplay-1}&computerPerPage=${computerPerPage}"
+					<li><a
+						href="home?pageToDisplay=${pageToDisplay-1}&computerPerPage=${computerPerPage}"
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 					</a></li>
 				</c:if>
+				<c:if test="${pageToDisplay>nbPages}" var="testPages"></c:if>
+
+				<c:forEach var="i" begin="${Math.max(pageToDisplay-2,1)}"
+					end="${Math.min(pageToDisplay+2,nbPages+0)}">
 
 
-				<li><a href="#">1</a></li>
-				<li><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li><a href="#">4</a></li>
-				<li><a href="#">5</a></li>
+					<li><a
+						href="home?pageToDisplay=${i}&computerPerPage=${computerPerPage}">${i}</a></li>
+
+
+				</c:forEach>
+
+				<!-- 				<li><a href="#">1</a></li> -->
+				<!-- 				<li><a href="#">2</a></li> -->
+				<!-- 				<li><a href="#">3</a></li> -->
+				<!-- 				<li><a href="#">4</a></li> -->
+				<!-- 				<li><a href="#">5</a></li> -->
 
 				<c:if test="${pageToDisplay<nbPages}">
-					<li><a href="ntm?pageToDisplay=${pageToDisplay+1}&computerPerPage=${computerPerPage}"
+					<li><a
+						href="home?pageToDisplay=${pageToDisplay+1}&computerPerPage=${computerPerPage}"
 						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 					</a></li>
 				</c:if>
@@ -115,12 +126,12 @@
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
 
-				<a href="ntm?pageToDisplay=${pageToDisplay}&computerPerPage=10"><button type="button"
-						class="btn btn-default">10</button></a> 
-				<a href="ntm?pageToDisplay=${pageToDisplay}&computerPerPage=50"><button type="button"
-						class="btn btn-default">50</button></a> 
-				<a href="ntm?pageToDisplay=${pageToDisplay}&computerPerPage=100"><button type="button"
-						class="btn btn-default">100</button></a>
+				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=10"><button
+						type="button" class="btn btn-default">10</button></a> <a
+					href="home?pageToDisplay=${pageToDisplay}&computerPerPage=50"><button
+						type="button" class="btn btn-default">50</button></a> <a
+					href="home?pageToDisplay=${pageToDisplay}&computerPerPage=100"><button
+						type="button" class="btn btn-default">100</button></a>
 			</div>
 		</div>
 	</footer>

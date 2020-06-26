@@ -37,7 +37,7 @@ public class ComputerDAO extends DAO<Computer> {
 	 * @return affiche l'ordinateur entré
 	 * @throws SQLException 
 	 */
-	public void add(String[] computerInfo) throws SQLException {
+	public void add(Computer computerToAdd) throws SQLException {
 
 		
 
@@ -45,13 +45,13 @@ public class ComputerDAO extends DAO<Computer> {
 				
 
 				PreparedStatement stmt = conn.prepareStatement(ADD_QUERY);
-				stmt.setString(1, computerInfo[0]);
-				stmt.setObject(2, ComputerMapper.stringToDate(computerInfo[1]));
-				stmt.setObject(3, ComputerMapper.stringToDate(computerInfo[2]));
-				if (computerInfo[3] == null) {
+				stmt.setString(1, computerToAdd.getName());
+				stmt.setObject(2, computerToAdd.getIntroduced());
+				stmt.setObject(3, computerToAdd.getDiscontinued());
+				if (computerToAdd.getCompanyID() == null) {
 					stmt.setNull(4, Types.BIGINT);
 				} else {
-					stmt.setLong(4, Long.parseLong(computerInfo[3]));
+					stmt.setLong(4, computerToAdd.getCompanyID());
 				}
 
 				stmt.execute();

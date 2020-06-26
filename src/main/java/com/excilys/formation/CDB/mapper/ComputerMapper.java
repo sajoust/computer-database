@@ -1,6 +1,5 @@
 package com.excilys.formation.CDB.mapper;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;

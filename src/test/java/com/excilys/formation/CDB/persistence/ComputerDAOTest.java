@@ -9,7 +9,6 @@ import org.dbunit.PropertiesBasedJdbcDatabaseTester;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Test;
@@ -26,7 +25,7 @@ public class ComputerDAOTest extends DBTestCase {
 	private final String DISCONTINUED = "1998-01-01";
 	private final String COMPANY_ID = "1";
 	private final String[] computerInfoTest = { NAME, INTRODUCED, DISCONTINUED, COMPANY_ID };
-	
+
 	IDatabaseConnection connection;
 
 	public ComputerDAOTest(String name) throws ClassNotFoundException, SQLException, DatabaseUnitException {
@@ -36,7 +35,7 @@ public class ComputerDAOTest extends DBTestCase {
 				"jdbc:mysql://localhost:3306/computer_database_test?serverTimezone=UTC");
 		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME, "pedro");
 		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD, "qwerty1234");
-		 System.setProperty( PropertiesBasedJdbcDatabaseTester.DBUNIT_SCHEMA, "" );
+		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_SCHEMA, "");
 //		Class.forName("com.mysql.cj.jdbc.Driver");
 //		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/computer_database_test?serverTimezone=UTC", "pedro", "qwerty1234");
 //
@@ -87,7 +86,7 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testAdd() {
 		try {
-			computerDAO.add(computerInfoTest);
+			computerDAO.add(ComputerMapper.stringTabToComputer(computerInfoTest));
 			Computer c = computerDAO.getByName(NAME);
 
 			assertEquals(ComputerMapper.stringTabToComputer(computerInfoTest).getName(), c.getName());
@@ -108,7 +107,6 @@ public class ComputerDAOTest extends DBTestCase {
 		Long dbId = computerDAO.deleteComputer(id).getId();
 
 		assertEquals(dbId, actualId);
-
 
 	}
 

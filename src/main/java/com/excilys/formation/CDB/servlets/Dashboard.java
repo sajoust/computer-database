@@ -12,11 +12,15 @@ import javax.servlet.http.HttpServletResponse;
 import com.excilys.formation.CDB.model.Computer;
 import com.excilys.formation.CDB.service.ComputerService;
 
-@WebServlet(name = "Dashboard", urlPatterns = { "/ntm" })
+@WebServlet(name = "Dashboard", urlPatterns = { "/home" })
 public class Dashboard extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
-	private ComputerService computerService=new ComputerService();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5205053770995883524L;
+	//private static final long serialVersionUID = 1L;
+	private ComputerService computerService=ComputerService.getInstance();
 	//private PageComputer pageComputer = new PageComputer(10);
 	private List<Computer> ComputerList;
 
@@ -27,12 +31,22 @@ public class Dashboard extends HttpServlet {
 		int computerPerPage = (request.getParameter("computerPerPage")!=null)?Integer.parseInt(request.getParameter("computerPerPage")):10;
 		int nbPages = (computerService.countEntries()/computerPerPage)+1;
 		System.out.println(nbPages);
-		
+		pageToDisplay=Math.min(pageToDisplay, nbPages);
 		ComputerList=computerService.getAll(computerPerPage, pageToDisplay);
 		
 		
+		
+		
+		String search = request.getParameter("search");
+		System.out.println(computerService.getByName(search).toString());
+		
+		
+		
+		request.setAttribute("search", search);
+		
 		request.setAttribute("nbPages", nbPages);
-		request.setAttribute("pageToDisplay", pageToDisplay);
+		request.setAttribute("pageToDisplay",pageToDisplay);
+
 		request.setAttribute("computerPerPage", computerPerPage);
 		request.setAttribute("computerList", ComputerList);		
 		request.setAttribute("entriesCount", computerService.countEntries());
