@@ -12,7 +12,7 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="Dashboard.jsp"> Application -
+			<a class="navbar-brand" href="/home"> Application -
 				Computer Database</a>
 		</div>
 	</header>
@@ -69,16 +69,16 @@
 				</thead>
 				<!-- Browse attribute computers -->
 				<tbody id="results">
-					<c:forEach items="${computerList}" var="computer"
+					<c:forEach items="${DTOList}" var="DTO"
 						varStatus="status">
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="0"></td>
 							<td><a href="editComputer.html" onclick=""><c:out
-										value="${computer.name}"></c:out></a></td>
-							<td><c:out value="${computer.introduced}"></c:out></td>
-							<td><c:out value="${computer.discontinued}"></c:out></td>
-							<td><c:out value="${computer.companyID}"></c:out></td>
+										value="${DTO.name}"></c:out></a></td>
+							<td><c:out value="${DTO.introduced}"></c:out></td>
+							<td><c:out value="${DTO.discontinued}"></c:out></td>
+							<td><c:out value="${DTO.companyID}"></c:out></td>
 
 						</tr>
 					</c:forEach>

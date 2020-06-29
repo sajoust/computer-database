@@ -23,8 +23,7 @@ public class PageCompany {
 		CompanyService companyService = new CompanyService();
 		String choix = "";
 		while (!choix.equals("x")) {
-			System.out.println("coucou");
-			results = companyService.getAll(nbLines, pageEnCours);
+			//results = companyService.getAll(nbLines, pageEnCours);
 			for (String string : results) {
 				System.out.println(string);
 			}
@@ -34,7 +33,7 @@ public class PageCompany {
 			case "z":
 				pageEnCours++;
 				results.clear();
-				results = companyService.getAll(nbLines, pageEnCours);
+				//results = companyService.getAll(nbLines, pageEnCours);
 				for (String string : results) {
 					System.out.println(string);
 				}
@@ -45,7 +44,7 @@ public class PageCompany {
 					pageEnCours=0;
 				}
 				results.clear();
-				results = companyService.getAll(nbLines, pageEnCours);
+				//results = companyService.getAll(nbLines, pageEnCours);
 				for (String string : results) {
 					System.out.println(string);
 				}

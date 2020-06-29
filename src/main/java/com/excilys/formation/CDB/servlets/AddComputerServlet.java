@@ -1,6 +1,9 @@
 package com.excilys.formation.CDB.servlets;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,13 +11,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.excilys.formation.CDB.DTO.DTOCompany;
+import com.excilys.formation.CDB.DTO.DTOComputer;
+import com.excilys.formation.CDB.service.CompanyService;
 import com.excilys.formation.CDB.service.ComputerService;
+import com.excilys.formation.CDB.validation.ValidationComputer;
 
 
 @WebServlet(name = "AddComputerServlet", urlPatterns = { "/addComputer" })
 public class AddComputerServlet extends HttpServlet {
 
 	private ComputerService computerService=ComputerService.getInstance();
+	private CompanyService companyService = CompanyService.getInstance();
+	private List<DTOCompany> DTOList;
 	
 	
 	/**
@@ -25,20 +34,43 @@ public class AddComputerServlet extends HttpServlet {
 	/**
 	 * 
 	 */
-	//private static final long serialVersionUID = 2L;
+	// private static final long serialVersionUID = 2L;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		//System.out.println(request.getAttribute("computerName"));
+
+		// System.out.println(request.getAttribute("computerName"));
+		DTOList=companyService.getAll(1	, 1, "la bretagne");
+		request.setAttribute("DTOList", DTOList);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/AddComputer.jsp").forward(request, response);
 	}
-	
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Map<String, String> errors = new HashMap<String, String>();
+		
+		
+		
 		String name = request.getParameter("computerName");
-		String introduced = (request.getParameter("introduced"))==""?(null):(request.getParameter("introduced"));
-		String discontinued = (request.getParameter("discontinued"))==""?(null):(request.getParameter("discontinued"));
-		String companyId = request.getParameter("companyId");		
-		computerService.add(new String[] {name,introduced,discontinued,companyId});
+		String introduced = request.getParameter("introduced");
+		String discontinued = request.getParameter("discontinued");
+		String company_id = request.getParameter("companyId");
+		DTOComputer dtoComputer = new DTOComputer(name, introduced, discontinued, company_id);
+	
+	    try {
+			ValidationComputer.nameValidation(dtoComputer);
+		} catch (Exception e) {
+			errors.put("computerName", e.getMessage());
+		}
+	    try {
+			ValidationComputer.dateValidation(dtoComputer);
+		} catch (Exception e) {
+			errors.put("discontinued", e.getMessage());
+		}
+	    
+	    request.setAttribute("errors", errors);
+	    
+	    if (errors.isEmpty()) {
+			computerService.add(dtoComputer);
+		}
 		
 		
 		
@@ -46,6 +78,5 @@ public class AddComputerServlet extends HttpServlet {
 		
 		doGet(request, response);
 	}
-	
-	
+
 }

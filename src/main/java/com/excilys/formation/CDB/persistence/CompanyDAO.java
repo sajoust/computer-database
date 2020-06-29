@@ -13,8 +13,8 @@ import com.excilys.formation.CDB.service.ConnectionSingleton;
 
 public class CompanyDAO extends DAO<Company> {
 
-	private final String VIEW_ALL_QUERY = "SELECT * FROM computer LIMIT ? OFFSET ? ";
-	private final String GET_BY_ID_QUERY = "SELECT * FROM computer WHERE id=?";
+	private final String VIEW_ALL_QUERY = "SELECT * FROM company";
+	private final String GET_BY_ID_QUERY = "SELECT * FROM company WHERE id=?";
 	
 
 	private ArrayList<Company> companyList;
@@ -24,7 +24,7 @@ public class CompanyDAO extends DAO<Company> {
 	}
 
 	@Override
-	public ArrayList<Company> getAll(int nbLines, int pageEnCours) {
+	public ArrayList<Company> getAll(int nbLines, int pageEnCours, String filter) {
 
 		ArrayList<Company> companyList = new ArrayList<Company>();
 
@@ -33,9 +33,6 @@ public class CompanyDAO extends DAO<Company> {
 			Connection conn = ConnectionSingleton.getInstance().getConnection();
 
 			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
-			stmt.setInt(1, nbLines);
-			stmt.setInt(2, nbLines * pageEnCours);
-			System.out.println(stmt.toString());
 			ResultSet resultSet = stmt.executeQuery();
 
 			while (resultSet.next()) {

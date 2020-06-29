@@ -13,6 +13,7 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Test;
 
+import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.mapper.ComputerMapper;
 import com.excilys.formation.CDB.model.Computer;
 
@@ -70,7 +71,7 @@ public class ComputerDAOTest extends DBTestCase {
 		try {
 			int nbRowsDataSet = getDataSet().getTable("computer").getRowCount();
 
-			assertEquals(computerDAO.getAll(10, 1).size(), nbRowsDataSet);
+			assertEquals(computerDAO.getAll(10, 1,"no_filter").size(), nbRowsDataSet);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,7 +87,8 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testAdd() {
 		try {
-			computerDAO.add(ComputerMapper.stringTabToComputer(computerInfoTest));
+			DTOComputer dtoComputer = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, COMPANY_ID);
+			computerDAO.add(dtoComputer);
 			Computer c = computerDAO.getByName(NAME);
 
 			assertEquals(ComputerMapper.stringTabToComputer(computerInfoTest).getName(), c.getName());

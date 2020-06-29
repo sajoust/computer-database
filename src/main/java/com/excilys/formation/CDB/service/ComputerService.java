@@ -1,8 +1,10 @@
 package com.excilys.formation.CDB.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.mapper.ComputerMapper;
 import com.excilys.formation.CDB.model.Computer;
 import com.excilys.formation.CDB.persistence.ComputerDAO;
@@ -28,15 +30,16 @@ public class ComputerService {
 		return ComputerServiceHolder.instance;
 	}
 
-	public List<Computer> getAll(int nbLines, int pageEnCours) {
-//		List<String> strList = new ArrayList<String>();
-//		List<Computer> computerList = computerDAO.getAll(nbLines,pageEnCours);
-//		for (Computer computer : computerList) {
-//			strList.add(computer.toString());
-//		}
-//		return strList;
+	public List<DTOComputer> getAll(int nbLines, int pageEnCours, String filter) {
+		List<Computer> computerList = computerDAO.getAll(nbLines, pageEnCours, filter);
+		List<DTOComputer> DTOList=new ArrayList<>();
+		for (Computer computer : computerList) {
+			DTOList.add(ComputerMapper.ComputerToDTO(computer));
+		}
+
 		
-		return computerDAO.getAll(nbLines,pageEnCours);
+		
+		return DTOList;
 	}
 	
 	public String get(String id) {
@@ -50,10 +53,10 @@ public class ComputerService {
 	}
 	
 	
-	public void add(String[] infoComputer) {
+	public void add(DTOComputer dtoComputer) {
 				
 		try {
-			computerDAO.add(ComputerMapper.stringTabToComputer(infoComputer));
+			computerDAO.add(dtoComputer);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

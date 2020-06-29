@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.model.Computer;
 
 public class ComputerMapper {
@@ -31,6 +32,19 @@ public class ComputerMapper {
 		}
 		return null;
 
+	}
+	
+	public static DTOComputer ComputerToDTO(Computer computer) {
+		
+		
+		String name = computer.getName();
+		String introduced = computer.getIntroduced()==null?"":computer.getIntroduced().toString();
+		String discontinued = computer.getDiscontinued()==null?"":computer.getDiscontinued().toString();
+		String company_id = computer.getCompanyID().toString();
+		
+		
+		DTOComputer DTO = new DTOComputer(name,introduced,discontinued,company_id);
+		return DTO;
 	}
 
 	public static  int countResults(ResultSet resultSet) {

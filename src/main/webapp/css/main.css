@@ -17,6 +17,11 @@ footer .pagination {
     margin:10px 0px;
 }
 
+
+ .error {
+    color: #900;
+}
+
 footer .btn-group {
     margin:10px 10px;
 }

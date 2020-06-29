@@ -50,7 +50,7 @@ public class CLI_UI {
 
 			case "4":
 				String[] infoComputer = askInfoComputer();
-				computerService.add(infoComputer);
+				//computerService.add(infoComputer);
 
 				break;
 

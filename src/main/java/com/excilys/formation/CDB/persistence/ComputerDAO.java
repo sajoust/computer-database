@@ -7,13 +7,14 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.mapper.ComputerMapper;
 import com.excilys.formation.CDB.model.Computer;
 import com.excilys.formation.CDB.service.ConnectionSingleton;
 
 public class ComputerDAO extends DAO<Computer> {
 
-	private final String VIEW_ALL_QUERY = "SELECT * FROM computer LIMIT ? OFFSET ? ";
+	private final String VIEW_ALL_QUERY = "SELECT * FROM computer";
 	private final String GET_BY_ID_QUERY = "SELECT * FROM computer WHERE id=?";
 	private final String GET_BY_NAME_QUERY = "SELECT * FROM computer WHERE name=?";
 	private final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
@@ -37,7 +38,7 @@ public class ComputerDAO extends DAO<Computer> {
 	 * @return affiche l'ordinateur entré
 	 * @throws SQLException 
 	 */
-	public void add(Computer computerToAdd) throws SQLException {
+	public void add(DTOComputer dtoComputer) throws SQLException {
 
 		
 
@@ -45,13 +46,14 @@ public class ComputerDAO extends DAO<Computer> {
 				
 
 				PreparedStatement stmt = conn.prepareStatement(ADD_QUERY);
-				stmt.setString(1, computerToAdd.getName());
-				stmt.setObject(2, computerToAdd.getIntroduced());
-				stmt.setObject(3, computerToAdd.getDiscontinued());
-				if (computerToAdd.getCompanyID() == null) {
-					stmt.setNull(4, Types.BIGINT);
+				stmt.setString(1, dtoComputer.getName());
+				stmt.setString(2, dtoComputer.getIntroduced());
+				stmt.setString(3, dtoComputer.getDiscontinued());
+				//stmt.setString(4, dtoComputer.getCompanyID());
+				if (dtoComputer.getCompanyID().equals("0")){
+					stmt.setNull(4, Types.VARCHAR);
 				} else {
-					stmt.setLong(4, computerToAdd.getCompanyID());
+					stmt.setString(4, dtoComputer.getCompanyID());
 				}
 
 				stmt.execute();
@@ -111,22 +113,26 @@ public class ComputerDAO extends DAO<Computer> {
 	}
 
 	@Override
-	public ArrayList<Computer> getAll(int nbLines, int pageEnCours) {
+	public ArrayList<Computer> getAll(int nbLines, int pageEnCours, String filter) {
 
 		ArrayList<Computer> computerList = new ArrayList<Computer>();
 
 		try (Connection conn = ConnectionSingleton.getInstance().getConnection()){
 			
-
-			//Connection conn = Connexion.getConnection();
-
-			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
-			stmt.setInt(1, nbLines);
-			stmt.setInt(2, nbLines * (pageEnCours - 1));
+			StringBuilder sb = new StringBuilder();
+			sb.append(VIEW_ALL_QUERY);			
+			
+			if (filter!="no_filter" && filter!="") {
+				sb.append(" WHERE name='"+filter+"'");
+			}
+			
+			sb.append(" LIMIT "+nbLines);
+			sb.append(" OFFSET "+nbLines * (pageEnCours - 1));		
+			PreparedStatement stmt = conn.prepareStatement(sb.toString());
 			ResultSet resultSet = stmt.executeQuery();
 
 			while (resultSet.next()) {
-
+				
 				computerList.add(ComputerMapper.processResults(resultSet));
 			}
 

@@ -28,7 +28,7 @@ public class PageComputer {
 		Scanner pageNav = new Scanner(System.in);
 		String choix = "";
 		while (!choix.equals("x")) {
-			results = computerService.getAll(nbLines, pageEnCours);
+			//results = computerService.getAll(nbLines, pageEnCours);
 			for (Computer computer : results) {
 				System.out.println(computer.toString());
 			}
@@ -41,7 +41,7 @@ public class PageComputer {
 					pageEnCours=nbPages;
 				}
 				results.clear();
-				results = computerService.getAll(nbLines, pageEnCours);
+				//results = computerService.getAll(nbLines, pageEnCours);
 				for (Computer computer : results) {
 					System.out.println(computer.toString());
 				}
@@ -52,7 +52,7 @@ public class PageComputer {
 					pageEnCours=1;
 				}
 				results.clear();
-				results = computerService.getAll(nbLines, pageEnCours);
+				//results = computerService.getAll(nbLines, pageEnCours);
 				for (Computer computer : results) {
 					System.out.println(computer.toString());
 				}
