@@ -14,7 +14,7 @@ import com.excilys.formation.CDB.service.ConnectionSingleton;
 
 public class ComputerDAO extends DAO<Computer> {
 
-	private final String VIEW_ALL_QUERY = "SELECT * FROM computer";
+	private final String VIEW_ALL_QUERY = "SELECT computer.name,introduced,discontinued,company_id,company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id";
 	private final String GET_BY_ID_QUERY = "SELECT * FROM computer WHERE id=?";
 	private final String GET_BY_NAME_QUERY = "SELECT * FROM computer WHERE name=?";
 	private final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
@@ -28,6 +28,41 @@ public class ComputerDAO extends DAO<Computer> {
 	public ComputerDAO() {
 		super();
 		//ComputerMapper = new ComputerMapper();
+
+	}
+	@Override
+	public ArrayList<Computer> getAll(int nbLines, int pageEnCours, String filter) {
+
+		ArrayList<Computer> computerList = new ArrayList<Computer>();
+
+		try (Connection conn = ConnectionSingleton.getInstance().getConnection()){
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append(VIEW_ALL_QUERY);			
+			
+			if (filter!="no_filter" && filter!="") {
+				sb.append(" WHERE computer.name='"+filter+"'");
+			}
+			
+			sb.append(" LIMIT "+nbLines);
+			sb.append(" OFFSET "+nbLines * (pageEnCours - 1));		
+			PreparedStatement stmt = conn.prepareStatement(sb.toString());
+			System.out.println("statement "+stmt.toString());
+			ResultSet resultSet = stmt.executeQuery();
+
+			while (resultSet.next()) {
+				
+				computerList.add(ComputerMapper.processResults(resultSet));
+			}
+
+			
+			return computerList;
+
+		} catch (SQLException e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		}
+		return null;
 
 	}
 
@@ -50,10 +85,10 @@ public class ComputerDAO extends DAO<Computer> {
 				stmt.setString(2, dtoComputer.getIntroduced());
 				stmt.setString(3, dtoComputer.getDiscontinued());
 				//stmt.setString(4, dtoComputer.getCompanyID());
-				if (dtoComputer.getCompanyID().equals("0")){
-					stmt.setNull(4, Types.VARCHAR);
+				if (dtoComputer.getDtoCompany().getId()=="0"){
+					stmt.setNull(4, Types.BIGINT);
 				} else {
-					stmt.setString(4, dtoComputer.getCompanyID());
+					stmt.setString(4, dtoComputer.getDtoCompany().getId());
 				}
 
 				stmt.execute();
@@ -112,40 +147,7 @@ public class ComputerDAO extends DAO<Computer> {
 		
 	}
 
-	@Override
-	public ArrayList<Computer> getAll(int nbLines, int pageEnCours, String filter) {
-
-		ArrayList<Computer> computerList = new ArrayList<Computer>();
-
-		try (Connection conn = ConnectionSingleton.getInstance().getConnection()){
-			
-			StringBuilder sb = new StringBuilder();
-			sb.append(VIEW_ALL_QUERY);			
-			
-			if (filter!="no_filter" && filter!="") {
-				sb.append(" WHERE name='"+filter+"'");
-			}
-			
-			sb.append(" LIMIT "+nbLines);
-			sb.append(" OFFSET "+nbLines * (pageEnCours - 1));		
-			PreparedStatement stmt = conn.prepareStatement(sb.toString());
-			ResultSet resultSet = stmt.executeQuery();
-
-			while (resultSet.next()) {
-				
-				computerList.add(ComputerMapper.processResults(resultSet));
-			}
-
-			
-			return computerList;
-
-		} catch (SQLException e) {
-			// TODO: handle exception
-			System.out.println(e.getMessage());
-		}
-		return null;
-
-	}
+	
 
 	public Computer deleteComputer(String id) {
 		try {
@@ -216,6 +218,12 @@ public class ComputerDAO extends DAO<Computer> {
 		}
 
 		return 0;
+	}
+
+	@Override
+	public ArrayList<Computer> getAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

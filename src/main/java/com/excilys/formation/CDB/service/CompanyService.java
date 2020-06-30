@@ -44,6 +44,17 @@ private static CompanyDAO companyDAO;
 		
 		return DTOList;
 	}
+	public List<DTOCompany> getAll() {
+		List<Company> companyList = companyDAO.getAll();
+		List<DTOCompany> DTOList=new ArrayList<DTOCompany>();
+		for (Company company : companyList) {
+			DTOList.add(CompanyMapper.CompanyToDTO(company));
+		}
+
+		
+		
+		return DTOList;
+	}
 	
 	public String get(String id) {
 				

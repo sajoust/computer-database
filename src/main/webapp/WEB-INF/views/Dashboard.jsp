@@ -12,7 +12,7 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="/home"> Application -
+			<a class="navbar-brand" href="home"> Application -
 				Computer Database</a>
 		</div>
 	</header>
@@ -78,7 +78,7 @@
 										value="${DTO.name}"></c:out></a></td>
 							<td><c:out value="${DTO.introduced}"></c:out></td>
 							<td><c:out value="${DTO.discontinued}"></c:out></td>
-							<td><c:out value="${DTO.companyID}"></c:out></td>
+							<td><c:out value="${DTO.dtoCompany.getId()}  ${DTO.dtoCompany.getName()}"></c:out></td>
 
 						</tr>
 					</c:forEach>

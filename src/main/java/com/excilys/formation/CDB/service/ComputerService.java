@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.mapper.ComputerMapper;
 import com.excilys.formation.CDB.model.Computer;
@@ -32,14 +33,15 @@ public class ComputerService {
 
 	public List<DTOComputer> getAll(int nbLines, int pageEnCours, String filter) {
 		List<Computer> computerList = computerDAO.getAll(nbLines, pageEnCours, filter);
-		List<DTOComputer> DTOList=new ArrayList<>();
+		List<DTOComputer> dtoComputerList=new ArrayList<>();
+		List<DTOCompany> dtoCompanyList = CompanyService.getInstance().getAll();
 		for (Computer computer : computerList) {
-			DTOList.add(ComputerMapper.ComputerToDTO(computer));
+			dtoComputerList.add(ComputerMapper.ComputerToDTO(computer));
 		}
 
 		
 		
-		return DTOList;
+		return dtoComputerList;
 	}
 	
 	public String get(String id) {

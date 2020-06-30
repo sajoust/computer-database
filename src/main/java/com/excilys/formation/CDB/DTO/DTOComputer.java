@@ -5,17 +5,16 @@ public class DTOComputer {
 	private String name;
 	private String introduced;
 	private String discontinued;
-	private String companyID;
 	private DTOCompany dtoCompany;
 	
 	
 	
-	public DTOComputer(String name, String introduced, String discontinued, String companyID) {
+	public DTOComputer(String name, String introduced, String discontinued, DTOCompany dtoCompany) {
 		super();
 		this.name = name;
 		this.introduced = introduced;
 		this.discontinued = discontinued;
-		this.companyID = companyID;
+		this.dtoCompany = dtoCompany;
 	}
 
 	public boolean validateData() {
@@ -54,19 +53,22 @@ public class DTOComputer {
 		this.discontinued = discontinued;
 	}
 
-	public String getCompanyID() {
-		return companyID;
+
+
+	public DTOCompany getDtoCompany() {
+		return dtoCompany;
 	}
 
-	public void setCompanyID(String companyID) {
-		this.companyID = companyID;
+	public void setDtoCompany(DTOCompany dtoCompany) {
+		this.dtoCompany = dtoCompany;
 	}
 
 	@Override
 	public String toString() {
 		return "DTOComputer [name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued
-				+ ", companyID=" + companyID + "]";
+				+ ", dtoCompany=" + dtoCompany + "]";
 	}
+
 
 	
 	

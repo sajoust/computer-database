@@ -2,15 +2,11 @@ package com.excilys.formation.CDB.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.model.Company;
 
 public class CompanyMapper {
-
-	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	public static Company processResults(ResultSet resultSet) {
 

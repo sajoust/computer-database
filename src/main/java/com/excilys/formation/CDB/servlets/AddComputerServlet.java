@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,6 +47,7 @@ public class AddComputerServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Map<String, String> errors = new HashMap<String, String>();
+		//Map<String, String> dtoMap = DTOList.stream().collect(Collectors.toMap(DTOCompany::getId, animal -> animal));
 		
 		
 		
@@ -53,7 +55,11 @@ public class AddComputerServlet extends HttpServlet {
 		String introduced = request.getParameter("introduced");
 		String discontinued = request.getParameter("discontinued");
 		String company_id = request.getParameter("companyId");
-		DTOComputer dtoComputer = new DTOComputer(name, introduced, discontinued, company_id);
+		
+		System.out.println("dto id= "+ request.getParameter("companyId"));
+		
+		DTOCompany dtoCompany = new DTOCompany(request.getParameter("DTO.id"),request.getParameter("DTO.name"));
+		DTOComputer dtoComputer = new DTOComputer(name, introduced, discontinued, dtoCompany);
 	
 	    try {
 			ValidationComputer.nameValidation(dtoComputer);

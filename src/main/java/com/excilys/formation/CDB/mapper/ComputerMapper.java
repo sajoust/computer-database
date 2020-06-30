@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.DTO.DTOComputer;
+import com.excilys.formation.CDB.model.Company;
 import com.excilys.formation.CDB.model.Computer;
 
 public class ComputerMapper {
@@ -15,15 +17,16 @@ public class ComputerMapper {
 	public static Computer processResults(ResultSet resultSet) {
 
 		try {
-			long ID = resultSet.getLong(1);
 			String name = resultSet.getString("name");
 			LocalDate ldIntroduced = (resultSet.getString("introduced") == null) ? null
 					: LocalDate.parse(resultSet.getString("introduced"), dateFormatter);
 			LocalDate ldDiscontinued = (resultSet.getString("discontinued")== null)? null:
 					LocalDate.parse(resultSet.getString("discontinued"), dateFormatter);
-			Long company_ID = resultSet.getLong("company_id");
+			String companyName = resultSet.getString("company_name");
+			Long companyID = resultSet.getLong("company_id");
+			Company company = new Company(companyID,companyName);
 
-			Computer c = new Computer(ID, name, ldIntroduced, ldDiscontinued, company_ID);
+			Computer c = new Computer(name, ldIntroduced, ldDiscontinued, company);
 			return c;
 
 		} catch (SQLException e) {
@@ -40,11 +43,11 @@ public class ComputerMapper {
 		String name = computer.getName();
 		String introduced = computer.getIntroduced()==null?"":computer.getIntroduced().toString();
 		String discontinued = computer.getDiscontinued()==null?"":computer.getDiscontinued().toString();
-		String company_id = computer.getCompanyID().toString();
+		DTOCompany dtoCompany = new DTOCompany(String.valueOf(computer.getCompany().getId()),computer.getCompany().getName());
 		
 		
-		DTOComputer DTO = new DTOComputer(name,introduced,discontinued,company_id);
-		return DTO;
+		DTOComputer dtoComputer = new DTOComputer(name,introduced,discontinued,dtoCompany);
+		return dtoComputer;
 	}
 
 	public static  int countResults(ResultSet resultSet) {
@@ -56,23 +59,25 @@ public class ComputerMapper {
 		}
 		return 0;
 	}
-
-	public static Computer stringTabToComputer(String[] computerInfo) {
-
-		if (computerInfo.length != 4) {
-			System.out.println("probleme dans computerInfo pas 4 elements");
-		}
-		String name = computerInfo[0];
-
-		LocalDate introduced = (computerInfo[1] == null) ? null : LocalDate.parse(computerInfo[1], dateFormatter);
-
-		LocalDate discontinued = (computerInfo[2] == null) ? null : LocalDate.parse(computerInfo[2], dateFormatter);
-
-		Long company_id = (computerInfo[3] == null) ? null : Long.parseLong(computerInfo[3]);
-
-		return new Computer(name, introduced, discontinued, company_id);
-
-	}
+//
+//	public static Computer stringTabToComputer(String[] computerInfo) {
+//
+//		if (computerInfo.length != 4) {
+//			System.out.println("probleme dans computerInfo pas 4 elements");
+//		}
+//		String name = computerInfo[0];
+//
+//		LocalDate introduced = (computerInfo[1] == null) ? null : LocalDate.parse(computerInfo[1], dateFormatter);
+//
+//		LocalDate discontinued = (computerInfo[2] == null) ? null : LocalDate.parse(computerInfo[2], dateFormatter);
+//
+//		Long company_id = (computerInfo[3] == null) ? null : Long.parseLong(computerInfo[3]);
+//		
+//		
+//
+//		return new Computer(name, introduced, discontinued, company_id);
+//
+//	}
 
 	public static LocalDate stringToDate(String sDate) {
 

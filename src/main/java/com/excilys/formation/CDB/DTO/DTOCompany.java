@@ -1,14 +1,21 @@
 package com.excilys.formation.CDB.DTO;
 
+import com.excilys.formation.CDB.model.Company;
+
 public class DTOCompany {
 	private String id;
 	private String name;
+	private Company company;
 	
 	
 	public DTOCompany(String id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
+	}
+	
+	public DTOCompany(Company company) {
+		this.company=company;
 	}
 
 

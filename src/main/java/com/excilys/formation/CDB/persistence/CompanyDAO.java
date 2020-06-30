@@ -80,4 +80,30 @@ public class CompanyDAO extends DAO<Company> {
 		return companyList;
 	}
 
+	@Override
+	public ArrayList<Company> getAll() {
+		ArrayList<Company> companyList = new ArrayList<Company>();
+
+		try {
+
+			Connection conn = ConnectionSingleton.getInstance().getConnection();
+
+			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
+			ResultSet resultSet = stmt.executeQuery();
+
+			while (resultSet.next()) {
+
+				companyList.add(CompanyMapper.processResults(resultSet));
+			}
+
+			conn.close();
+			return companyList;
+
+		} catch (SQLException e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+
 }

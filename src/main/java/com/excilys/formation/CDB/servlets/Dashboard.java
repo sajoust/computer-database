@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.DTO.DTOComputer;
+import com.excilys.formation.CDB.service.CompanyService;
 import com.excilys.formation.CDB.service.ComputerService;
 
 @WebServlet(name = "Dashboard", urlPatterns = { "/home" })
@@ -19,10 +21,12 @@ public class Dashboard extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 5205053770995883524L;
-	//private static final long serialVersionUID = 1L;
+
 	private ComputerService computerService=ComputerService.getInstance();
-	//private PageComputer pageComputer = new PageComputer(10);
-	private List<DTOComputer> DTOList;
+	private CompanyService companyService = CompanyService.getInstance();
+
+	private List<DTOComputer> ComputerDTOList;
+	private List<DTOCompany> CompanyDTOList;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -32,14 +36,15 @@ public class Dashboard extends HttpServlet {
 		int nbPages = (computerService.countEntries()/computerPerPage)+1;
 		pageToDisplay=Math.min(pageToDisplay, nbPages);
 		String search =(request.getParameter("search")!=null)?request.getParameter("search"):"no_filter";
-		DTOList=computerService.getAll(computerPerPage, pageToDisplay,search);
+		ComputerDTOList=computerService.getAll(computerPerPage, pageToDisplay,search);
+		//CompanyDTOList=companyService.getAll();
 		
 		
 
 		request.setAttribute("nbPages", nbPages);
 		request.setAttribute("pageToDisplay",pageToDisplay);
 		request.setAttribute("computerPerPage", computerPerPage);
-		request.setAttribute("DTOList", DTOList);		
+		request.setAttribute("DTOList", ComputerDTOList);		
 		request.setAttribute("entriesCount", computerService.countEntries());
 		
 		

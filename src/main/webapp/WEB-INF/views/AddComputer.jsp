@@ -42,7 +42,7 @@
 								<select class="form-control" name="companyId">
 									<option value="0">Unknown company</option>
 									<c:forEach items="${DTOList}" var="DTO" varStatus="status">
-										<option value="${DTO.id}"><c:out value="${DTO.id} -- ${DTO.name}"></c:out></option>
+										<option value="${DTO.name}"><c:out value="${DTO.id} -- ${DTO.name}"></c:out></option>
 									</c:forEach>
 
 								</select>
