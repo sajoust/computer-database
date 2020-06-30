@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Computer Database</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="css/font-awesome.css" rel="stylesheet" media="screen">
@@ -20,11 +20,11 @@
 			<div class="row">
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<h1>Add Computer</h1>
-					<form action="addComputer" method="post">
+					<form action="addComputer" accept-charset="UTF-8" method="post" onsubmit = "return nameValidator() & dateValidator()">
 						<fieldset>
 							<div class="form-group">
 								<label for="computerName">Computer name*</label>
-								<input id="labretagne" type="text" class="form-control" name="computerName" placeholder="Computer name">
+								<input type="text" class="form-control" name="computerName" placeholder="Computer name">
 								<span class="error">${errors['computerName']}</span>
 							</div>
 							<div class="form-group">
@@ -49,7 +49,7 @@
 							</div>
 						</fieldset>
 						<div class="actions pull-right">
-							<input type="submit" value="Add" class="btn btn-primary" onclick="nameValidator()">
+							<input type="submit" value="Add" class="btn btn-primary"  >
 							or <a href="home" class="btn btn-default">Cancel</a>
 						</div>
 					</form>

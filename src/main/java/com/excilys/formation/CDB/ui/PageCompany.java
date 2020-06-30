@@ -3,6 +3,7 @@ package com.excilys.formation.CDB.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 import com.excilys.formation.CDB.service.CompanyService;
 
 public class PageCompany {
@@ -20,7 +21,7 @@ public class PageCompany {
 	public void loadPage() {
 
 		Scanner pageNav = new Scanner(System.in);
-		CompanyService companyService = new CompanyService();
+		CompanyService companyService = CompanyService.getInstance();
 		String choix = "";
 		while (!choix.equals("x")) {
 			//results = companyService.getAll(nbLines, pageEnCours);

@@ -4,17 +4,33 @@
 
 
 function nameValidator() {
-  var name, text;
-
-  // Get the value of the input field with id="numb"
+  var text = "Name cant be empty"
   
-  name=document.getElementsById('labretagne').value;
-  window.alert(name.length);
+  var nameField=document.getElementsByName("computerName")[0].value;
 
-  // If x is Not a Number or less than one or greater than 10
-  if (name.length==0) {
-    text = "Input not valid";
+  if (nameField.length==0) {
     window.alert(text);
+    return false;
   }
-  
+  return true;
+
+}
+
+function dateValidator(){
+	var text,dateIntroduced,dateDiscontinued;
+	var introduced = document.getElementsByName("introduced")[0].value;
+	var discontinued = document.getElementsByName("discontinued")[0].value;
+	dateIntroduced = new Date(introduced); 
+	dateDiscontinued = new Date(discontinued);
+	console.log(dateIntroduced);
+	console.log("coucoucoucouc")
+	console.log(dateDiscontinued);
+	
+	if (dateIntroduced>dateDiscontinued){
+		window.alert("introduced must be before discontinued");
+		return false
+	}
+	return true
+	
+	
 }
