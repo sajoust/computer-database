@@ -13,6 +13,9 @@ public class DTOCompany {
 		this.id = id;
 		this.name = name;
 	}
+	public DTOCompany(String id) {
+		this.id=id;
+	}
 	
 	public DTOCompany(Company company) {
 		this.company=company;

@@ -1,5 +1,6 @@
 package com.excilys.formation.CDB.service;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,21 +33,45 @@ public class ComputerService {
 	}
 
 	public List<DTOComputer> getAll(int nbLines, int pageEnCours, String filter) {
-		List<Computer> computerList = computerDAO.getAll(nbLines, pageEnCours, filter);
+		ResultSet resultSet= computerDAO.getAll(nbLines, pageEnCours, filter);
+		List<Computer> computerList=new ArrayList<>();
 		List<DTOComputer> dtoComputerList=new ArrayList<>();
 		List<DTOCompany> dtoCompanyList = CompanyService.getInstance().getAll();
+
+
+		try {
+			while (resultSet.next()) {
+				computerList.add(ComputerMapper.processResults(resultSet));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for (Computer computer : computerList) {
 			dtoComputerList.add(ComputerMapper.ComputerToDTO(computer));
 		}
-
 		
 		
 		return dtoComputerList;
 	}
 	
-	public String get(String id) {
-				
-		return computerDAO.get(id).toString();
+	public DTOComputer get(String id) {
+		
+		ResultSet resultSet = computerDAO.get(id);
+		Computer c = null;
+		try {
+			while (resultSet.next()) {
+				System.out.println("FHFHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+				c=ComputerMapper.processResults(resultSet);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DTOComputer dtoComputer = ComputerMapper.ComputerToDTO(c);
+		
+		return dtoComputer;
 		
 	}
 	
@@ -66,13 +91,13 @@ public class ComputerService {
 		
 	}
 	
-	public Computer delete(String id) {
-		return computerDAO.deleteComputer(id);
+	public void delete(String id) {
+		computerDAO.deleteComputer(id);
 	}
 
-	public Computer update(String id, String[] computerToUpdateInfo) {
+	public void edit(String id, DTOComputer dtoComputer) {
 				
-		return computerDAO.update(id, computerToUpdateInfo);
+		computerDAO.edit(id, dtoComputer);
 		
 	}
 	

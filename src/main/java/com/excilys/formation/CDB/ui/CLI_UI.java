@@ -60,7 +60,7 @@ public class CLI_UI {
 				String[] computerToUpdateInfo = askInfoComputer();
 				System.out.println("Computer added: ");
 				System.out.println();
-				System.out.println(computerService.update(computerToUpdateId, computerToUpdateInfo));
+				System.out.println(computerService.edit(computerToUpdateId, computerToUpdateInfo));
 
 				break;
 			case "6":

@@ -31,10 +31,10 @@ public class ConnectionSingleton implements AutoCloseable {
 
 			Properties defaultProperties = new Properties();
 			defaultProperties.load(inputStream);
-			String url = (String) defaultProperties.get("db.url");
-			String username = (String) defaultProperties.get("db.username");
-			String password = (String) defaultProperties.get("db.password");
-			String driver = (String) defaultProperties.get("db.driver");
+			String url = (String) defaultProperties.get("dataSource.serverName");
+			String username = (String) defaultProperties.get("dataSource.user");
+			String password = (String) defaultProperties.get("dataSource.password");
+			String driver = (String) defaultProperties.get("dataSourceClassName");
 			Class.forName(driver);
 
 			inputStream.close();

@@ -1,7 +1,7 @@
 package com.excilys.formation.CDB.DTO;
 
 public class DTOComputer {
-	//private String id;
+	private String id;
 	private String name;
 	private String introduced;
 	private String discontinued;
@@ -16,18 +16,27 @@ public class DTOComputer {
 		this.discontinued = discontinued;
 		this.dtoCompany = dtoCompany;
 	}
+	
+	public DTOComputer(String id, String name, String introduced, String discontinued, DTOCompany dtoCompany) {
+		super();
+		this.id=id;
+		this.name = name;
+		this.introduced = introduced;
+		this.discontinued = discontinued;
+		this.dtoCompany = dtoCompany;
+	}
 
 	public boolean validateData() {
 		return true;
 	}
 
-//	public String getId() {
-//		return id;
-//	}
-//
-//	public void setId(String id) {
-//		this.id = id;
-//	}
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;

@@ -8,55 +8,50 @@ import java.sql.Types;
 import java.util.ArrayList;
 
 import com.excilys.formation.CDB.DTO.DTOComputer;
+import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.mapper.ComputerMapper;
 import com.excilys.formation.CDB.model.Computer;
 import com.excilys.formation.CDB.service.ConnectionSingleton;
 
 public class ComputerDAO extends DAO<Computer> {
 
-	private final String VIEW_ALL_QUERY = "SELECT computer.name,introduced,discontinued,company_id,company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id";
-	private final String GET_BY_ID_QUERY = "SELECT * FROM computer WHERE id=?";
+	private final String VIEW_ALL_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id";
+	private final String GET_BY_ID_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id WHERE computer.id=?";
 	private final String GET_BY_NAME_QUERY = "SELECT * FROM computer WHERE name=?";
 	private final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
 	private final String DELETE_QUERY = " DELETE FROM computer WHERE id>=?";
 	private final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
 	private final String COUNT_QUERY = "SELECT COUNT(id) FROM computer";
-	
 
-	//private ComputerMapper ComputerMapper;
+	// private ComputerMapper ComputerMapper;
 
 	public ComputerDAO() {
 		super();
-		//ComputerMapper = new ComputerMapper();
+		// ComputerMapper = new ComputerMapper();
 
 	}
+
 	@Override
-	public ArrayList<Computer> getAll(int nbLines, int pageEnCours, String filter) {
+	public ResultSet getAll(int nbLines, int pageEnCours, String filter) {
 
 		ArrayList<Computer> computerList = new ArrayList<Computer>();
 
-		try (Connection conn = ConnectionSingleton.getInstance().getConnection()){
-			
+		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+
 			StringBuilder sb = new StringBuilder();
-			sb.append(VIEW_ALL_QUERY);			
-			
-			if (filter!="no_filter" && filter!="") {
-				sb.append(" WHERE computer.name='"+filter+"'");
+			sb.append(VIEW_ALL_QUERY);
+
+			if (filter != "no_filter" && filter != "") {
+				sb.append(" WHERE computer.name='" + filter + "'");
 			}
-			
-			sb.append(" LIMIT "+nbLines);
-			sb.append(" OFFSET "+nbLines * (pageEnCours - 1));		
+
+			sb.append(" LIMIT " + nbLines);
+			sb.append(" OFFSET " + nbLines * (pageEnCours - 1));
 			PreparedStatement stmt = conn.prepareStatement(sb.toString());
-			System.out.println("statement "+stmt.toString());
+			System.out.println("statement " + stmt.toString());
 			ResultSet resultSet = stmt.executeQuery();
 
-			while (resultSet.next()) {
-				
-				computerList.add(ComputerMapper.processResults(resultSet));
-			}
-
-			
-			return computerList;
+			return resultSet;
 
 		} catch (SQLException e) {
 			// TODO: handle exception
@@ -71,137 +66,119 @@ public class ComputerDAO extends DAO<Computer> {
 	 * 
 	 * @param computerToAdd
 	 * @return affiche l'ordinateur entré
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public void add(DTOComputer dtoComputer) throws SQLException {
 
-		
+		// try(Connection conn = ConnectionSingleton.getInstance().getConnection()) {
+		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
 
-			try(Connection conn = ConnectionSingleton.getInstance().getConnection()) {
-				
+			PreparedStatement stmt = conn.prepareStatement(ADD_QUERY);
+			stmt.setString(1, dtoComputer.getName());
+			stmt.setString(2, dtoComputer.getIntroduced());
+			stmt.setString(3, dtoComputer.getDiscontinued());
+			// stmt.setString(4, dtoComputer.getCompanyID());
+			if (dtoComputer.getDtoCompany().getId() == "0") {
+				stmt.setNull(4, Types.VARCHAR);
+			} else {
+				stmt.setString(4, dtoComputer.getDtoCompany().getId());
+			}
 
-				PreparedStatement stmt = conn.prepareStatement(ADD_QUERY);
-				stmt.setString(1, dtoComputer.getName());
-				stmt.setString(2, dtoComputer.getIntroduced());
-				stmt.setString(3, dtoComputer.getDiscontinued());
-				//stmt.setString(4, dtoComputer.getCompanyID());
-				if (dtoComputer.getDtoCompany().getId()=="0"){
-					stmt.setNull(4, Types.BIGINT);
-				} else {
-					stmt.setString(4, dtoComputer.getDtoCompany().getId());
-				}
+			stmt.execute();
+			System.out.println("computer added");
 
-				stmt.execute();
-				System.out.println("computer added");
-				
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-			
 
 	}
 
 	@Override
-	public Computer get(String id) {
+	public ResultSet get(String id) {
 
-		try {
+		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
 			Computer computer = new Computer();
-			Connection conn = ConnectionSingleton.getInstance().getConnection();
 
-			//Connection conn = Connexion.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(GET_BY_ID_QUERY);
 			stmt.setString(1, id);
+			ResultSet resultSet = stmt.executeQuery();
+			conn.close();
+			return resultSet;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public Computer getByName(String name) {
+
+		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+			Computer computer = new Computer();
+			PreparedStatement stmt = conn.prepareStatement(GET_BY_NAME_QUERY);
+			stmt.setString(1, name);
 			ResultSet resultSet = stmt.executeQuery();
 
 			while (resultSet.next()) {
 				computer = ComputerMapper.processResults(resultSet);
 			}
-			conn.close();
-			return computer;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-	public Computer getByName(String name) {
-		
-		try(Connection conn = ConnectionSingleton.getInstance().getConnection()) {
-			Computer computer = new Computer();
-			PreparedStatement stmt = conn.prepareStatement(GET_BY_NAME_QUERY);
-			stmt.setString(1, name);
-			ResultSet resultSet = stmt.executeQuery();
-			
-			while (resultSet.next()) {
-				computer=ComputerMapper.processResults(resultSet);
-			}
 			return computer;
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+
 		return null;
-		
+
 	}
 
-	
+	public void deleteComputer(String id) {
+		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
 
-	public Computer deleteComputer(String id) {
-		try {
-			Connection conn = ConnectionSingleton.getInstance().getConnection();
-
-			//Connection conn = Connexion.getConnection();
+			// Connection conn = Connexion.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(DELETE_QUERY);
 			stmt.setString(1, id);
-			Computer computerToDelete = get(id);
 			stmt.execute();
 
 			conn.close();
 
-			return computerToDelete;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
 	}
 
-	public Computer update(String id, String[] computerToUpdateInfo) {
+	public void edit(String id, DTOComputer dtoComputer) {
 
-		try {
-			//Connection conn = Connexion.getConnection();
-			Connection conn = ConnectionSingleton.getInstance().getConnection();
+		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
 
 			PreparedStatement stmt = conn.prepareStatement(UPDATE_QUERY);
 
-
-
-			stmt.setString(1, computerToUpdateInfo[0]);
-			stmt.setObject(2, ComputerMapper.stringToDate(computerToUpdateInfo[1]));
-			stmt.setObject(3, ComputerMapper.stringToDate(computerToUpdateInfo[2]));
-			if (computerToUpdateInfo[3] == null) {
-				stmt.setNull(4, Types.BIGINT);
-			} else {
-				stmt.setLong(4, Long.parseLong(computerToUpdateInfo[3]));
-			}
+			stmt.setString(1, dtoComputer.getName());
+			stmt.setObject(2, dtoComputer.getIntroduced());
+			stmt.setObject(3, dtoComputer.getDiscontinued());
+			stmt.setObject(4, dtoComputer.getDtoCompany().getId());
+			
+			
+			
+//			if (computerToUpdateInfo[3] == null) {
+//				stmt.setNull(4, Types.BIGINT);
+//			} else {
+//				stmt.setLong(4, Long.parseLong(computerToUpdateInfo[3]));
+//			}
 			stmt.setString(5, id);
 			stmt.execute();
 			conn.close();
 
-			return get(id);
+		
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		return null;
+	
 	}
 
 	public int countEntries() {
 
-		try {
-			//Connection conn = Connexion.getConnection();
-			Connection conn = ConnectionSingleton.getInstance().getConnection();
+		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
 
 			PreparedStatement stmt = conn.prepareStatement(COUNT_QUERY);
 			ResultSet resultSet = stmt.executeQuery();

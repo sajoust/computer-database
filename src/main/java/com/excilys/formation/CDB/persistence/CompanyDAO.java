@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
+import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.mapper.CompanyMapper;
 import com.excilys.formation.CDB.model.Company;
 import com.excilys.formation.CDB.service.ConnectionSingleton;
@@ -15,33 +17,25 @@ public class CompanyDAO extends DAO<Company> {
 
 	private final String VIEW_ALL_QUERY = "SELECT * FROM company";
 	private final String GET_BY_ID_QUERY = "SELECT * FROM company WHERE id=?";
-	
 
 	private ArrayList<Company> companyList;
 
 	public CompanyDAO() {
-		super();		
+		super();
 	}
 
 	@Override
-	public ArrayList<Company> getAll(int nbLines, int pageEnCours, String filter) {
+	public ResultSet getAll(int nbLines, int pageEnCours, String filter) {
 
-		ArrayList<Company> companyList = new ArrayList<Company>();
+		// ArrayList<Company> companyList = new ArrayList<Company>();
 
-		try {
-
-			Connection conn = ConnectionSingleton.getInstance().getConnection();
+		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
 
 			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
 			ResultSet resultSet = stmt.executeQuery();
 
-			while (resultSet.next()) {
-
-				companyList.add(CompanyMapper.processResults(resultSet));
-			}
-
 			conn.close();
-			return companyList;
+			return resultSet;
 
 		} catch (SQLException e) {
 			// TODO: handle exception
@@ -52,28 +46,22 @@ public class CompanyDAO extends DAO<Company> {
 	}
 
 	@Override
-	public Company get(String id) {
+	public ResultSet get(String id) {
 
-		try {
-			Connection conn = ConnectionSingleton.getInstance().getConnection();
+		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+
 			Statement stmt = conn.createStatement();
-			ResultSet results = stmt.executeQuery(GET_BY_ID_QUERY + "" + id);
-
-			for (Company company : companyList) {
-				if (company.getId() == results.getLong(1)) {
-					conn.close();
-					return company;
-				}
-			}
+			ResultSet resultSet = stmt.executeQuery(GET_BY_ID_QUERY + "" + id);
 
 			conn.close();
+			return resultSet;
+
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
-
 	}
 
 	public ArrayList<Company> getCompanyList() {
@@ -84,9 +72,7 @@ public class CompanyDAO extends DAO<Company> {
 	public ArrayList<Company> getAll() {
 		ArrayList<Company> companyList = new ArrayList<Company>();
 
-		try {
-
-			Connection conn = ConnectionSingleton.getInstance().getConnection();
+		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
 
 			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
 			ResultSet resultSet = stmt.executeQuery();

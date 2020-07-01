@@ -1,5 +1,7 @@
 package com.excilys.formation.CDB.service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,15 +36,27 @@ private static CompanyDAO companyDAO;
 	
 
 	public List<DTOCompany> getAll(int nbLines, int pageEnCours, String filter) {
-		List<Company> companyList = companyDAO.getAll(nbLines, pageEnCours, filter);
-		List<DTOCompany> DTOList=new ArrayList<DTOCompany>();
+		ResultSet resultSet = companyDAO.getAll(nbLines, pageEnCours, filter);
+		List<Company> companyList = new ArrayList<>();
+		List<DTOCompany> dtoCompanyList=new ArrayList<DTOCompany>();
+		
+		try {
+			while (resultSet.next()) {
+				companyList.add(CompanyMapper.processResults(resultSet));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		for (Company company : companyList) {
-			DTOList.add(CompanyMapper.CompanyToDTO(company));
+			dtoCompanyList.add(CompanyMapper.CompanyToDTO(company));
 		}
 
 		
 		
-		return DTOList;
+		return dtoCompanyList;
 	}
 	public List<DTOCompany> getAll() {
 		List<Company> companyList = companyDAO.getAll();

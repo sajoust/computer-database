@@ -17,6 +17,8 @@ public class ComputerMapper {
 	public static Computer processResults(ResultSet resultSet) {
 
 		try {
+			Long id = resultSet.getLong(1);
+			System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC              "+id);
 			String name = resultSet.getString("name");
 			LocalDate ldIntroduced = (resultSet.getString("introduced") == null) ? null
 					: LocalDate.parse(resultSet.getString("introduced"), dateFormatter);
@@ -26,7 +28,7 @@ public class ComputerMapper {
 			Long companyID = resultSet.getLong("company_id");
 			Company company = new Company(companyID,companyName);
 
-			Computer c = new Computer(name, ldIntroduced, ldDiscontinued, company);
+			Computer c = new Computer(id, name, ldIntroduced, ldDiscontinued, company);
 			return c;
 
 		} catch (SQLException e) {
@@ -38,15 +40,14 @@ public class ComputerMapper {
 	}
 	
 	public static DTOComputer ComputerToDTO(Computer computer) {
-		
-		
+		String id = String.valueOf(computer.getId());
 		String name = computer.getName();
 		String introduced = computer.getIntroduced()==null?"":computer.getIntroduced().toString();
 		String discontinued = computer.getDiscontinued()==null?"":computer.getDiscontinued().toString();
 		DTOCompany dtoCompany = new DTOCompany(String.valueOf(computer.getCompany().getId()),computer.getCompany().getName());
 		
 		
-		DTOComputer dtoComputer = new DTOComputer(name,introduced,discontinued,dtoCompany);
+		DTOComputer dtoComputer = new DTOComputer(id,name,introduced,discontinued,dtoCompany);
 		return dtoComputer;
 	}
 
