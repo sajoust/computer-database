@@ -51,8 +51,8 @@
 						<!-- Variable declarations for passing labels as parameters -->
 						<!-- Table header for Computer Name -->
 
-						<th class="editMode" style="width: 60px; height: 22px;"><input
-							type="checkbox" id="selectall" /> <span
+						<th class="editMode" style="width: 60px; height: 22px;"> <input
+							type="checkbox" id="selectall" /><span
 							style="vertical-align: top;"> - <a href="#"
 								id="deleteSelected" onclick="$.fn.deleteSelected();"> <i
 									class="fa fa-trash-o fa-lg"></i>
@@ -73,7 +73,7 @@
 						varStatus="status">
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
-								class="cb" value="0"></td>
+								class="cb" value="${DTO.id}"></td>
 							<td><a href="editComputer?computerToEdit=${DTO.id}" onclick=""><c:out
 										value="${DTO.name}"></c:out></a></td>
 							<td><c:out value="${DTO.introduced}"></c:out></td>
@@ -94,7 +94,7 @@
 
 				<c:if test="${pageToDisplay>1}">
 					<li><a
-						href="home?pageToDisplay=${pageToDisplay-1}&computerPerPage=${computerPerPage}"
+						href="home?pageToDisplay=${pageToDisplay-1}&computerPerPage=${computerPerPage}&search=${search}"
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 					</a></li>
 				</c:if>
@@ -105,20 +105,15 @@
 
 
 					<li><a
-						href="home?pageToDisplay=${i}&computerPerPage=${computerPerPage}">${i}</a></li>
+						href="home?pageToDisplay=${i}&computerPerPage=${computerPerPage}&search=${search}">${i}</a></li>
 
 
 				</c:forEach>
 
-				<!-- 				<li><a href="#">1</a></li> -->
-				<!-- 				<li><a href="#">2</a></li> -->
-				<!-- 				<li><a href="#">3</a></li> -->
-				<!-- 				<li><a href="#">4</a></li> -->
-				<!-- 				<li><a href="#">5</a></li> -->
 
 				<c:if test="${pageToDisplay<nbPages}">
 					<li><a
-						href="home?pageToDisplay=${pageToDisplay+1}&computerPerPage=${computerPerPage}"
+						href="home?pageToDisplay=${pageToDisplay+1}&computerPerPage=${computerPerPage}&search=${search}"
 						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 					</a></li>
 				</c:if>
@@ -126,11 +121,11 @@
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
 
-				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=10"><button
+				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=10&search=${search}"><button
 						type="button" class="btn btn-default">10</button></a> <a
-					href="home?pageToDisplay=${pageToDisplay}&computerPerPage=50"><button
+					href="home?pageToDisplay=${pageToDisplay}&computerPerPage=50&search=${search}"><button
 						type="button" class="btn btn-default">50</button></a> <a
-					href="home?pageToDisplay=${pageToDisplay}&computerPerPage=100"><button
+					href="home?pageToDisplay=${pageToDisplay}&computerPerPage=100&search=${search}"><button
 						type="button" class="btn btn-default">100</button></a>
 			</div>
 		</div>

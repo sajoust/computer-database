@@ -13,99 +13,96 @@ import com.excilys.formation.CDB.persistence.ComputerDAO;
 
 public class ComputerService {
 
-	
-	//h2 = BDD en memoire brut
+	// h2 = BDD en memoire brut
 	private static ComputerDAO computerDAO;
-	
-	
-	//prend un computer et renvoie string
-	
+
+	// prend un computer et renvoie string
+
 	private ComputerService() {
 		computerDAO = new ComputerDAO();
 	}
-	
+
 	private static class ComputerServiceHolder {
 		private final static ComputerService instance = new ComputerService();
 	}
-	
+
 	public static ComputerService getInstance() {
 		return ComputerServiceHolder.instance;
 	}
 
 	public List<DTOComputer> getAll(int nbLines, int pageEnCours, String filter) {
-		ResultSet resultSet= computerDAO.getAll(nbLines, pageEnCours, filter);
-		List<Computer> computerList=new ArrayList<>();
-		List<DTOComputer> dtoComputerList=new ArrayList<>();
+		ResultSet resultSet = computerDAO.getAll(nbLines, pageEnCours, filter);
+		List<Computer> computerList = new ArrayList<>();
+		List<DTOComputer> dtoComputerList = new ArrayList<>();
 		List<DTOCompany> dtoCompanyList = CompanyService.getInstance().getAll();
 
-
 		try {
-			while (resultSet.next()) {
-				computerList.add(ComputerMapper.processResults(resultSet));
+			if (resultSet.next() == false) {
+				System.out.println("RESULT SET OF SERVICE GETALL IS EMPTY");
+			} else {
+				do {
+					computerList.add(ComputerMapper.processResults(resultSet));
+				} while (resultSet.next());
 			}
+
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for (Computer computer : computerList) {
 			dtoComputerList.add(ComputerMapper.ComputerToDTO(computer));
 		}
-		
-		
+
 		return dtoComputerList;
 	}
-	
+
 	public DTOComputer get(String id) {
-		
+
 		ResultSet resultSet = computerDAO.get(id);
 		Computer c = null;
 		try {
 			while (resultSet.next()) {
-				System.out.println("FHFHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
-				c=ComputerMapper.processResults(resultSet);
+				System.out.println("RESULT SET DANS GET DE SERVICE  " + resultSet.getString(1));
+				c = ComputerMapper.processResults(resultSet);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.err.println("ERREUR DANS GET DE SERVICE ");
 			e.printStackTrace();
 		}
-		
+		// System.out.println("VOICI LE COMPUTER FAIT DANS SERVICE FONCTION GET " +
+		// c.toString());
+
 		DTOComputer dtoComputer = ComputerMapper.ComputerToDTO(c);
-		
 		return dtoComputer;
-		
+
 	}
-	
+
 	public Computer getByName(String name) {
 		return computerDAO.getByName(name);
 	}
-	
-	
+
 	public void add(DTOComputer dtoComputer) {
-				
+
 		try {
 			computerDAO.add(dtoComputer);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void delete(String id) {
 		computerDAO.deleteComputer(id);
 	}
 
 	public void edit(String id, DTOComputer dtoComputer) {
-				
-		computerDAO.edit(id, dtoComputer);
-		
-	}
-	
-	public int countEntries() {
-		return computerDAO.countEntries();
-	}
-	
 
-	
+		computerDAO.edit(id, dtoComputer);
+
+	}
+
+	public int countEntries(String filter) {
+		return computerDAO.countEntries(filter);
+	}
 
 }

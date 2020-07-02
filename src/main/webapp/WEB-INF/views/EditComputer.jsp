@@ -21,16 +21,17 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <div class="label label-default pull-right">
-                        id: 0
+                        id: <c:out value="${computerToEdit}"></c:out>
                     </div>
                     <h1>Edit Computer</h1>
 
                     <form action="editComputer" method="POST" onsubmit = "return nameValidator() & dateValidator()">
-                        <input type="hidden" value="0" id="id"/> <!-- TODO: Change this value with the computer id -->
+                        <input type="hidden" value="${computerToEdit}" name="computerToEdit" id="id"/> <!-- TODO: Change this value with the computer id -->
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
                                 <input type="text" value="${computerToEditName}" class="form-control" name="computerName" id="computerName" placeholder="Computer name">
+                                <span class="error">${errors['computerName']}</span>
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
@@ -39,11 +40,12 @@
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
                                 <input type="date" class="form-control" value="${discontinuedComputerToEdit}" name="discontinued" id="discontinued" placeholder="Discontinued date">
+                                <span class="error">${errors['discontinued']}</span>
                             </div>
                             <div class="form-group">
 								<label for="companyId">Company</label>
 								<select class="form-control" name="companyId">
-									<option value="${companyIDComputerToEdit}"><c:out value="${companyIDComputerToEdit} -- ${companNameComputerToEdit}"></c:out></option>
+									<option value="${companyIDComputerToEdit}"><c:out value="${companyIDComputerToEdit} -- ${companyNameComputerToEdit}"></c:out></option>
 									<c:forEach items="${dtoCompanyList}" var="DTO" varStatus="status">
 										<option value="${DTO.id}"><c:out value="${DTO.id} -- ${DTO.name}"></c:out></option>
 									</c:forEach>

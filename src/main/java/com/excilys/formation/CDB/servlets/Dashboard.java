@@ -25,33 +25,49 @@ public class Dashboard extends HttpServlet {
 	private ComputerService computerService=ComputerService.getInstance();
 	private CompanyService companyService = CompanyService.getInstance();
 
-	private List<DTOComputer> ComputerDTOList;
+	private List<DTOComputer> computerDTOList;
 	private List<DTOCompany> CompanyDTOList;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		
 		int pageToDisplay = (request.getParameter("pageToDisplay")!=null)?Integer.parseInt(request.getParameter("pageToDisplay")):1;
+		String search =(request.getParameter("search")!=null)?request.getParameter("search"):"";
 		int computerPerPage = (request.getParameter("computerPerPage")!=null)?Integer.parseInt(request.getParameter("computerPerPage")):10;
-		int nbPages = (computerService.countEntries()/computerPerPage)+1;
+		computerDTOList=computerService.getAll(computerPerPage, pageToDisplay,search);
+		int nbEntries=computerService.countEntries(search);
+		int nbPages = (nbEntries/computerPerPage)+1;
 		pageToDisplay=Math.min(pageToDisplay, nbPages);
-		String search =(request.getParameter("search")!=null)?request.getParameter("search"):"no_filter";
-		ComputerDTOList=computerService.getAll(computerPerPage, pageToDisplay,search);
+		
+		
 		//CompanyDTOList=companyService.getAll();
+		//int nbEntries = computerDTOList.size();
 		
 		
-
+		request.setAttribute("search", search);
 		request.setAttribute("nbPages", nbPages);
 		request.setAttribute("pageToDisplay",pageToDisplay);
 		request.setAttribute("computerPerPage", computerPerPage);
-		request.setAttribute("DTOList", ComputerDTOList);		
-		request.setAttribute("entriesCount", computerService.countEntries());
+		request.setAttribute("DTOList", computerDTOList);		
+		request.setAttribute("entriesCount", nbEntries);
 		
 		
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/Dashboard.jsp").forward(request, response);
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		String computersToDelete = request.getParameter("selection");
+		//computerService.delete(computersToDelete);
+		String[] results = computersToDelete.split(",");
+		for (String str : results) {
+			computerService.delete(str);
+		}
+
+		//System.out.println("COMPUTERS TO DELETE DASHBOARD POST     "+computersToDelete);
+		
+		
 		doGet(request, response);
 	}
 	

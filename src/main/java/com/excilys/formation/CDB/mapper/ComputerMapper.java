@@ -18,7 +18,6 @@ public class ComputerMapper {
 
 		try {
 			Long id = resultSet.getLong(1);
-			System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC              "+id);
 			String name = resultSet.getString("name");
 			LocalDate ldIntroduced = (resultSet.getString("introduced") == null) ? null
 					: LocalDate.parse(resultSet.getString("introduced"), dateFormatter);
