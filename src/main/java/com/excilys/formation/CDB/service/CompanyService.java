@@ -75,6 +75,9 @@ private static CompanyDAO companyDAO;
 		return companyDAO.get(id).toString();
 		
 	}
+	public void delete(String id) {
+		companyDAO.delete(id);
+	}
 	
 
 	

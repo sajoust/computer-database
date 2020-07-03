@@ -18,7 +18,7 @@ public class DTOCompany {
 	}
 	
 	public DTOCompany(Company company) {
-		this.company=company;
+		this.setCompany(company);
 	}
 
 
@@ -39,6 +39,12 @@ public class DTOCompany {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	public Company getCompany() {
+		return company;
+	}
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 	
 	

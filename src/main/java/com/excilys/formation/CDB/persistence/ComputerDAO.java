@@ -44,10 +44,10 @@ public class ComputerDAO extends DAO<Computer> {
 			if (filter != "no_filter" && filter != "") {
 				sb.append(" WHERE computer.name LIKE '%" + filter + "%' or company.name LIKE '%" + filter + "%'");
 			}
-
+			//sb.append(" ORDER BY company.name, introduced DESC");
 			sb.append(" LIMIT " + nbLines);
 			sb.append(" OFFSET " + nbLines * (pageEnCours - 1));
-			//sb.append(" ORDER BY company.name, introduced DESC");
+			
 			PreparedStatement stmt = conn.prepareStatement(sb.toString());
 			System.out.println("statement " + stmt.toString());
 			ResultSet resultSet = stmt.executeQuery();
@@ -158,12 +158,15 @@ public class ComputerDAO extends DAO<Computer> {
 			stmt.setObject(3, dtoComputer.getDiscontinued());
 			stmt.setObject(4, dtoComputer.getDtoCompany().getId());
 
+			System.out.println("STATEMENT EDIT       "+stmt.toString());
 			stmt.setString(5, id);
-			stmt.execute();
-			conn.close();
+			
+			
+			stmt.executeUpdate();
+			//conn.close();
 
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 
 	}

@@ -2,7 +2,9 @@ package com.excilys.formation.CDB.ui;
 
 import java.util.Scanner;
 
+import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.model.Computer;
+import com.excilys.formation.CDB.service.CompanyService;
 import com.excilys.formation.CDB.service.ComputerService;
 
 
@@ -10,13 +12,16 @@ import com.excilys.formation.CDB.service.ComputerService;
 public class CLI_UI {
 
 	private static ComputerService computerService;
+	private static CompanyService companyService;
 	
 
 	private final static int NB_LINES = 100;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
 		computerService = ComputerService.getInstance();
+		companyService = CompanyService.getInstance();
 
 		Scanner userEntry = new Scanner(System.in);
 		String choix = "";
@@ -43,32 +48,17 @@ public class CLI_UI {
 
 				System.out.println("computer's id ?");
 				String id = userEntry.nextLine();
-				String result = computerService.get(id);
+				DTOComputer result = computerService.get(id);
 				System.out.println(result);
 
 				break;
-
 			case "4":
-				String[] infoComputer = askInfoComputer();
-				//computerService.add(infoComputer);
-
+				
+				System.out.println("company to delete id ?");
+				String idCompany = userEntry.nextLine();
+				companyService.delete(idCompany);
 				break;
 
-			case "5":
-				System.out.println("computer's ID ?");
-				String computerToUpdateId = userEntry.nextLine();
-				String[] computerToUpdateInfo = askInfoComputer();
-				System.out.println("Computer added: ");
-				System.out.println();
-				System.out.println(computerService.edit(computerToUpdateId, computerToUpdateInfo));
-
-				break;
-			case "6":
-				System.out.println("computer to delete ID ?");
-				Computer deletedComputer = computerService.delete(userEntry.nextLine());
-				System.out.println("deleted computer: ");
-				System.out.println(deletedComputer.toString());
-				break;
 
 			default:
 				System.out.println("wrong entry or unimplemented");
@@ -134,9 +124,7 @@ public class CLI_UI {
 		System.out.println("1 - List computers");
 		System.out.println("2 - List companies");
 		System.out.println("3 - Show computer details");
-		System.out.println("4 - Create a computer");
-		System.out.println("5 - Update a computer");
-		System.out.println("6 - Delete a computer");
+		System.out.println("4 - Delete a Company");
 
 		System.out.println();
 		System.out.println("press x to quit");

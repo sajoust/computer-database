@@ -25,7 +25,7 @@ public class ValidationComputer {
 			LocalDate introduced=LocalDate.parse(dtoComputer.getIntroduced(),dtf);
 			LocalDate discontinued=LocalDate.parse(dtoComputer.getDiscontinued(),dtf);
 			if (introduced.compareTo(discontinued)>0) {
-				throw new Exception("introduced date must be before discontinued");
+				throw new Exception("Introduced date must be before discontinued");
 			}
 
 		}

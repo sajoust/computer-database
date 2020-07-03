@@ -20,7 +20,7 @@ public class PageComputer {
 		this.nbLines = nbLines;
 		results = new ArrayList<Computer>();
 		computerService = ComputerService.getInstance();
-		nbPages = (computerService.countEntries()/nbLines)+1; //=6
+		nbPages = (computerService.countEntries("")/nbLines)+1; //=6
 	}
 
 	public void loadPage() {

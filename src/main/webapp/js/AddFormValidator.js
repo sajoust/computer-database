@@ -23,7 +23,6 @@ function dateValidator(){
 	dateIntroduced = new Date(introduced); 
 	dateDiscontinued = new Date(discontinued);
 	console.log(dateIntroduced);
-	console.log("coucoucoucouc")
 	console.log(dateDiscontinued);
 	
 	if (dateIntroduced>dateDiscontinued){
