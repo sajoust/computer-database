@@ -5,6 +5,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.mapper.ComputerMapper;
@@ -15,9 +19,14 @@ public class ComputerService {
 
 	// h2 = BDD en memoire brut
 	private static ComputerDAO computerDAO;
-
+	
+	@Autowired
+	private ComputerMapper computerMapper;
+	//ApplicationContext context;
 	// prend un computer et renvoie string
-
+	
+	
+	
 	private ComputerService() {
 		computerDAO = new ComputerDAO();
 	}

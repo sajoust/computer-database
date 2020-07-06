@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -40,7 +39,7 @@ public class AddComputerServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// System.out.println(request.getAttribute("computerName"));
-		DTOList=companyService.getAll(1	, 1, "la bretagne");
+		DTOList=companyService.getAll(1	, 1, "la bretagne","le plancton");
 		request.setAttribute("DTOList", DTOList);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/AddComputer.jsp").forward(request, response);
 	}

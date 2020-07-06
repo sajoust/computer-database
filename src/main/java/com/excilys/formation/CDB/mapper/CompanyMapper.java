@@ -22,7 +22,7 @@ public class CompanyMapper {
 			return c;
 
 		} catch (SQLException e) {
-			logger.debug("probleme dans process results");
+			logger.error("probleme dans process results");
 			e.printStackTrace();
 		}
 		return null;
@@ -42,7 +42,7 @@ public class CompanyMapper {
 		try {
 			return resultSet.getInt(1);
 		} catch (SQLException e) {
-			logger.debug("probleme de resultSet");
+			logger.error("probleme de resultSet");
 			e.printStackTrace();
 		}
 

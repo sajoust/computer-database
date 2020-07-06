@@ -9,24 +9,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.formation.CDB.DTO.DTOCompany;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.formation.CDB.DTO.DTOComputer;
-import com.excilys.formation.CDB.service.CompanyService;
 import com.excilys.formation.CDB.service.ComputerService;
 
 @WebServlet(name = "Dashboard", urlPatterns = { "/home" })
 public class Dashboard extends HttpServlet {
+	
+	
+	
+	private static Logger logger = LoggerFactory.getLogger(Dashboard.class);
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5205053770995883524L;
 
 	private ComputerService computerService=ComputerService.getInstance();
-	private CompanyService companyService = CompanyService.getInstance();
+
+
 
 	private List<DTOComputer> computerDTOList;
-	private List<DTOCompany> CompanyDTOList;
+
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -38,17 +41,14 @@ public class Dashboard extends HttpServlet {
 		String order = (request.getParameter("order")!=null && !request.getParameter("order").equals(""))?request.getParameter("order"):"";
 		int computerPerPage = (request.getParameter("computerPerPage")!=null)?Integer.parseInt(request.getParameter("computerPerPage")):10;
 		
-		System.out.println("ORDER DASHBOARD GET   "+order);
+		logger.debug(order);
+		
 		computerDTOList=computerService.getAll(computerPerPage, pageToDisplay, search, order);
 		int nbEntries=computerService.countEntries(search);
 		int nbPages = (nbEntries/computerPerPage)+1;
 		pageToDisplay=Math.min(pageToDisplay, nbPages);
 		
 		
-		
-		
-		//CompanyDTOList=companyService.getAll();
-		//int nbEntries = computerDTOList.size();
 		
 		
 		request.setAttribute("search", search);
@@ -71,7 +71,6 @@ public class Dashboard extends HttpServlet {
 			computerService.delete(str);
 		}
 
-		//System.out.println("COMPUTERS TO DELETE DASHBOARD POST     "+computersToDelete);
 		
 		
 		doGet(request, response);

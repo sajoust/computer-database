@@ -3,12 +3,15 @@ package com.excilys.formation.CDB.connection;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class ConnectionHikari {
 	private static Connection conn;
-	//private static Logger logger = LoggerFactory.getLogger(ConnectionHikari.class);
+	private static Logger logger = LoggerFactory.getLogger(ConnectionHikari.class);
 	private static HikariConfig config;
 	private static HikariDataSource datasource;
 
@@ -37,6 +40,7 @@ public class ConnectionHikari {
 			}
 		} catch (SQLException e) {
 			//logger.debug("datasource null");
+			logger.error("connection issue");
 			e.printStackTrace();
 		}
 		return conn;

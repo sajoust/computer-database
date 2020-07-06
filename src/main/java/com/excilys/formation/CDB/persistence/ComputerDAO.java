@@ -24,18 +24,18 @@ public class ComputerDAO extends DAO<Computer> {
 	private final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
 	private final String COUNT_QUERY = "SELECT COUNT(computer.id) FROM computer LEFT JOIN company ON computer.company_id=company.id ";
 
-	// private ComputerMapper ComputerMapper;
+
 
 	public ComputerDAO() {
 		super();
-		// ComputerMapper = new ComputerMapper();
+		
 
 	}
 
 	@Override
 	public ResultSet getAll(int nbLines, int pageToDisplay, String filter, String order) {
 
-		//ArrayList<Computer> computerList = new ArrayList<Computer>();
+		
 
 		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
 
@@ -47,7 +47,7 @@ public class ComputerDAO extends DAO<Computer> {
 			
 			sb.append(" LIMIT " + nbLines);
 			sb.append(" OFFSET " + nbLines * (pageToDisplay-1));
-			//sb.append(" ORDER BY company.name, introduced DESC");
+			
 			
 			PreparedStatement stmt = conn.prepareStatement(sb.toString());
 			System.out.println("statement " + stmt.toString());

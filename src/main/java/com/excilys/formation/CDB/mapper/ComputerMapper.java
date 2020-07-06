@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.model.Company;
@@ -13,6 +16,7 @@ import com.excilys.formation.CDB.model.Computer;
 public class ComputerMapper {
 
 	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private static Logger logger = LoggerFactory.getLogger(ComputerMapper.class);
 
 	public static Computer processResults(ResultSet resultSet) {
 
@@ -54,30 +58,11 @@ public class ComputerMapper {
 		try {
 			return resultSet.getInt(1);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			logger.error("result set in countResults");
 			e.printStackTrace();
 		}
 		return 0;
 	}
-//
-//	public static Computer stringTabToComputer(String[] computerInfo) {
-//
-//		if (computerInfo.length != 4) {
-//			System.out.println("probleme dans computerInfo pas 4 elements");
-//		}
-//		String name = computerInfo[0];
-//
-//		LocalDate introduced = (computerInfo[1] == null) ? null : LocalDate.parse(computerInfo[1], dateFormatter);
-//
-//		LocalDate discontinued = (computerInfo[2] == null) ? null : LocalDate.parse(computerInfo[2], dateFormatter);
-//
-//		Long company_id = (computerInfo[3] == null) ? null : Long.parseLong(computerInfo[3]);
-//		
-//		
-//
-//		return new Computer(name, introduced, discontinued, company_id);
-//
-//	}
 
 	public static LocalDate stringToDate(String sDate) {
 
