@@ -1,11 +1,10 @@
 package com.excilys.formation.CDB.DTO;
 
-import com.excilys.formation.CDB.model.Company;
 
 public class DTOCompany {
 	private String id;
 	private String name;
-	private Company company;
+
 	
 	
 	public DTOCompany(String id, String name) {
@@ -17,10 +16,6 @@ public class DTOCompany {
 		this.id=id;
 	}
 	
-	public DTOCompany(Company company) {
-		this.setCompany(company);
-	}
-
 
 	public String getId() {
 		return id;
@@ -40,12 +35,7 @@ public class DTOCompany {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Company getCompany() {
-		return company;
-	}
-	public void setCompany(Company company) {
-		this.company = company;
-	}
+
 	
 	
 	

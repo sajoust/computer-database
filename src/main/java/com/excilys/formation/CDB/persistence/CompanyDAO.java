@@ -25,7 +25,7 @@ public class CompanyDAO extends DAO<Company> {
 	}
 
 	@Override
-	public ResultSet getAll(int nbLines, int pageEnCours, String filter) {
+	public ResultSet getAll(int nbLines, int pageEnCours, String filter, String order) {
 
 		// ArrayList<Company> companyList = new ArrayList<Company>();
 

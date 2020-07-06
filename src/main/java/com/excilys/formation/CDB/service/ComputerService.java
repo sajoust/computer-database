@@ -30,19 +30,16 @@ public class ComputerService {
 		return ComputerServiceHolder.instance;
 	}
 
-	public List<DTOComputer> getAll(int nbLines, int pageEnCours, String filter) {
-		ResultSet resultSet = computerDAO.getAll(nbLines, pageEnCours, filter);
+	public List<DTOComputer> getAll(int nbLines, int pageEnCours, String filter, String order) {
+		System.out.println("SERVICE GET ALL FILTER:   " + filter);
+		ResultSet resultSet = computerDAO.getAll(nbLines, pageEnCours, filter, order);
 		List<Computer> computerList = new ArrayList<>();
 		List<DTOComputer> dtoComputerList = new ArrayList<>();
 		List<DTOCompany> dtoCompanyList = CompanyService.getInstance().getAll();
 
 		try {
-			if (resultSet.next() == false) {
-				System.out.println("RESULT SET OF SERVICE GETALL IS EMPTY");
-			} else {
-				do {
-					computerList.add(ComputerMapper.processResults(resultSet));
-				} while (resultSet.next());
+			while (resultSet.next()) {
+				computerList.add(ComputerMapper.processResults(resultSet));
 			}
 
 		} catch (SQLException e) {

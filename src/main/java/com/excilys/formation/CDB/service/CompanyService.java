@@ -35,8 +35,8 @@ private static CompanyDAO companyDAO;
 	}
 	
 
-	public List<DTOCompany> getAll(int nbLines, int pageEnCours, String filter) {
-		ResultSet resultSet = companyDAO.getAll(nbLines, pageEnCours, filter);
+	public List<DTOCompany> getAll(int nbLines, int pageEnCours, String filter, String order) {
+		ResultSet resultSet = companyDAO.getAll(nbLines, pageEnCours, filter, order);
 		List<Company> companyList = new ArrayList<>();
 		List<DTOCompany> dtoCompanyList=new ArrayList<DTOCompany>();
 		

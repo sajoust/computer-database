@@ -32,12 +32,19 @@ public class Dashboard extends HttpServlet {
 
 		
 		int pageToDisplay = (request.getParameter("pageToDisplay")!=null)?Integer.parseInt(request.getParameter("pageToDisplay")):1;
-		String search =(request.getParameter("search")!=null)?request.getParameter("search"):"";
+		
+		
+		String search =(request.getParameter("search")!=null && !request.getParameter("search").equals(""))?request.getParameter("search"):"";
+		String order = (request.getParameter("order")!=null && !request.getParameter("order").equals(""))?request.getParameter("order"):"";
 		int computerPerPage = (request.getParameter("computerPerPage")!=null)?Integer.parseInt(request.getParameter("computerPerPage")):10;
-		computerDTOList=computerService.getAll(computerPerPage, pageToDisplay,search);
+		
+		System.out.println("ORDER DASHBOARD GET   "+order);
+		computerDTOList=computerService.getAll(computerPerPage, pageToDisplay, search, order);
 		int nbEntries=computerService.countEntries(search);
 		int nbPages = (nbEntries/computerPerPage)+1;
 		pageToDisplay=Math.min(pageToDisplay, nbPages);
+		
+		
 		
 		
 		//CompanyDTOList=companyService.getAll();
@@ -47,10 +54,10 @@ public class Dashboard extends HttpServlet {
 		request.setAttribute("search", search);
 		request.setAttribute("nbPages", nbPages);
 		request.setAttribute("pageToDisplay",pageToDisplay);
-		request.setAttribute("computerPerPage", computerPerPage);
-		request.setAttribute("DTOList", computerDTOList);		
+		request.setAttribute("computerPerPage", computerPerPage); 
+		request.setAttribute("DTOList", computerDTOList);	
 		request.setAttribute("entriesCount", nbEntries);
-		
+		request.setAttribute("order", order);
 		
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/Dashboard.jsp").forward(request, response);
 	}
@@ -59,7 +66,6 @@ public class Dashboard extends HttpServlet {
 		
 		
 		String computersToDelete = request.getParameter("selection");
-		//computerService.delete(computersToDelete);
 		String[] results = computersToDelete.split(",");
 		for (String str : results) {
 			computerService.delete(str);

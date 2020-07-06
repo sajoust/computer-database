@@ -35,7 +35,7 @@ public class EditComputerServlet extends HttpServlet {
 		idToEdit = request.getParameter("computerToEdit");
 
 		request.setAttribute("computerToEdit", idToEdit);
-		dtoCompanyList = companyService.getAll(1, 1, "la bretagne");
+		dtoCompanyList = companyService.getAll(1, 1, "la bretagne","le plancton");
 		DTOComputer dtoComputer = computerService.get(idToEdit);
 
 		request.setAttribute("computerToEditName", dtoComputer.getName());

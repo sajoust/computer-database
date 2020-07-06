@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
@@ -32,21 +33,21 @@ public class ComputerDAO extends DAO<Computer> {
 	}
 
 	@Override
-	public ResultSet getAll(int nbLines, int pageEnCours, String filter) {
+	public ResultSet getAll(int nbLines, int pageToDisplay, String filter, String order) {
 
-		ArrayList<Computer> computerList = new ArrayList<Computer>();
+		//ArrayList<Computer> computerList = new ArrayList<Computer>();
 
 		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(VIEW_ALL_QUERY);
-
-			if (filter != "no_filter" && filter != "") {
-				sb.append(" WHERE computer.name LIKE '%" + filter + "%' or company.name LIKE '%" + filter + "%'");
-			}
-			//sb.append(" ORDER BY company.name, introduced DESC");
+			
+			sb.append(doFilter(filter));
+			sb.append(doOrder(order));
+			
 			sb.append(" LIMIT " + nbLines);
-			sb.append(" OFFSET " + nbLines * (pageEnCours - 1));
+			sb.append(" OFFSET " + nbLines * (pageToDisplay-1));
+			//sb.append(" ORDER BY company.name, introduced DESC");
 			
 			PreparedStatement stmt = conn.prepareStatement(sb.toString());
 			System.out.println("statement " + stmt.toString());
@@ -71,14 +72,14 @@ public class ComputerDAO extends DAO<Computer> {
 	 */
 	public void add(DTOComputer dtoComputer) throws SQLException {
 
-		// try(Connection conn = ConnectionSingleton.getInstance().getConnection()) {
+
 		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
 
 			PreparedStatement stmt = conn.prepareStatement(ADD_QUERY);
 			stmt.setString(1, dtoComputer.getName());
 			stmt.setString(2, dtoComputer.getIntroduced());
 			stmt.setString(3, dtoComputer.getDiscontinued());
-			// stmt.setString(4, dtoComputer.getCompanyID());
+
 			if (dtoComputer.getDtoCompany().getId().equals("0")) {
 				stmt.setNull(4, Types.BIGINT);
 			} else {
@@ -86,10 +87,10 @@ public class ComputerDAO extends DAO<Computer> {
 			}
 
 			stmt.execute();
-			System.out.println("computer added");
+
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
@@ -103,7 +104,7 @@ public class ComputerDAO extends DAO<Computer> {
 			PreparedStatement stmt = conn.prepareStatement(GET_BY_ID_QUERY);
 			stmt.setString(1, id);
 			ResultSet resultSet = stmt.executeQuery();
-			conn.close();
+
 			return resultSet;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -140,7 +141,6 @@ public class ComputerDAO extends DAO<Computer> {
 			stmt.setString(1, id);
 			System.out.println("STATEMENT IN DELETE DAO   " + stmt.toString());
 			stmt.execute();
-			conn.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -180,7 +180,7 @@ public class ComputerDAO extends DAO<Computer> {
 			// ResultSet resultSet = stmt.executeQuery();
 			int entriesCount = 0;
 
-			if (filter != "no_filter" && filter != "") {
+			if (filter != "no_filter" && filter != "#") {
 				sb.append(" WHERE computer.name LIKE '%" + filter + "%' or company.name LIKE '%" + filter + "%'");
 			}
 
@@ -188,7 +188,6 @@ public class ComputerDAO extends DAO<Computer> {
 			while (resultSet.next()) {
 				entriesCount = ComputerMapper.countResults(resultSet);
 			}
-			conn.close();
 			return entriesCount;
 
 		} catch (SQLException e) {
@@ -199,9 +198,31 @@ public class ComputerDAO extends DAO<Computer> {
 	}
 
 	@Override
-	public ArrayList<Computer> getAll() {
-		// TODO Auto-generated method stub
+	public List<Computer> getAll() {
 		return null;
+	}
+	
+	public String doFilter (String filter) {
+		
+		if (!filter.equals("")) {
+			 return (" WHERE computer.name LIKE '%" + filter + "%' or company.name LIKE '%" + filter + "%'");
+		}
+		return "";
+		
+	}
+	
+	public String doOrder(String order) {
+		StringBuilder sb = new StringBuilder();
+		System.out.println("ORDER AVANT TEST COMPUTER DAO     "+order);
+		
+		
+		if (!order.equals("")) {
+			System.out.println("PASSE IF DOORDER DAO");
+			String[] arrayOrder = order.split("-");
+			return " ORDER BY "+arrayOrder[0]+" "+arrayOrder[1];
+			
+		}
+		return "";
 	}
 
 }
