@@ -5,14 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.mapper.ComputerMapper;
 import com.excilys.formation.CDB.model.Computer;
-import com.excilys.formation.CDB.service.ConnectionSingleton;
+
 
 public class ComputerDAO extends DAO<Computer> {
 
@@ -24,11 +25,12 @@ public class ComputerDAO extends DAO<Computer> {
 	private final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
 	private final String COUNT_QUERY = "SELECT COUNT(computer.id) FROM computer LEFT JOIN company ON computer.company_id=company.id ";
 
+	@Autowired
+	private ConnectionHikari connectionHikari;
 
-
-	public ComputerDAO() {
+	public ComputerDAO(ConnectionHikari connectionHikari) {
 		super();
-		
+		this.connectionHikari=connectionHikari;
 
 	}
 
@@ -36,8 +38,8 @@ public class ComputerDAO extends DAO<Computer> {
 	public ResultSet getAll(int nbLines, int pageToDisplay, String filter, String order) {
 
 		
-
-		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+		//Connection conn = ConnectionHikari.getInstance().getConnection()
+		try (Connection conn = connectionHikari.getConnection()) {
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(VIEW_ALL_QUERY);
@@ -52,13 +54,14 @@ public class ComputerDAO extends DAO<Computer> {
 			PreparedStatement stmt = conn.prepareStatement(sb.toString());
 			System.out.println("statement " + stmt.toString());
 			ResultSet resultSet = stmt.executeQuery();
-
+			stmt.close();
 			return resultSet;
 
 		} catch (SQLException e) {
 			// TODO: handle exception
 			System.out.println(e.getMessage());
 		}
+		
 		return null;
 
 	}
@@ -73,7 +76,7 @@ public class ComputerDAO extends DAO<Computer> {
 	public void add(DTOComputer dtoComputer) throws SQLException {
 
 
-		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+		try (Connection conn = connectionHikari.getConnection()) {
 
 			PreparedStatement stmt = conn.prepareStatement(ADD_QUERY);
 			stmt.setString(1, dtoComputer.getName());
@@ -99,7 +102,7 @@ public class ComputerDAO extends DAO<Computer> {
 	@Override
 	public ResultSet get(String id) {
 
-		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+		try (Connection conn = connectionHikari.getConnection()) {
 
 			PreparedStatement stmt = conn.prepareStatement(GET_BY_ID_QUERY);
 			stmt.setString(1, id);
@@ -115,7 +118,7 @@ public class ComputerDAO extends DAO<Computer> {
 
 	public Computer getByName(String name) {
 
-		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+		try (Connection conn = connectionHikari.getConnection()) {
 			Computer computer = new Computer();
 			PreparedStatement stmt = conn.prepareStatement(GET_BY_NAME_QUERY);
 			stmt.setString(1, name);
@@ -134,7 +137,7 @@ public class ComputerDAO extends DAO<Computer> {
 	}
 
 	public void deleteComputer(String id) {
-		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+		try (Connection conn = connectionHikari.getConnection()) {
 
 			// Connection conn = Connexion.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(DELETE_QUERY);
@@ -149,7 +152,7 @@ public class ComputerDAO extends DAO<Computer> {
 
 	public void edit(String id, DTOComputer dtoComputer) {
 
-		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+		try (Connection conn = connectionHikari.getConnection()) {
 
 			PreparedStatement stmt = conn.prepareStatement(UPDATE_QUERY);
 
@@ -173,11 +176,9 @@ public class ComputerDAO extends DAO<Computer> {
 
 	public int countEntries(String filter) {
 
-		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+		try (Connection conn = connectionHikari.getConnection()) {
 
 			StringBuilder sb = new StringBuilder(COUNT_QUERY);
-			// PreparedStatement stmt = conn.prepareStatement(COUNT_QUERY);
-			// ResultSet resultSet = stmt.executeQuery();
 			int entriesCount = 0;
 
 			if (filter != "no_filter" && filter != "#") {
@@ -212,7 +213,7 @@ public class ComputerDAO extends DAO<Computer> {
 	}
 	
 	public String doOrder(String order) {
-		StringBuilder sb = new StringBuilder();
+		
 		System.out.println("ORDER AVANT TEST COMPUTER DAO     "+order);
 		
 		

@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.DTO.DTOComputer;
@@ -15,29 +14,32 @@ import com.excilys.formation.CDB.mapper.ComputerMapper;
 import com.excilys.formation.CDB.model.Computer;
 import com.excilys.formation.CDB.persistence.ComputerDAO;
 
+
+
+@Component
 public class ComputerService {
 
 	// h2 = BDD en memoire brut
+	@Autowired
 	private static ComputerDAO computerDAO;
 	
-	@Autowired
-	private ComputerMapper computerMapper;
-	//ApplicationContext context;
-	// prend un computer et renvoie string
-	
-	
-	
-	private ComputerService() {
-		computerDAO = new ComputerDAO();
-	}
 
-	private static class ComputerServiceHolder {
-		private final static ComputerService instance = new ComputerService();
-	}
+	//private ComputerMapper computerMapper;
 
-	public static ComputerService getInstance() {
-		return ComputerServiceHolder.instance;
-	}
+	
+	
+//	
+//	private ComputerService() {
+//		computerDAO = new ComputerDAO();
+//	}
+//
+//	private static class ComputerServiceHolder {
+//		private final static ComputerService instance = new ComputerService();
+//	}
+//
+//	public static ComputerService getInstance() {
+//		return ComputerServiceHolder.instance;
+//	}
 
 	public List<DTOComputer> getAll(int nbLines, int pageEnCours, String filter, String order) {
 		System.out.println("SERVICE GET ALL FILTER:   " + filter);

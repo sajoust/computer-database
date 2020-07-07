@@ -5,33 +5,32 @@ import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+@Component
 public class ConnectionHikari {
 	private static Connection conn;
 	private static Logger logger = LoggerFactory.getLogger(ConnectionHikari.class);
 	private static HikariConfig config;
 	private static HikariDataSource datasource;
 
-	private ConnectionHikari() {
+	public ConnectionHikari() {
 		config = new HikariConfig("/connector.properties");
 		datasource = new HikariDataSource(config);
 	}
 
-	private static class ConnectionHikariHolder {
-		private final static ConnectionHikari instance = new ConnectionHikari();
-	}
+//	private static class ConnectionHikariHolder {
+//		private final static ConnectionHikari instance = new ConnectionHikari();
+//	}
+//
+//	public static ConnectionHikari getInstance() {
+//		return ConnectionHikariHolder.instance;
+//	}
 
-	public static ConnectionHikari getInstance() {
-		return ConnectionHikariHolder.instance;
-	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	public Connection getConnection() {
 
 		try {

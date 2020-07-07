@@ -6,11 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.DTO.DTOComputer;
@@ -25,11 +29,23 @@ public class EditComputerServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = -8760262791830598329L;
-	private ComputerService computerService = ComputerService.getInstance();
+	@Autowired
+	private ComputerService computerService;
 	private CompanyService companyService = CompanyService.getInstance();
 	private List<DTOCompany> dtoCompanyList;
 	private String idToEdit = "";
 
+	
+	
+	public void init(ServletConfig config) {
+		try {
+			super.init(config);
+		} catch (ServletException e) {
+
+			e.printStackTrace();
+		}
+		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+	}
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		idToEdit = request.getParameter("computerToEdit");

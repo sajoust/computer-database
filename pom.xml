@@ -16,7 +16,9 @@
 		<mysql-version>8.0.18</mysql-version>
 		<mockito-version>2.10.0</mockito-version>
 		<junit-version>4.12</junit-version>
-		<spring.version>3.2.3.RELEASE</spring.version>
+		<spring.version>5.2.7.RELEASE</spring.version>
+		<slf4j-log4j12.version>1.7.5</slf4j-log4j12.version>
+		<slf4j-api.version>1.7.5</slf4j-api.version>
 	</properties>
 	<build>
 		<plugins>
@@ -80,13 +82,23 @@
 			<version>${junit-version}</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.2.3</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>5.2.7.RELEASE</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j-api.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j-log4j12.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
