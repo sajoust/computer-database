@@ -26,7 +26,8 @@ import com.excilys.formation.CDB.validation.ValidationComputer;
 public class AddComputerServlet extends HttpServlet {
 	@Autowired
 	private ComputerService computerService;
-	private CompanyService companyService = CompanyService.getInstance();
+	@Autowired
+	private CompanyService companyService;
 	private List<DTOCompany> DTOList;
 
 	private static final long serialVersionUID = 2024490107750585147L;
@@ -43,7 +44,6 @@ public class AddComputerServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		// System.out.println(request.getAttribute("computerName"));
 		DTOList = companyService.getAll(1, 1, "la bretagne", "le plancton");
 		request.setAttribute("DTOList", DTOList);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/AddComputer.jsp").forward(request, response);
@@ -51,9 +51,6 @@ public class AddComputerServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Map<String, String> errors = new HashMap<String, String>();
-		// Map<String, String> dtoMap =
-		// DTOList.stream().collect(Collectors.toMap(DTOCompany::getId, animal ->
-		// animal));
 
 		String name = request.getParameter("computerName");
 		String introduced = request.getParameter("introduced");

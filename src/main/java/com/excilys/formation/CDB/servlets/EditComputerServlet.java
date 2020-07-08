@@ -31,7 +31,8 @@ public class EditComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = -8760262791830598329L;
 	@Autowired
 	private ComputerService computerService;
-	private CompanyService companyService = CompanyService.getInstance();
+	@Autowired
+	private CompanyService companyService;
 	private List<DTOCompany> dtoCompanyList;
 	private String idToEdit = "";
 

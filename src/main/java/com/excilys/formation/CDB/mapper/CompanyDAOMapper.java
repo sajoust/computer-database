@@ -6,15 +6,16 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.model.Company;
 
-public class CompanyMapper {
+public class CompanyDAOMapper {
 
-	private static Logger logger = LoggerFactory.getLogger(CompanyMapper.class);
+	private static Logger logger = LoggerFactory.getLogger(CompanyDTOMapper.class);
+	
+	
+	public static Company resultSetToCompany(ResultSet resultSet) {
 
-	public static Company processResults(ResultSet resultSet) {
-
+		
 		try {
 			long ID = resultSet.getLong(1);
 			String name = resultSet.getString("name");
@@ -25,28 +26,18 @@ public class CompanyMapper {
 			logger.error("probleme dans process results");
 			e.printStackTrace();
 		}
+		
 		return null;
 
 	}
-
-	public static DTOCompany CompanyToDTO(Company company) {
-
-		String id = String.valueOf(company.getId());
-		String name = company.getName();
-		DTOCompany DTO = new DTOCompany(id, name);
-
-		return DTO;
-	}
-
+	
 	public static int countResults(ResultSet resultSet) {
 		try {
 			return resultSet.getInt(1);
 		} catch (SQLException e) {
-			logger.error("probleme de resultSet");
+			logger.error("result set in countResults");
 			e.printStackTrace();
 		}
-
 		return 0;
 	}
-
 }

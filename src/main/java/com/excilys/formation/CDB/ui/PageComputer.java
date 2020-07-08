@@ -9,7 +9,7 @@ import com.excilys.formation.CDB.service.ComputerService;
 
 public class PageComputer {
 
-	private int nbLines;
+
 	private int pageEnCours = 1;
 	private List<Computer> results;
 	private ComputerService computerService;
@@ -17,9 +17,8 @@ public class PageComputer {
 
 	public PageComputer(int nbLines) {
 		super();
-		this.nbLines = nbLines;
 		results = new ArrayList<Computer>();
-		computerService = ComputerService.getInstance();
+		//computerService = ComputerService.getInstance();
 		nbPages = (computerService.countEntries("")/nbLines)+1; //=6
 	}
 
@@ -61,6 +60,7 @@ public class PageComputer {
 				break;
 			}
 			menu();
+			pageNav.close();
 			choix = pageNav.nextLine();
 
 		}

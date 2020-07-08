@@ -4,27 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.excilys.formation.CDB.service.CompanyService;
-
 public class PageCompany {
 
-	private int nbLines;
+
 	private int pageEnCours = 0;
 	private List<String> results;
 
-	public PageCompany(int nbLines) {
+
+	public PageCompany() {
 		super();
-		this.nbLines = nbLines;
+		
 		results = new ArrayList<String>();
 	}
 
 	public void loadPage() {
 
 		Scanner pageNav = new Scanner(System.in);
-		CompanyService companyService = CompanyService.getInstance();
+		
 		String choix = "";
 		while (!choix.equals("x")) {
-			//results = companyService.getAll(nbLines, pageEnCours);
+			
 			for (String string : results) {
 				System.out.println(string);
 			}

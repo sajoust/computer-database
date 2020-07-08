@@ -29,7 +29,7 @@ public class CompanyMapperTest {
 		Mockito.when(rs.getString("name")).thenReturn(NAME);
 		
 		Company companyExpected = new Company(ID,NAME);
-		assertEquals(companyExpected, CompanyMapper.processResults(rs));
+		assertEquals(companyExpected, CompanyDTOMapper.processResults(rs));
 	}
 	
 

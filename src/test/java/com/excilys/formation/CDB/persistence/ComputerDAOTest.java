@@ -1,47 +1,46 @@
 package com.excilys.formation.CDB.persistence;
 
 import java.io.FileInputStream;
-import java.sql.SQLException;
 
 import org.dbunit.DBTestCase;
-import org.dbunit.DatabaseUnitException;
-import org.dbunit.PropertiesBasedJdbcDatabaseTester;
+import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.DTO.DTOComputer;
-import com.excilys.formation.CDB.mapper.ComputerMapper;
-import com.excilys.formation.CDB.model.Computer;
+import com.excilys.formation.CDB.configuration.SpringConfig;
+import com.excilys.formation.CDB.connection.ConnectionHikari;
+import com.excilys.formation.CDB.mapper.ComputerDAOMapper;
 
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes = SpringConfig.class)
 public class ComputerDAOTest extends DBTestCase {
 
-	private ComputerDAO computerDAO = new ComputerDAO();
-	private final String ID = "300";
+	@Autowired
+	private ComputerDAO computerDAO;
+	@Autowired
+	private ConnectionHikari connectionHikari;
+
 	private final String NAME = "Pierre Palmade";
 	private final String INTRODUCED = "1997-01-01";
 	private final String DISCONTINUED = "1998-01-01";
-	private final String COMPANY_ID = "1";
-	private final String[] computerInfoTest = { NAME, INTRODUCED, DISCONTINUED, COMPANY_ID };
 
 	IDatabaseConnection connection;
 
-	public ComputerDAOTest(String name) throws ClassNotFoundException, SQLException, DatabaseUnitException {
-		super(name);
-		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_DRIVER_CLASS, "com.mysql.cj.jdbc.Driver");
-		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_CONNECTION_URL,
-				"jdbc:mysql://localhost:3306/computer_database_test?serverTimezone=UTC");
-		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME, "pedro");
-		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD, "qwerty1234");
-		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_SCHEMA, "");
-//		Class.forName("com.mysql.cj.jdbc.Driver");
-//		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/computer_database_test?serverTimezone=UTC", "pedro", "qwerty1234");
-//
-//		connection = new DatabaseConnection(conn);
-
+	@Before
+	public void setUp() throws Exception {
+		DatabaseConnection connectionJUnit = new DatabaseConnection(connectionHikari.getConnection());
+		getSetUpOperation().execute(connectionJUnit, getDataSet());
 	}
 
 	@Override
@@ -49,14 +48,19 @@ public class ComputerDAOTest extends DBTestCase {
 		return new FlatXmlDataSetBuilder().build(new FileInputStream("src/test/resources/computer.xml"));
 	}
 
+	@Override
 	protected DatabaseOperation getSetUpOperation() throws Exception {
+
 		return DatabaseOperation.CLEAN_INSERT;
 	}
 
+	@Override
 	protected DatabaseOperation getTearDownOperation() throws Exception {
+
 		return DatabaseOperation.REFRESH;
 	}
 
+//
 	@Test
 	public void testGet() {
 		String id = "1";
@@ -67,53 +71,50 @@ public class ComputerDAOTest extends DBTestCase {
 	}
 
 	@Test
-	public void testGetAll() {
-		try {
-			int nbRowsDataSet = getDataSet().getTable("computer").getRowCount();
+	public void testGetAll() throws DataSetException, Exception {
+		
+		
+		int nbRowsDataSet = getDataSet().getTable("computer").getRowCount();
 
-			assertEquals(computerDAO.getAll(10, 1,"no_filter").size(), nbRowsDataSet);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		assertEquals(computerDAO.getAll(10, 1, "", "").size(), nbRowsDataSet);
+		assertEquals(computerDAO.getAll(10, 1, "Firts", "").size(), 1);
+		assertEquals(computerDAO.getAll(10, 1, "", "name-DESC").get(0).getName(), "Tirdh");
+
 	}
 
 	@Test
-	public void testGetByName() {
-		String name = "Firts";
-		assertEquals(computerDAO.getByName(name).getName(), name);
-	}
+	public void testAdd() throws Exception {
 
-	@Test
-	public void testAdd() {
-		try {
-			DTOComputer dtoComputer = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, COMPANY_ID);
-			computerDAO.add(dtoComputer);
-			Computer c = computerDAO.getByName(NAME);
-
-			assertEquals(ComputerMapper.stringTabToComputer(computerInfoTest).getName(), c.getName());
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		DTOComputer dtoComputer = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, new DTOCompany("1", "Pomme"));
+		DTOComputer dtoComputerNoCompany = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, new DTOCompany("0"));
+		assertNotNull(computerDAO);
+		assertNotNull(dtoComputerNoCompany);
+		assertEquals(computerDAO.add(dtoComputer), ComputerDAOMapper.dtoToComputer(dtoComputer));
+		assertEquals(computerDAO.add(dtoComputerNoCompany), ComputerDAOMapper.dtoToComputer(dtoComputerNoCompany));
 
 	}
 
 	@Test
 	public void testDelete() throws DataSetException, Exception {
 		String id = "1";
-		Long actualId = Long.parseLong(id);
-		Long dbId = computerDAO.deleteComputer(id).getId();
-
-		assertEquals(dbId, actualId);
+		assertNotNull(computerDAO.get(id));
+		computerDAO.deleteComputer(id);
+		assertNull(computerDAO.get(id));
 
 	}
 
 	@Test
+	public void testCountEntries() {
+		assertEquals(3, computerDAO.countEntries(""));
+	}
+
+	@Test
 	public void testUpdate() {
+		assertTrue(true);
+		assertFalse(!true);
+		boolean notTrue = true;
+		assertFalse(!notTrue);
+		assertEquals(2, 1 + 1);
 
 	}
 

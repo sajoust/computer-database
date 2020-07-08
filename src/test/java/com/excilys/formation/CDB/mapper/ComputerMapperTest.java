@@ -46,7 +46,7 @@ public class ComputerMapperTest {
 			
 			Computer computerExpected = new Computer (ID, NAME, LocalDate.parse(INTRODUCED),LocalDate.parse(DISCONTINUED),COMPANY_ID);
 			
-			assertEquals(computerExpected, ComputerMapper.processResults(rs));
+			assertEquals(computerExpected, ComputerDTOMapper.processResults(rs));
 			
 			
 		} catch (SQLException e) {
@@ -66,7 +66,7 @@ public class ComputerMapperTest {
 			
 			Computer computerExpected = new Computer (ID, NAME, null,null,COMPANY_ID);
 			
-			assertEquals(computerExpected, ComputerMapper.processResults(rs));
+			assertEquals(computerExpected, ComputerDTOMapper.processResults(rs));
 			
 			
 		} catch (SQLException e) {
@@ -82,7 +82,7 @@ public class ComputerMapperTest {
 	public void testStringToDate() {
 		String sDate = "1997-01-03";
 
-		assertEquals(LocalDate.parse(sDate), ComputerMapper.stringToDate(sDate));
+		assertEquals(LocalDate.parse(sDate), ComputerDTOMapper.stringToDate(sDate));
 		
 
 	}

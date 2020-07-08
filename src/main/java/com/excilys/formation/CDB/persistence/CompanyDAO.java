@@ -6,11 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
 
 import com.excilys.formation.CDB.connection.ConnectionHikari;
-import com.excilys.formation.CDB.mapper.CompanyMapper;
+import com.excilys.formation.CDB.mapper.CompanyDAOMapper;
 import com.excilys.formation.CDB.model.Company;
 
+@Component
 public class CompanyDAO extends DAO<Company> {
 
 	private  final String DELETE_COMPANY_QUERY = "DELETE FROM company WHERE id=?";
@@ -18,24 +22,30 @@ public class CompanyDAO extends DAO<Company> {
 	private final String VIEW_ALL_QUERY = "SELECT * FROM company";
 	private final String GET_BY_ID_QUERY = "SELECT * FROM company WHERE id=?";
 
-	private ArrayList<Company> companyList;
+	
+	
+	private ConnectionHikari connectionHikari;
 
-	public CompanyDAO() {
+	public CompanyDAO(ConnectionHikari connectionHikari) {
 		super();
+		this.connectionHikari=connectionHikari;
 	}
 
 	@Override
-	public ResultSet getAll(int nbLines, int pageEnCours, String filter, String order) {
+	public List<Company> getAll(int nbLines, int pageEnCours, String filter, String order) {
 
-		// ArrayList<Company> companyList = new ArrayList<Company>();
+		List<Company> companyList = new ArrayList<Company>();
 
-		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+		try (Connection conn = connectionHikari.getConnection()) {
 
 			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
 			ResultSet resultSet = stmt.executeQuery();
 
 			conn.close();
-			return resultSet;
+			while (resultSet.next()) {
+				companyList.add(CompanyDAOMapper.resultSetToCompany(resultSet));
+			}
+			return companyList;
 
 		} catch (SQLException e) {
 			// TODO: handle exception
@@ -46,15 +56,18 @@ public class CompanyDAO extends DAO<Company> {
 	}
 
 	@Override
-	public ResultSet get(String id) {
+	public Company get(String id) {
 
-		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
+		try (Connection conn = connectionHikari.getConnection()) {
 
 			Statement stmt = conn.createStatement();
 			ResultSet resultSet = stmt.executeQuery(GET_BY_ID_QUERY + "" + id);
 
-			conn.close();
-			return resultSet;
+			while (resultSet.next()) {
+				Company c = CompanyDAOMapper.resultSetToCompany(resultSet);
+				return c;
+			}
+		
 
 
 		} catch (SQLException e) {
@@ -64,37 +77,10 @@ public class CompanyDAO extends DAO<Company> {
 		return null;
 	}
 
-	public ArrayList<Company> getCompanyList() {
-		return companyList;
-	}
-
-	@Override
-	public ArrayList<Company> getAll() {
-		ArrayList<Company> companyList = new ArrayList<Company>();
-
-		try (Connection conn = ConnectionHikari.getInstance().getConnection()) {
-
-			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
-			ResultSet resultSet = stmt.executeQuery();
-
-			while (resultSet.next()) {
-
-				companyList.add(CompanyMapper.processResults(resultSet));
-			}
-
-			conn.close();
-			return companyList;
-
-		} catch (SQLException e) {
-			// TODO: handle exception
-			System.out.println(e.getMessage());
-		}
-		return null;
-	}
 	
 	public void delete(String id) {
 		
-		try(Connection conn = ConnectionHikari.getInstance().getConnection()) {
+		try(Connection conn = connectionHikari.getConnection()) {
 			conn.setAutoCommit(false);
 			PreparedStatement deleteComputers = conn.prepareStatement(DELETE_COMPUTERS_QUERY);
 			deleteComputers.setString(1, id);

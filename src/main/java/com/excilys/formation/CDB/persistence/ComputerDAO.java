@@ -5,16 +5,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
-import com.excilys.formation.CDB.mapper.ComputerMapper;
+import com.excilys.formation.CDB.mapper.ComputerDAOMapper;
 import com.excilys.formation.CDB.model.Computer;
 
-
+@Component
 public class ComputerDAO extends DAO<Computer> {
 
 	private final String VIEW_ALL_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id ";
@@ -25,9 +27,11 @@ public class ComputerDAO extends DAO<Computer> {
 	private final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
 	private final String COUNT_QUERY = "SELECT COUNT(computer.id) FROM computer LEFT JOIN company ON computer.company_id=company.id ";
 
-	@Autowired
+	
 	private ConnectionHikari connectionHikari;
 
+	
+	@Autowired
 	public ComputerDAO(ConnectionHikari connectionHikari) {
 		super();
 		this.connectionHikari=connectionHikari;
@@ -35,10 +39,8 @@ public class ComputerDAO extends DAO<Computer> {
 	}
 
 	@Override
-	public ResultSet getAll(int nbLines, int pageToDisplay, String filter, String order) {
-
-		
-		//Connection conn = ConnectionHikari.getInstance().getConnection()
+	public List<Computer> getAll(int nbLines, int pageToDisplay, String filter, String order) {
+		List<Computer> computerList = new ArrayList<>();
 		try (Connection conn = connectionHikari.getConnection()) {
 
 			StringBuilder sb = new StringBuilder();
@@ -52,10 +54,13 @@ public class ComputerDAO extends DAO<Computer> {
 			
 			
 			PreparedStatement stmt = conn.prepareStatement(sb.toString());
-			System.out.println("statement " + stmt.toString());
 			ResultSet resultSet = stmt.executeQuery();
-			stmt.close();
-			return resultSet;
+			
+			while (resultSet.next()) {
+				computerList.add(ComputerDAOMapper.resultSetToComputer(resultSet));
+			}
+			return computerList;
+			
 
 		} catch (SQLException e) {
 			// TODO: handle exception
@@ -73,7 +78,7 @@ public class ComputerDAO extends DAO<Computer> {
 	 * @return affiche l'ordinateur entré
 	 * @throws SQLException
 	 */
-	public void add(DTOComputer dtoComputer) throws SQLException {
+	public Computer add(DTOComputer dtoComputer) throws SQLException {
 
 
 		try (Connection conn = connectionHikari.getConnection()) {
@@ -88,27 +93,33 @@ public class ComputerDAO extends DAO<Computer> {
 			} else {
 				stmt.setString(4, dtoComputer.getDtoCompany().getId());
 			}
-
+			
 			stmt.execute();
-
+			return ComputerDAOMapper.dtoToComputer(dtoComputer);
 
 		} catch (SQLException e) {
 
 			e.printStackTrace();
 		}
+		return null;
 
 	}
 
 	@Override
-	public ResultSet get(String id) {
+	public Computer get(String id) {
 
 		try (Connection conn = connectionHikari.getConnection()) {
 
 			PreparedStatement stmt = conn.prepareStatement(GET_BY_ID_QUERY);
 			stmt.setString(1, id);
 			ResultSet resultSet = stmt.executeQuery();
+			while (resultSet.next()) {
+				Computer c = ComputerDAOMapper.resultSetToComputer(resultSet);
+				return c;
+			}
+			
 
-			return resultSet;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -116,33 +127,14 @@ public class ComputerDAO extends DAO<Computer> {
 		return null;
 	}
 
-	public Computer getByName(String name) {
 
-		try (Connection conn = connectionHikari.getConnection()) {
-			Computer computer = new Computer();
-			PreparedStatement stmt = conn.prepareStatement(GET_BY_NAME_QUERY);
-			stmt.setString(1, name);
-			ResultSet resultSet = stmt.executeQuery();
-
-			while (resultSet.next()) {
-				computer = ComputerMapper.processResults(resultSet);
-			}
-			return computer;
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-		return null;
-
-	}
 
 	public void deleteComputer(String id) {
 		try (Connection conn = connectionHikari.getConnection()) {
 
-			// Connection conn = Connexion.getConnection();
+
 			PreparedStatement stmt = conn.prepareStatement(DELETE_QUERY);
 			stmt.setString(1, id);
-			System.out.println("STATEMENT IN DELETE DAO   " + stmt.toString());
 			stmt.execute();
 
 		} catch (SQLException e) {
@@ -161,12 +153,10 @@ public class ComputerDAO extends DAO<Computer> {
 			stmt.setObject(3, dtoComputer.getDiscontinued());
 			stmt.setObject(4, dtoComputer.getDtoCompany().getId());
 
-			System.out.println("STATEMENT EDIT       "+stmt.toString());
 			stmt.setString(5, id);
 			
 			
 			stmt.executeUpdate();
-			//conn.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -176,10 +166,11 @@ public class ComputerDAO extends DAO<Computer> {
 
 	public int countEntries(String filter) {
 
+		int entriesCount = 0;
 		try (Connection conn = connectionHikari.getConnection()) {
 
 			StringBuilder sb = new StringBuilder(COUNT_QUERY);
-			int entriesCount = 0;
+			
 
 			if (filter != "no_filter" && filter != "#") {
 				sb.append(" WHERE computer.name LIKE '%" + filter + "%' or company.name LIKE '%" + filter + "%'");
@@ -187,21 +178,17 @@ public class ComputerDAO extends DAO<Computer> {
 
 			ResultSet resultSet = conn.prepareStatement(sb.toString()).executeQuery();
 			while (resultSet.next()) {
-				entriesCount = ComputerMapper.countResults(resultSet);
+				entriesCount = ComputerDAOMapper.countResults(resultSet);
 			}
-			return entriesCount;
+			
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return 0;
+		return entriesCount;
 	}
 
-	@Override
-	public List<Computer> getAll() {
-		return null;
-	}
 	
 	public String doFilter (String filter) {
 		
@@ -213,8 +200,6 @@ public class ComputerDAO extends DAO<Computer> {
 	}
 	
 	public String doOrder(String order) {
-		
-		System.out.println("ORDER AVANT TEST COMPUTER DAO     "+order);
 		
 		
 		if (!order.equals("")) {

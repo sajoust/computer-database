@@ -1,10 +1,14 @@
 package com.excilys.formation.CDB.configuration;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.AbstractContextLoaderInitializer;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @ComponentScan(basePackages = "com.excilys.formation.CDB")
@@ -15,4 +19,12 @@ public class SpringConfig extends AbstractContextLoaderInitializer {
 		applicationContext.register(SpringConfig.class);
 		return applicationContext;
 	}
+	
+
+	
+	@Bean
+	public HikariDataSource hikariDataSource() {
+		return new HikariDataSource(new HikariConfig("/connector.properties"));
+	}
+	
 }

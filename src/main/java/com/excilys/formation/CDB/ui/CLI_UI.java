@@ -2,26 +2,27 @@ package com.excilys.formation.CDB.ui;
 
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.excilys.formation.CDB.DTO.DTOComputer;
-import com.excilys.formation.CDB.model.Computer;
 import com.excilys.formation.CDB.service.CompanyService;
 import com.excilys.formation.CDB.service.ComputerService;
 
 
-
+@Component
 public class CLI_UI {
 
+	@Autowired
 	private static ComputerService computerService;
+	@Autowired
 	private static CompanyService companyService;
 	
 
 	private final static int NB_LINES = 100;
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		computerService = ComputerService.getInstance();
-		companyService = CompanyService.getInstance();
+	
 
 		Scanner userEntry = new Scanner(System.in);
 		String choix = "";
@@ -39,7 +40,7 @@ public class CLI_UI {
 				break;
 
 			case "2":
-				PageCompany pageCompany = new PageCompany(NB_LINES);
+				PageCompany pageCompany = new PageCompany();
 				pageCompany.loadPage();
 
 				break;
@@ -107,6 +108,8 @@ public class CLI_UI {
 			}
 
 			String[] infoComputer = { name, introduced, discontinued, company_id };
+			
+			userEntry.close();
 			return infoComputer;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
