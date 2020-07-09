@@ -1,8 +1,10 @@
 package com.excilys.formation.CDB.persistence;
 
 import java.io.FileInputStream;
+import java.sql.SQLException;
 
 import org.dbunit.DBTestCase;
+import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
@@ -20,7 +22,9 @@ import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.configuration.SpringConfig;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
+import com.excilys.formation.CDB.mapper.CompanyDTOMapper;
 import com.excilys.formation.CDB.mapper.ComputerDAOMapper;
+import com.excilys.formation.CDB.model.Company;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = SpringConfig.class)
@@ -34,13 +38,19 @@ public class ComputerDAOTest extends DBTestCase {
 	private final String NAME = "Pierre Palmade";
 	private final String INTRODUCED = "1997-01-01";
 	private final String DISCONTINUED = "1998-01-01";
+	private final Company COMPANY = new Company(42, "ParIciLaCompanie");
 
-	IDatabaseConnection connection;
+
+	DatabaseConnection dbConnection;
 
 	@Before
 	public void setUp() throws Exception {
-		DatabaseConnection connectionJUnit = new DatabaseConnection(connectionHikari.getConnection());
-		getSetUpOperation().execute(connectionJUnit, getDataSet());
+		dbConnection = new DatabaseConnection(connectionHikari.getConnection());
+		getSetUpOperation().execute(dbConnection, getDataSet());
+	}
+	
+	public void refresh() throws DatabaseUnitException, SQLException, Exception {
+		DatabaseOperation.REFRESH.execute(dbConnection, getDataSet());
 	}
 
 	@Override
@@ -54,11 +64,11 @@ public class ComputerDAOTest extends DBTestCase {
 		return DatabaseOperation.CLEAN_INSERT;
 	}
 
-	@Override
-	protected DatabaseOperation getTearDownOperation() throws Exception {
-
-		return DatabaseOperation.REFRESH;
-	}
+//	@Override
+//	protected DatabaseOperation getTearDownOperation() throws Exception {
+//
+//		return DatabaseOperation.REFRESH;
+//	}
 
 //
 	@Test
@@ -116,6 +126,21 @@ public class ComputerDAOTest extends DBTestCase {
 		assertFalse(!notTrue);
 		assertEquals(2, 1 + 1);
 
+	}
+	
+	@Test
+	public void testEdit() throws Exception {
+		DTOCompany dtoCompany = CompanyDTOMapper.CompanyToDTO(COMPANY);
+		DTOComputer dtoComputer = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, dtoCompany);
+		String id = "1";
+		computerDAO.edit("1", dtoComputer);
+		//refresh();
+		
+		
+		assertEquals(NAME, getDataSet().getTable("computer").getValue(0, "name"));
+		assertEquals(getDataSet().getTable("computer").getValue(0, "introduced"), INTRODUCED);
+		assertEquals(getDataSet().getTable("computer").getValue(0, "discontinued"), DISCONTINUED);
+		
 	}
 
 }

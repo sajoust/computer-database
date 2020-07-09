@@ -153,7 +153,7 @@ public class ComputerDAO extends DAO<Computer> {
 			stmt.setObject(3, dtoComputer.getDiscontinued());
 			stmt.setObject(4, dtoComputer.getDtoCompany().getId());
 
-			stmt.setString(5, id);
+			stmt.setLong(5, Long.parseLong(id));
 			
 			
 			stmt.executeUpdate();
@@ -203,7 +203,6 @@ public class ComputerDAO extends DAO<Computer> {
 		
 		
 		if (!order.equals("")) {
-			System.out.println("PASSE IF DOORDER DAO");
 			String[] arrayOrder = order.split("-");
 			return " ORDER BY "+arrayOrder[0]+" "+arrayOrder[1];
 			
