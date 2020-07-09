@@ -18,6 +18,9 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.DTO.DTOComputer;
+import com.excilys.formation.CDB.exceptions.ComputerDateException;
+import com.excilys.formation.CDB.exceptions.ComputerNameException;
+import com.excilys.formation.CDB.model.Page;
 import com.excilys.formation.CDB.service.CompanyService;
 import com.excilys.formation.CDB.service.ComputerService;
 import com.excilys.formation.CDB.validation.ValidationComputer;
@@ -52,7 +55,7 @@ public class EditComputerServlet extends HttpServlet {
 		idToEdit = request.getParameter("computerToEdit");
 
 		request.setAttribute("computerToEdit", idToEdit);
-		dtoCompanyList = companyService.getAll(1, 1, "la bretagne","le plancton");
+		dtoCompanyList = companyService.getAll(new Page());
 		DTOComputer dtoComputer = computerService.get(idToEdit);
 
 		request.setAttribute("computerToEditName", dtoComputer.getName());
@@ -68,7 +71,6 @@ public class EditComputerServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		System.out.println("ID RECUPEREE DANS EDIT SERVLET POST = " + idToEdit);
-		//String id = request.getParameter("computerToEdit");
 		String name = request.getParameter("computerName");
 		String introduced = request.getParameter("introduced");
 		String discontinued = request.getParameter("discontinued");
@@ -81,12 +83,12 @@ public class EditComputerServlet extends HttpServlet {
 
 		try {
 			ValidationComputer.nameValidation(dtoComputer);
-		} catch (Exception e) {
+		} catch (ComputerNameException e) {
 			errors.put("computerName", e.getMessage());
 		}
 		try {
 			ValidationComputer.dateValidation(dtoComputer);
-		} catch (Exception e) {
+		} catch (ComputerDateException e) {
 			errors.put("discontinued", e.getMessage());
 		}
 

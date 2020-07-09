@@ -1,6 +1,7 @@
 package com.excilys.formation.CDB.servlets;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.formation.CDB.DTO.DTOComputer;
+import com.excilys.formation.CDB.model.Page;
 import com.excilys.formation.CDB.service.ComputerService;
 
 @WebServlet(name = "Dashboard", urlPatterns = { "/home" })
@@ -41,7 +43,36 @@ public class Dashboard extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-	
+		
+		Page page = paginate(request);
+		computerDTOList = computerService.getAll(page);
+		int nbEntries = computerService.countEntries(page.getFilter());
+		int nbPages = (nbEntries / page.getNbLines()) + 1;
+		page.setPageToDisplay(Math.min(page.getPageToDisplay(), nbPages));
+
+		request.setAttribute("search", page.getFilter());
+		request.setAttribute("nbPages", page.getNbLines());
+		request.setAttribute("pageToDisplay", page.getPageToDisplay());
+		request.setAttribute("computerPerPage", page.getNbLines());
+		request.setAttribute("DTOList", computerDTOList);
+		request.setAttribute("entriesCount", nbEntries);
+		request.setAttribute("order", page.getOrder());
+
+		this.getServletContext().getRequestDispatcher("/WEB-INF/views/Dashboard.jsp").forward(request, response);
+	}
+
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		String computersToDelete = request.getParameter("selection");
+		List<String> results = Arrays.asList(computersToDelete.split(","));
+		
+		results.stream().forEach(str -> computerService.delete(str));		
+
+		doGet(request, response);
+	}
+
+	public Page paginate(HttpServletRequest request) {
+
 		int pageToDisplay = (request.getParameter("pageToDisplay") != null)
 				? Integer.parseInt(request.getParameter("pageToDisplay"))
 				: 1;
@@ -56,33 +87,8 @@ public class Dashboard extends HttpServlet {
 				? Integer.parseInt(request.getParameter("computerPerPage"))
 				: 10;
 
-		logger.debug(order);
-
-		computerDTOList = computerService.getAll(computerPerPage, pageToDisplay, search, order);
-		int nbEntries = computerService.countEntries(search);
-		int nbPages = (nbEntries / computerPerPage) + 1;
-		pageToDisplay = Math.min(pageToDisplay, nbPages);
-
-		request.setAttribute("search", search);
-		request.setAttribute("nbPages", nbPages);
-		request.setAttribute("pageToDisplay", pageToDisplay);
-		request.setAttribute("computerPerPage", computerPerPage);
-		request.setAttribute("DTOList", computerDTOList);
-		request.setAttribute("entriesCount", nbEntries);
-		request.setAttribute("order", order);
-
-		this.getServletContext().getRequestDispatcher("/WEB-INF/views/Dashboard.jsp").forward(request, response);
-	}
-
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		String computersToDelete = request.getParameter("selection");
-		String[] results = computersToDelete.split(",");
-		for (String str : results) {
-			computerService.delete(str);
-		}
-
-		doGet(request, response);
+		Page page = new Page(computerPerPage, pageToDisplay, search, order);
+		return page;
 	}
 
 }

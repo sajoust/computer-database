@@ -4,19 +4,21 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import com.excilys.formation.CDB.DTO.DTOComputer;
+import com.excilys.formation.CDB.exceptions.ComputerDateException;
+import com.excilys.formation.CDB.exceptions.ComputerNameException;
 
 public class ValidationComputer {
 	
 	final static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	public static void nameValidation(DTOComputer dtoComputer) throws Exception {
+	public static void nameValidation(DTOComputer dtoComputer) throws ComputerNameException {
 
 		if (dtoComputer.getName().equals("")) {
-			throw new Exception("Name field cannot be empty");
+			throw new ComputerNameException();
 		}
 	}
 	
-	public static void dateValidation(DTOComputer dtoComputer) throws Exception {
+	public static void dateValidation(DTOComputer dtoComputer) throws ComputerDateException {
 		dtoComputer.setIntroduced(dtoComputer.getIntroduced()==""?null:dtoComputer.getIntroduced());
 		dtoComputer.setDiscontinued(dtoComputer.getDiscontinued()==""?null:dtoComputer.getDiscontinued());
 		
@@ -25,7 +27,7 @@ public class ValidationComputer {
 			LocalDate introduced=LocalDate.parse(dtoComputer.getIntroduced(),dtf);
 			LocalDate discontinued=LocalDate.parse(dtoComputer.getDiscontinued(),dtf);
 			if (introduced.compareTo(discontinued)>0) {
-				throw new Exception("Introduced date must be before discontinued");
+				throw new ComputerDateException();
 			}
 
 		}

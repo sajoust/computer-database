@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.mapper.ComputerDTOMapper;
 import com.excilys.formation.CDB.model.Computer;
+import com.excilys.formation.CDB.model.Page;
 import com.excilys.formation.CDB.persistence.ComputerDAO;
 
 @Service
@@ -23,12 +24,12 @@ public class ComputerService {
 	@Autowired
 	public ComputerService(ComputerDAO computerDAO) {
 		this.computerDAO = computerDAO;
-		// this.companyService=companyService;
+	
 	}
 
-	public List<DTOComputer> getAll(int nbLines, int pageEnCours, String filter, String order) {
+	public List<DTOComputer> getAll(Page page) {
 
-		List<Computer> computerList = computerDAO.getAll(nbLines, pageEnCours, filter, order);
+		List<Computer> computerList = computerDAO.getAll(page);
 		List<DTOComputer> dtoComputerList = new ArrayList<>();
 
 		for (Computer computer : computerList) {

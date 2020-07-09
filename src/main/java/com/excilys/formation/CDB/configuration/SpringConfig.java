@@ -11,7 +11,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@ComponentScan(basePackages = "com.excilys.formation.CDB")
+@ComponentScan({"com.excilys.formation.CDB.connection","com.excilys.formation.CDB.persistence","com.excilys.formation.CDB.service","com.excilys.formation.CDB.servlets"})
 public class SpringConfig extends AbstractContextLoaderInitializer {
 	@Override
 	protected WebApplicationContext createRootApplicationContext() {

@@ -17,6 +17,8 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.formation.CDB.DTO.DTOCompany;
 import com.excilys.formation.CDB.DTO.DTOComputer;
+import com.excilys.formation.CDB.exceptions.ComputerException;
+import com.excilys.formation.CDB.model.Page;
 import com.excilys.formation.CDB.service.CompanyService;
 import com.excilys.formation.CDB.service.ComputerService;
 import com.excilys.formation.CDB.validation.ValidationComputer;
@@ -44,7 +46,7 @@ public class AddComputerServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		DTOList = companyService.getAll(1, 1, "la bretagne", "le plancton");
+		DTOList = companyService.getAll(new Page());
 		request.setAttribute("DTOList", DTOList);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/AddComputer.jsp").forward(request, response);
 	}
@@ -64,12 +66,13 @@ public class AddComputerServlet extends HttpServlet {
 
 		try {
 			ValidationComputer.nameValidation(dtoComputer);
-		} catch (Exception e) {
+		} catch (ComputerException e) {
 			errors.put("computerName", e.getMessage());
 		}
+		
 		try {
 			ValidationComputer.dateValidation(dtoComputer);
-		} catch (Exception e) {
+		} catch (ComputerException e) {
 			errors.put("discontinued", e.getMessage());
 		}
 

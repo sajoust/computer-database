@@ -2,11 +2,13 @@ package com.excilys.formation.CDB.persistence;
 
 import java.util.List;
 
+import com.excilys.formation.CDB.model.Page;
+
 public abstract class DAO<T> {
 	
 	
 
-	public abstract List<T> getAll(int nbLines,int pageEnCours, String filter, String order);
+	public abstract List<T> getAll(Page page);
 	
 	public abstract T get(String id);
 	

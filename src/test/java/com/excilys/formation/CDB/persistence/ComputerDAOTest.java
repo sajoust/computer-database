@@ -25,6 +25,7 @@ import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.mapper.CompanyDTOMapper;
 import com.excilys.formation.CDB.mapper.ComputerDAOMapper;
 import com.excilys.formation.CDB.model.Company;
+import com.excilys.formation.CDB.model.Page;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = SpringConfig.class)
@@ -40,7 +41,6 @@ public class ComputerDAOTest extends DBTestCase {
 	private final String DISCONTINUED = "1998-01-01";
 	private final Company COMPANY = new Company(42, "ParIciLaCompanie");
 
-
 	DatabaseConnection dbConnection;
 
 	@Before
@@ -48,7 +48,7 @@ public class ComputerDAOTest extends DBTestCase {
 		dbConnection = new DatabaseConnection(connectionHikari.getConnection());
 		getSetUpOperation().execute(dbConnection, getDataSet());
 	}
-	
+
 	public void refresh() throws DatabaseUnitException, SQLException, Exception {
 		DatabaseOperation.REFRESH.execute(dbConnection, getDataSet());
 	}
@@ -81,14 +81,31 @@ public class ComputerDAOTest extends DBTestCase {
 	}
 
 	@Test
-	public void testGetAll() throws DataSetException, Exception {
-		
-		
-		int nbRowsDataSet = getDataSet().getTable("computer").getRowCount();
+	public void testGetNoSearchNoOrder() throws DataSetException, Exception {
 
-		assertEquals(computerDAO.getAll(10, 1, "", "").size(), nbRowsDataSet);
-		assertEquals(computerDAO.getAll(10, 1, "Firts", "").size(), 1);
-		assertEquals(computerDAO.getAll(10, 1, "", "name-DESC").get(0).getName(), "Tirdh");
+		int nbRowsDataSet = getDataSet().getTable("computer").getRowCount();
+		Page page = new Page(10,1,"","");
+		 
+		assertEquals(computerDAO.getAll(page).size(), nbRowsDataSet);
+
+
+	}
+	@Test
+	public void testGetSearchNoOrder() throws DataSetException, Exception {
+
+		
+		Page page = new Page(10,1,"Firts","");
+		 	
+		assertEquals(computerDAO.getAll(page).size(), 1);
+		
+
+	}
+	@Test
+	public void testGetNoSearchOrder() throws DataSetException, Exception {
+
+		Page page = new Page(10,1,"","name-DESC");
+		 
+		assertEquals(computerDAO.getAll(page).get(0).getName(), "Tirdh");
 
 	}
 
@@ -127,20 +144,19 @@ public class ComputerDAOTest extends DBTestCase {
 		assertEquals(2, 1 + 1);
 
 	}
-	
+
 	@Test
 	public void testEdit() throws Exception {
 		DTOCompany dtoCompany = CompanyDTOMapper.CompanyToDTO(COMPANY);
 		DTOComputer dtoComputer = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, dtoCompany);
 		String id = "1";
 		computerDAO.edit("1", dtoComputer);
-		//refresh();
-		
-		
+		// refresh();
+
 		assertEquals(NAME, getDataSet().getTable("computer").getValue(0, "name"));
 		assertEquals(getDataSet().getTable("computer").getValue(0, "introduced"), INTRODUCED);
 		assertEquals(getDataSet().getTable("computer").getValue(0, "discontinued"), DISCONTINUED);
-		
+
 	}
 
 }

@@ -13,26 +13,26 @@ import org.springframework.stereotype.Component;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.mapper.CompanyDAOMapper;
 import com.excilys.formation.CDB.model.Company;
+import com.excilys.formation.CDB.model.Page;
 
 @Component
 public class CompanyDAO extends DAO<Company> {
 
-	private  final String DELETE_COMPANY_QUERY = "DELETE FROM company WHERE id=?";
-	private final String DELETE_COMPUTERS_QUERY = "DELETE FROM computer WHERE company_id=?";
-	private final String VIEW_ALL_QUERY = "SELECT * FROM company";
-	private final String GET_BY_ID_QUERY = "SELECT * FROM company WHERE id=?";
+	private static final String DELETE_COMPANY_QUERY = "DELETE FROM company WHERE id=?";
+	private static final String DELETE_COMPUTERS_QUERY = "DELETE FROM computer WHERE company_id=?";
+	private static final String VIEW_ALL_QUERY = "SELECT id,name FROM company";
+	private static final String GET_BY_ID_QUERY = "SELECT id,name FROM company WHERE id=?";
 
 	
 	
 	private ConnectionHikari connectionHikari;
 
 	public CompanyDAO(ConnectionHikari connectionHikari) {
-		super();
 		this.connectionHikari=connectionHikari;
 	}
 
 	@Override
-	public List<Company> getAll(int nbLines, int pageEnCours, String filter, String order) {
+	public List<Company> getAll(Page page) {
 
 		List<Company> companyList = new ArrayList<Company>();
 

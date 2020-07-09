@@ -15,17 +15,17 @@ import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.mapper.ComputerDAOMapper;
 import com.excilys.formation.CDB.model.Computer;
+import com.excilys.formation.CDB.model.Page;
 
 @Component
 public class ComputerDAO extends DAO<Computer> {
 
-	private final String VIEW_ALL_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id ";
-	private final String GET_BY_ID_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id, company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id WHERE computer.id=?";
-	private final String GET_BY_NAME_QUERY = "SELECT * FROM computer WHERE name=?";
-	private final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
-	private final String DELETE_QUERY = "DELETE FROM computer WHERE id=?";
-	private final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
-	private final String COUNT_QUERY = "SELECT COUNT(computer.id) FROM computer LEFT JOIN company ON computer.company_id=company.id ";
+	private static final String VIEW_ALL_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id ";
+	private static final String GET_BY_ID_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id, company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id WHERE computer.id=?";
+	private static final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
+	private static final String DELETE_QUERY = "DELETE FROM computer WHERE id=?";
+	private static final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
+	private static final String COUNT_QUERY = "SELECT COUNT(computer.id) FROM computer LEFT JOIN company ON computer.company_id=company.id ";
 
 	
 	private ConnectionHikari connectionHikari;
@@ -39,18 +39,18 @@ public class ComputerDAO extends DAO<Computer> {
 	}
 
 	@Override
-	public List<Computer> getAll(int nbLines, int pageToDisplay, String filter, String order) {
+	public List<Computer> getAll(Page page) {
 		List<Computer> computerList = new ArrayList<>();
 		try (Connection conn = connectionHikari.getConnection()) {
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(VIEW_ALL_QUERY);
 			
-			sb.append(doFilter(filter));
-			sb.append(doOrder(order));
+			sb.append(doFilter(page.getFilter()));
+			sb.append(doOrder(page.getOrder()));
 			
-			sb.append(" LIMIT " + nbLines);
-			sb.append(" OFFSET " + nbLines * (pageToDisplay-1));
+			sb.append(" LIMIT " + page.getNbLines());
+			sb.append(" OFFSET " + page.getNbLines() * (page.getPageToDisplay()-1));
 			
 			
 			PreparedStatement stmt = conn.prepareStatement(sb.toString());
@@ -155,6 +155,11 @@ public class ComputerDAO extends DAO<Computer> {
 
 			stmt.setLong(5, Long.parseLong(id));
 			
+			if (dtoComputer.getDtoCompany().getId().equals("0")) {
+				stmt.setNull(4, Types.BIGINT);
+			} else {
+				stmt.setString(4, dtoComputer.getDtoCompany().getId());
+			}
 			
 			stmt.executeUpdate();
 
@@ -172,7 +177,7 @@ public class ComputerDAO extends DAO<Computer> {
 			StringBuilder sb = new StringBuilder(COUNT_QUERY);
 			
 
-			if (filter != "no_filter" && filter != "#") {
+			if (!"".equals(filter)) {
 				sb.append(" WHERE computer.name LIKE '%" + filter + "%' or company.name LIKE '%" + filter + "%'");
 			}
 
