@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import org.dbunit.DBTestCase;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
@@ -34,8 +33,10 @@ public class ComputerDAOTest extends DBTestCase {
 	@Autowired
 	private ComputerDAO computerDAO;
 	@Autowired
+	private CompanyDAO companyDAO;
+	@Autowired
 	private ConnectionHikari connectionHikari;
-
+	private final String ID = "1";
 	private final String NAME = "Pierre Palmade";
 	private final String INTRODUCED = "1997-01-01";
 	private final String DISCONTINUED = "1998-01-01";
@@ -84,27 +85,26 @@ public class ComputerDAOTest extends DBTestCase {
 	public void testGetNoSearchNoOrder() throws DataSetException, Exception {
 
 		int nbRowsDataSet = getDataSet().getTable("computer").getRowCount();
-		Page page = new Page(10,1,"","");
-		 
+		Page page = new Page(10, 1, "", "");
+
 		assertEquals(computerDAO.getAll(page).size(), nbRowsDataSet);
 
-
 	}
+
 	@Test
 	public void testGetSearchNoOrder() throws DataSetException, Exception {
 
-		
-		Page page = new Page(10,1,"Firts","");
-		 	
+		Page page = new Page(10, 1, "Firts", "");
+
 		assertEquals(computerDAO.getAll(page).size(), 1);
-		
 
 	}
+
 	@Test
 	public void testGetNoSearchOrder() throws DataSetException, Exception {
 
-		Page page = new Page(10,1,"","name-DESC");
-		 
+		Page page = new Page(10, 1, "", "name-DESC");
+
 		assertEquals(computerDAO.getAll(page).get(0).getName(), "Tirdh");
 
 	}
@@ -112,12 +112,15 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testAdd() throws Exception {
 
-		DTOComputer dtoComputer = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, new DTOCompany("1", "Pomme"));
+		
+		Company company = companyDAO.get("1");
+		DTOComputer dtoComputer = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, CompanyDTOMapper.CompanyToDTO(company));
 		DTOComputer dtoComputerNoCompany = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, new DTOCompany("0"));
-		assertNotNull(computerDAO);
-		assertNotNull(dtoComputerNoCompany);
-		assertEquals(computerDAO.add(dtoComputer), ComputerDAOMapper.dtoToComputer(dtoComputer));
-		assertEquals(computerDAO.add(dtoComputerNoCompany), ComputerDAOMapper.dtoToComputer(dtoComputerNoCompany));
+		computerDAO.add(dtoComputer);
+		
+		assertEquals(computerDAO.getLast().getName(), ComputerDAOMapper.dtoToComputer(dtoComputer).getName());
+		// assertEquals(computerDAO.add(dtoComputerNoCompany),
+		// ComputerDAOMapper.dtoToComputer(dtoComputerNoCompany));
 
 	}
 
@@ -147,15 +150,12 @@ public class ComputerDAOTest extends DBTestCase {
 
 	@Test
 	public void testEdit() throws Exception {
-		DTOCompany dtoCompany = CompanyDTOMapper.CompanyToDTO(COMPANY);
-		DTOComputer dtoComputer = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, dtoCompany);
-		String id = "1";
-		computerDAO.edit("1", dtoComputer);
-		// refresh();
+		Company company = companyDAO.get("1");
+		DTOComputer dtoComputer = new DTOComputer(ID, NAME, INTRODUCED, DISCONTINUED,
+				CompanyDTOMapper.CompanyToDTO(company));
+		computerDAO.edit(ID, dtoComputer);
 
-		assertEquals(NAME, getDataSet().getTable("computer").getValue(0, "name"));
-		assertEquals(getDataSet().getTable("computer").getValue(0, "introduced"), INTRODUCED);
-		assertEquals(getDataSet().getTable("computer").getValue(0, "discontinued"), DISCONTINUED);
+		assertEquals(ComputerDAOMapper.dtoToComputer(dtoComputer), computerDAO.get(ID));
 
 	}
 

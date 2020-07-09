@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +59,9 @@ public class CompanyDAO extends DAO<Company> {
 
 		try (Connection conn = connectionHikari.getConnection()) {
 
-			Statement stmt = conn.createStatement();
-			ResultSet resultSet = stmt.executeQuery(GET_BY_ID_QUERY + "" + id);
+			PreparedStatement stmt = conn.prepareStatement(GET_BY_ID_QUERY);
+			stmt.setString(1, id);
+			ResultSet resultSet = stmt.executeQuery();
 
 			while (resultSet.next()) {
 				Company c = CompanyDAOMapper.resultSetToCompany(resultSet);
@@ -76,6 +76,7 @@ public class CompanyDAO extends DAO<Company> {
 		}
 		return null;
 	}
+	
 
 	
 	public void delete(String id) {

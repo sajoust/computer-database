@@ -14,11 +14,12 @@ import com.excilys.formation.CDB.model.Computer;
 
 public class ComputerDAOMapper {
 
-	private static Logger logger = LoggerFactory.getLogger(ComputerDTOMapper.class);
+	private static Logger logger = LoggerFactory.getLogger(ComputerDTOMapper.class);	
 	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");	
+	
+	
 	public static Computer resultSetToComputer(ResultSet resultSet) {
-
-		
+	
 		try {
 	
 				Long id = resultSet.getLong(1);
@@ -39,6 +40,7 @@ public class ComputerDAOMapper {
 		return null;
 
 	}
+
 	public static Computer dtoToComputer(DTOComputer dtoComputer) {
 		
 		
@@ -49,6 +51,10 @@ public class ComputerDAOMapper {
 		Long companyId = Long.parseLong(dtoComputer.getDtoCompany().getId());
 		String companyName = dtoComputer.getDtoCompany().getName();
 		Company company = new Company(companyId, companyName);
+		if (dtoComputer.getId()!=null) {
+			Long id = Long.parseLong(dtoComputer.getId());
+			return new Computer(id, name, introduced, discontinued, company);
+		}
 		return new Computer(name, introduced, discontinued, company);
 	}
 	

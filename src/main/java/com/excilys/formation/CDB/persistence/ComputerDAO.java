@@ -26,6 +26,7 @@ public class ComputerDAO extends DAO<Computer> {
 	private static final String DELETE_QUERY = "DELETE FROM computer WHERE id=?";
 	private static final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
 	private static final String COUNT_QUERY = "SELECT COUNT(computer.id) FROM computer LEFT JOIN company ON computer.company_id=company.id ";
+	private static final String GET_LAST_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id, company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id ORDER BY ID DESC LIMIT 1";
 
 	
 	private ConnectionHikari connectionHikari;
@@ -78,7 +79,7 @@ public class ComputerDAO extends DAO<Computer> {
 	 * @return affiche l'ordinateur entré
 	 * @throws SQLException
 	 */
-	public Computer add(DTOComputer dtoComputer) throws SQLException {
+	public void add(DTOComputer dtoComputer) throws SQLException {
 
 
 		try (Connection conn = connectionHikari.getConnection()) {
@@ -95,13 +96,13 @@ public class ComputerDAO extends DAO<Computer> {
 			}
 			
 			stmt.execute();
-			return ComputerDAOMapper.dtoToComputer(dtoComputer);
+			
 
 		} catch (SQLException e) {
 
 			e.printStackTrace();
 		}
-		return null;
+		
 
 	}
 
@@ -126,7 +127,26 @@ public class ComputerDAO extends DAO<Computer> {
 
 		return null;
 	}
+	
+	public Computer getLast() {
 
+		try (Connection conn = connectionHikari.getConnection()) {
+
+			PreparedStatement stmt = conn.prepareStatement(GET_LAST_QUERY);
+			ResultSet resultSet = stmt.executeQuery();
+			while (resultSet.next()) {
+				Computer c = ComputerDAOMapper.resultSetToComputer(resultSet);
+				return c;
+			}
+			
+
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 
 	public void deleteComputer(String id) {

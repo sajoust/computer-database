@@ -15,6 +15,6 @@ public class ComputerException extends Exception {
 	private static Logger logger = LoggerFactory.getLogger(ConnectionHikari.class);
 
 	public ComputerException() {
-		logger.error("Incorrect computer");
+		
 	}
 }
