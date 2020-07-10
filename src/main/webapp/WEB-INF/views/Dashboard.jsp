@@ -97,7 +97,7 @@
 					<li><a href="home?pageToDisplay=${pageToDisplay-1}&computerPerPage=${computerPerPage}&search=${search}&order=${order}" aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 					</a></li>
 				</c:if>
-				<c:if test="${pageToDisplay>nbPages}" var="testPages"></c:if>
+<%-- 				<c:if test="${pageToDisplay>nbPages}" var="testPages"></c:if> --%>
 
 				<c:forEach var="i" begin="${Math.max(pageToDisplay-2,1)}" end="${Math.min(pageToDisplay+2,nbPages+0)}">
 

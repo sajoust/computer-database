@@ -47,4 +47,8 @@ public class ConnectionHikari {
 		return conn;
 	}
 
+	public HikariDataSource getDataSource() {
+		return dataSource;
+	}
+
 }

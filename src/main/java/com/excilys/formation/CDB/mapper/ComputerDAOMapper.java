@@ -7,12 +7,13 @@ import java.time.format.DateTimeFormatter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.model.Company;
 import com.excilys.formation.CDB.model.Computer;
 
-public class ComputerDAOMapper {
+public class ComputerDAOMapper implements RowMapper<Computer> {
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerDTOMapper.class);	
 	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");	
@@ -66,5 +67,11 @@ public class ComputerDAOMapper {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+
+	@Override
+	public Computer mapRow(ResultSet rs, int rowNum) throws SQLException {
+		
+		return resultSetToComputer(rs);
 	}
 }

@@ -129,7 +129,7 @@ public class ComputerDAOTest extends DBTestCase {
 		String id = "1";
 		assertNotNull(computerDAO.get(id));
 		computerDAO.deleteComputer(id);
-		assertNull(computerDAO.get(id));
+		assertNull(computerDAO.get(id)); //TODO réparer ça id null car on vient de supprimer le computer
 
 	}
 

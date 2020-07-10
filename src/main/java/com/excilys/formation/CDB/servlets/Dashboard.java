@@ -49,9 +49,11 @@ public class Dashboard extends HttpServlet {
 		int nbEntries = computerService.countEntries(page.getFilter());
 		int nbPages = (nbEntries / page.getNbLines()) + 1;
 		page.setPageToDisplay(Math.min(page.getPageToDisplay(), nbPages));
+		
 
+		
 		request.setAttribute("search", page.getFilter());
-		request.setAttribute("nbPages", page.getNbLines());
+		request.setAttribute("nbPages", nbPages);
 		request.setAttribute("pageToDisplay", page.getPageToDisplay());
 		request.setAttribute("computerPerPage", page.getNbLines());
 		request.setAttribute("DTOList", computerDTOList);

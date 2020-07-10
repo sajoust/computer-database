@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.excilys.formation.CDB.DTO.DTOComputer;
@@ -21,54 +24,41 @@ import com.excilys.formation.CDB.model.Page;
 public class ComputerDAO extends DAO<Computer> {
 
 	private static final String VIEW_ALL_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id ";
-	private static final String GET_BY_ID_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id, company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id WHERE computer.id=?";
-	private static final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
-	private static final String DELETE_QUERY = "DELETE FROM computer WHERE id=?";
-	private static final String UPDATE_QUERY = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ?";
+	private static final String GET_BY_ID_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id, company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id WHERE computer.id=:id";
+	private static final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (:name,:introduced,:discontinued,:companyId)";
+	private static final String DELETE_QUERY = "DELETE FROM computer WHERE id=:id";
+	private static final String UPDATE_QUERY = "UPDATE computer SET name = :name , introduced = :introduced , discontinued = :discontinued , company_id = :companyId WHERE id = :id";
 	private static final String COUNT_QUERY = "SELECT COUNT(computer.id) FROM computer LEFT JOIN company ON computer.company_id=company.id ";
 	private static final String GET_LAST_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id, company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id ORDER BY ID DESC LIMIT 1";
 
-	
 	private ConnectionHikari connectionHikari;
 
-	
 	@Autowired
 	public ComputerDAO(ConnectionHikari connectionHikari) {
 		super();
-		this.connectionHikari=connectionHikari;
+		this.connectionHikari = connectionHikari;
 
 	}
 
 	@Override
 	public List<Computer> getAll(Page page) {
+
+		JdbcTemplate vJdbcTemplate = new JdbcTemplate(connectionHikari.getDataSource());
+
 		List<Computer> computerList = new ArrayList<>();
-		try (Connection conn = connectionHikari.getConnection()) {
 
-			StringBuilder sb = new StringBuilder();
-			sb.append(VIEW_ALL_QUERY);
-			
-			sb.append(doFilter(page.getFilter()));
-			sb.append(doOrder(page.getOrder()));
-			
-			sb.append(" LIMIT " + page.getNbLines());
-			sb.append(" OFFSET " + page.getNbLines() * (page.getPageToDisplay()-1));
-			
-			
-			PreparedStatement stmt = conn.prepareStatement(sb.toString());
-			ResultSet resultSet = stmt.executeQuery();
-			
-			while (resultSet.next()) {
-				computerList.add(ComputerDAOMapper.resultSetToComputer(resultSet));
-			}
-			return computerList;
-			
+		StringBuilder sb = new StringBuilder();
+		sb.append(VIEW_ALL_QUERY);
 
-		} catch (SQLException e) {
-			// TODO: handle exception
-			System.out.println(e.getMessage());
-		}
-		
-		return null;
+		sb.append(doFilter(page.getFilter()));
+		sb.append(doOrder(page.getOrder()));
+
+		sb.append(" LIMIT " + page.getNbLines());
+		sb.append(" OFFSET " + page.getNbLines() * (page.getPageToDisplay() - 1));
+
+		computerList = vJdbcTemplate.query(sb.toString(), new ComputerDAOMapper());
+
+		return computerList;
 
 	}
 
@@ -81,156 +71,90 @@ public class ComputerDAO extends DAO<Computer> {
 	 */
 	public void add(DTOComputer dtoComputer) throws SQLException {
 
-
-		try (Connection conn = connectionHikari.getConnection()) {
-
-			PreparedStatement stmt = conn.prepareStatement(ADD_QUERY);
-			stmt.setString(1, dtoComputer.getName());
-			stmt.setString(2, dtoComputer.getIntroduced());
-			stmt.setString(3, dtoComputer.getDiscontinued());
-
-			if (dtoComputer.getDtoCompany().getId().equals("0")) {
-				stmt.setNull(4, Types.BIGINT);
-			} else {
-				stmt.setString(4, dtoComputer.getDtoCompany().getId());
-			}
-			
-			stmt.execute();
-			
-
-		} catch (SQLException e) {
-
-			e.printStackTrace();
+		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate((connectionHikari.getDataSource()));
+		MapSqlParameterSource vParams = new MapSqlParameterSource();
+		vParams.addValue("name", dtoComputer.getName(), Types.VARCHAR);
+		vParams.addValue("introduced", dtoComputer.getIntroduced(), Types.DATE);
+		vParams.addValue("discontinued", dtoComputer.getDiscontinued(), Types.DATE);
+		String companyId = dtoComputer.getDtoCompany().getId();
+		if (companyId.equals("0")) {
+			companyId = null;
 		}
-		
+		vParams.addValue("companyId", companyId, Types.BIGINT);
+
+		vJdbcTemplate.update(ADD_QUERY, vParams);
 
 	}
 
 	@Override
 	public Computer get(String id) {
 
-		try (Connection conn = connectionHikari.getConnection()) {
-
-			PreparedStatement stmt = conn.prepareStatement(GET_BY_ID_QUERY);
-			stmt.setString(1, id);
-			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
-				Computer c = ComputerDAOMapper.resultSetToComputer(resultSet);
-				return c;
-			}
-			
-
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate((connectionHikari.getDataSource()));
+		MapSqlParameterSource vParams = new MapSqlParameterSource();
+		vParams.addValue("id", id);
+		return vJdbcTemplate.query(GET_BY_ID_QUERY, vParams, new ComputerDAOMapper()).get(0);
+		
 	}
-	
+
 	public Computer getLast() {
 
-		try (Connection conn = connectionHikari.getConnection()) {
+		JdbcTemplate vJdbcTemplate = new JdbcTemplate(connectionHikari.getDataSource());
 
-			PreparedStatement stmt = conn.prepareStatement(GET_LAST_QUERY);
-			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
-				Computer c = ComputerDAOMapper.resultSetToComputer(resultSet);
-				return c;
-			}
-			
-
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		return vJdbcTemplate.query(GET_LAST_QUERY, new ComputerDAOMapper()).get(0);
 	}
 
-
 	public void deleteComputer(String id) {
-		try (Connection conn = connectionHikari.getConnection()) {
-
-
-			PreparedStatement stmt = conn.prepareStatement(DELETE_QUERY);
-			stmt.setString(1, id);
-			stmt.execute();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate((connectionHikari.getDataSource()));
+		MapSqlParameterSource vParams = new MapSqlParameterSource();
+		vParams.addValue("id", id);
+		vJdbcTemplate.update(DELETE_QUERY, vParams);
 	}
 
 	public void edit(String id, DTOComputer dtoComputer) {
-
-		try (Connection conn = connectionHikari.getConnection()) {
-
-			PreparedStatement stmt = conn.prepareStatement(UPDATE_QUERY);
-
-			stmt.setString(1, dtoComputer.getName());
-			stmt.setObject(2, dtoComputer.getIntroduced());
-			stmt.setObject(3, dtoComputer.getDiscontinued());
-			stmt.setObject(4, dtoComputer.getDtoCompany().getId());
-
-			stmt.setLong(5, Long.parseLong(id));
-			
-			if (dtoComputer.getDtoCompany().getId().equals("0")) {
-				stmt.setNull(4, Types.BIGINT);
-			} else {
-				stmt.setString(4, dtoComputer.getDtoCompany().getId());
-			}
-			
-			stmt.executeUpdate();
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate((connectionHikari.getDataSource()));
+		MapSqlParameterSource vParams = new MapSqlParameterSource();
+		vParams.addValue("name", dtoComputer.getName());
+		vParams.addValue("introduced", dtoComputer.getIntroduced());
+		vParams.addValue("discontinued", dtoComputer.getDiscontinued());
+		String companyId = dtoComputer.getDtoCompany().getId();
+		if (companyId.equals("0")) {
+			companyId = null;
 		}
+		vParams.addValue("companyId", companyId, Types.BIGINT);
+		vParams.addValue("id", id);
+		vJdbcTemplate.update(UPDATE_QUERY, vParams);
 
 	}
 
 	public int countEntries(String filter) {
 
-		int entriesCount = 0;
-		try (Connection conn = connectionHikari.getConnection()) {
-
-			StringBuilder sb = new StringBuilder(COUNT_QUERY);
-			
-
-			if (!"".equals(filter)) {
-				sb.append(" WHERE computer.name LIKE '%" + filter + "%' or company.name LIKE '%" + filter + "%'");
-			}
-
-			ResultSet resultSet = conn.prepareStatement(sb.toString()).executeQuery();
-			while (resultSet.next()) {
-				entriesCount = ComputerDAOMapper.countResults(resultSet);
-			}
-			
-
-		} catch (SQLException e) {
-			e.printStackTrace();
+		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate((connectionHikari.getDataSource()));
+		MapSqlParameterSource vParams = new MapSqlParameterSource();
+		
+		if (!"".equals(filter)) {
+			vParams.addValue("filter", filter);
 		}
+		
 
-		return entriesCount;
+		return vJdbcTemplate.queryForObject(COUNT_QUERY, vParams, Integer.class);
 	}
 
-	
-	public String doFilter (String filter) {
-		
+	public String doFilter(String filter) {
+
 		if (!filter.equals("")) {
-			 return (" WHERE computer.name LIKE '%" + filter + "%' or company.name LIKE '%" + filter + "%'");
+			return (" WHERE computer.name LIKE '%" + filter + "%' or company.name LIKE '%" + filter + "%'");
 		}
 		return "";
-		
+
 	}
-	
+
 	public String doOrder(String order) {
-		
-		
+
 		if (!order.equals("")) {
 			String[] arrayOrder = order.split("-");
-			return " ORDER BY "+arrayOrder[0]+" "+arrayOrder[1];
-			
+			return " ORDER BY " + arrayOrder[0] + " " + arrayOrder[1];
+
 		}
 		return "";
 	}
