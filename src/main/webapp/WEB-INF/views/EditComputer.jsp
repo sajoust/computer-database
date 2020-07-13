@@ -49,7 +49,7 @@
 									<c:forEach items="${dtoCompanyList}" var="DTO" varStatus="status">
 										<option value="${DTO.id}"><c:out value="${DTO.id} -- ${DTO.name}"></c:out></option>
 									</c:forEach>
-									<option value="0">Unknown company</option>
+									<option value="0"> -- Unknown company</option>
 
 								</select>
 							</div>

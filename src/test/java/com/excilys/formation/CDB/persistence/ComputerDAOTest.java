@@ -2,6 +2,7 @@ package com.excilys.formation.CDB.persistence;
 
 import java.io.FileInputStream;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import org.dbunit.DBTestCase;
 import org.dbunit.DatabaseUnitException;
@@ -24,6 +25,7 @@ import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.mapper.CompanyDTOMapper;
 import com.excilys.formation.CDB.mapper.ComputerDAOMapper;
 import com.excilys.formation.CDB.model.Company;
+import com.excilys.formation.CDB.model.Computer;
 import com.excilys.formation.CDB.model.Page;
 
 @RunWith(SpringRunner.class)
@@ -36,12 +38,13 @@ public class ComputerDAOTest extends DBTestCase {
 	private CompanyDAO companyDAO;
 	@Autowired
 	private ConnectionHikari connectionHikari;
-	private final String ID = "1";
+	private final Long ID = 1L;
 	private final String NAME = "Pierre Palmade";
-	private final String INTRODUCED = "1997-01-01";
-	private final String DISCONTINUED = "1998-01-01";
-	private final Company COMPANY = new Company(42, "ParIciLaCompanie");
-
+	private final LocalDate INTRODUCED = LocalDate.parse("1997-01-01");
+	private final LocalDate DISCONTINUED = LocalDate.parse("1998-01-01");
+	private final Company COMPANY = new Company(1, "laCompanyCreole");
+	private final Computer testComputer = new Computer(ID, NAME, INTRODUCED, DISCONTINUED, COMPANY);
+	private final Computer testComputerNoID = new Computer(NAME, INTRODUCED, DISCONTINUED, COMPANY);
 	DatabaseConnection dbConnection;
 
 	@Before
@@ -112,25 +115,18 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testAdd() throws Exception {
 
-		
-		Company company = companyDAO.get("1");
-		DTOComputer dtoComputer = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, CompanyDTOMapper.CompanyToDTO(company));
-		DTOComputer dtoComputerNoCompany = new DTOComputer(NAME, INTRODUCED, DISCONTINUED, new DTOCompany("0"));
-		computerDAO.add(dtoComputer);
-		
-		assertEquals(computerDAO.getLast().getName(), ComputerDAOMapper.dtoToComputer(dtoComputer).getName());
-		// assertEquals(computerDAO.add(dtoComputerNoCompany),
-		// ComputerDAOMapper.dtoToComputer(dtoComputerNoCompany));
+		computerDAO.add(testComputerNoID);		
+		assertEquals(computerDAO.getLast().getName(), testComputerNoID.getName());
+
 
 	}
 
 	@Test
 	public void testDelete() throws DataSetException, Exception {
-		String id = "1";
-		assertNotNull(computerDAO.get(id));
-		computerDAO.deleteComputer(id);
-		assertNull(computerDAO.get(id)); //TODO réparer ça id null car on vient de supprimer le computer
-
+	
+		assertNotNull(computerDAO.get(ID.toString()));
+		assertEquals(1, computerDAO.deleteComputer(ID.toString()));
+		
 	}
 
 	@Test
@@ -150,12 +146,10 @@ public class ComputerDAOTest extends DBTestCase {
 
 	@Test
 	public void testEdit() throws Exception {
-		Company company = companyDAO.get("1");
-		DTOComputer dtoComputer = new DTOComputer(ID, NAME, INTRODUCED, DISCONTINUED,
-				CompanyDTOMapper.CompanyToDTO(company));
-		computerDAO.edit(ID, dtoComputer);
 
-		assertEquals(ComputerDAOMapper.dtoToComputer(dtoComputer), computerDAO.get(ID));
+		computerDAO.edit(ID.toString(), testComputer);
+
+		assertEquals(testComputer, computerDAO.get(ID.toString()));
 
 	}
 

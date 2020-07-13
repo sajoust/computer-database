@@ -5,10 +5,11 @@ import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.excilys.formation.CDB.model.Company;
 
-public class CompanyDAOMapper {
+public class CompanyDAOMapper implements RowMapper<Company> {
 
 	private static Logger logger = LoggerFactory.getLogger(CompanyDTOMapper.class);
 	
@@ -40,4 +41,12 @@ public class CompanyDAOMapper {
 		}
 		return 0;
 	}
+
+	@Override
+	public Company mapRow(ResultSet rs, int rowNum) throws SQLException {
+		// TODO Auto-generated method stub
+		return resultSetToCompany(rs);
+	}
+	
+
 }

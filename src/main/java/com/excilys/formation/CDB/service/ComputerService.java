@@ -52,8 +52,8 @@ public class ComputerService {
 
 	public void add(DTOComputer dtoComputer) {
 
-		try {
-			computerDAO.add(dtoComputer);
+		try {	
+			computerDAO.add(ComputerDTOMapper.dtoToComputer(dtoComputer));
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -67,7 +67,7 @@ public class ComputerService {
 
 	public void edit(String id, DTOComputer dtoComputer) {
 
-		computerDAO.edit(id, dtoComputer);
+		computerDAO.edit(id, ComputerDTOMapper.dtoToComputer(dtoComputer));
 
 	}
 

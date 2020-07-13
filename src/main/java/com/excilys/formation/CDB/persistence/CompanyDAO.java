@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.excilys.formation.CDB.connection.ConnectionHikari;
@@ -20,7 +23,7 @@ public class CompanyDAO extends DAO<Company> {
 	private static final String DELETE_COMPANY_QUERY = "DELETE FROM company WHERE id=?";
 	private static final String DELETE_COMPUTERS_QUERY = "DELETE FROM computer WHERE company_id=?";
 	private static final String VIEW_ALL_QUERY = "SELECT id,name FROM company";
-	private static final String GET_BY_ID_QUERY = "SELECT id,name FROM company WHERE id=?";
+	private static final String GET_BY_ID_QUERY = "SELECT id,name FROM company WHERE id=:id";
 
 	
 	
@@ -35,51 +38,25 @@ public class CompanyDAO extends DAO<Company> {
 
 		List<Company> companyList = new ArrayList<Company>();
 
-		try (Connection conn = connectionHikari.getConnection()) {
-
-			PreparedStatement stmt = conn.prepareStatement(VIEW_ALL_QUERY);
-			ResultSet resultSet = stmt.executeQuery();
-
-			conn.close();
-			while (resultSet.next()) {
-				companyList.add(CompanyDAOMapper.resultSetToCompany(resultSet));
-			}
-			return companyList;
-
-		} catch (SQLException e) {
-			// TODO: handle exception
-			System.out.println(e.getMessage());
-		}
-		return null;
+		JdbcTemplate vJdbcTemplate = new JdbcTemplate((connectionHikari.getDataSource()));
+		companyList = vJdbcTemplate.query(VIEW_ALL_QUERY, new CompanyDAOMapper());
+		return companyList;
 
 	}
 
 	@Override
 	public Company get(String id) {
 
-		try (Connection conn = connectionHikari.getConnection()) {
-
-			PreparedStatement stmt = conn.prepareStatement(GET_BY_ID_QUERY);
-			stmt.setString(1, id);
-			ResultSet resultSet = stmt.executeQuery();
-
-			while (resultSet.next()) {
-				Company c = CompanyDAOMapper.resultSetToCompany(resultSet);
-				return c;
-			}
-		
-
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(connectionHikari.getDataSource());
+		MapSqlParameterSource vParams = new MapSqlParameterSource();
+		vParams.addValue("id", id);
+		return vJdbcTemplate.query(GET_BY_ID_QUERY, new CompanyDAOMapper()).get(0);
 	}
 	
 
 	
 	public void delete(String id) {
+		
 		
 		try(Connection conn = connectionHikari.getConnection()) {
 			conn.setAutoCommit(false);

@@ -39,8 +39,6 @@ public class EditComputerServlet extends HttpServlet {
 	private List<DTOCompany> dtoCompanyList;
 	private String idToEdit = "";
 
-	
-	
 	public void init(ServletConfig config) {
 		try {
 			super.init(config);
@@ -50,6 +48,7 @@ public class EditComputerServlet extends HttpServlet {
 		}
 		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
 	}
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		idToEdit = request.getParameter("computerToEdit");
@@ -70,27 +69,18 @@ public class EditComputerServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		System.out.println("ID RECUPEREE DANS EDIT SERVLET POST = " + idToEdit);
 		String name = request.getParameter("computerName");
 		String introduced = request.getParameter("introduced");
 		String discontinued = request.getParameter("discontinued");
 		String company_id = request.getParameter("companyId");
+		String companyName = (String) request.getAttribute("companyNameComputerToEdit");
 
-		DTOCompany dtoCompany = new DTOCompany(company_id);
+		DTOCompany dtoCompany = new DTOCompany(company_id, companyName);
 		DTOComputer dtoComputer = new DTOComputer(idToEdit, name, introduced, discontinued, dtoCompany);
 
 		Map<String, String> errors = new HashMap<String, String>();
 
-		try {
-			ValidationComputer.nameValidation(dtoComputer);
-		} catch (ComputerNameException e) {
-			errors.put("computerName", e.getMessage());
-		}
-		try {
-			ValidationComputer.dateValidation(dtoComputer);
-		} catch (ComputerDateException e) {
-			errors.put("discontinued", e.getMessage());
-		}
+		errors = isValid(dtoComputer, errors);
 
 		request.setAttribute("errors", errors);
 
@@ -98,13 +88,25 @@ public class EditComputerServlet extends HttpServlet {
 
 			computerService.edit(idToEdit, dtoComputer);
 			response.sendRedirect(request.getContextPath() + "/home");
-		}else {
-			
+		} else {
+
 			doGet(request, response);
-			//response.sendRedirect("editComputer?computerToEdit="+idToEdit);
+			// response.sendRedirect("editComputer?computerToEdit="+idToEdit);
 		}
 
-		
+	}
+
+	private Map<String, String> isValid(DTOComputer dtoComputer, Map<String, String> errors) {
+		try {
+			ValidationComputer.nameValidation(dtoComputer);
+			ValidationComputer.dateValidation(dtoComputer);
+		} catch (ComputerNameException exceptionName) {
+			errors.put("computerName", exceptionName.getMessage());
+		} catch (ComputerDateException exceptionDate) {
+			errors.put("discontinued", exceptionDate.getMessage());
+		}
+
+		return errors;
 	}
 
 }

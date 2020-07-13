@@ -1,8 +1,5 @@
 package com.excilys.formation.CDB.persistence;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -14,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.mapper.ComputerDAOMapper;
 import com.excilys.formation.CDB.model.Computer;
@@ -31,6 +27,7 @@ public class ComputerDAO extends DAO<Computer> {
 	private static final String COUNT_QUERY = "SELECT COUNT(computer.id) FROM computer LEFT JOIN company ON computer.company_id=company.id ";
 	private static final String GET_LAST_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id, company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id ORDER BY ID DESC LIMIT 1";
 
+	
 	private ConnectionHikari connectionHikari;
 
 	@Autowired
@@ -42,21 +39,14 @@ public class ComputerDAO extends DAO<Computer> {
 
 	@Override
 	public List<Computer> getAll(Page page) {
-
+		
 		JdbcTemplate vJdbcTemplate = new JdbcTemplate(connectionHikari.getDataSource());
-
+		StringBuilder querySQL = new StringBuilder(VIEW_ALL_QUERY);		
 		List<Computer> computerList = new ArrayList<>();
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(VIEW_ALL_QUERY);
-
-		sb.append(doFilter(page.getFilter()));
-		sb.append(doOrder(page.getOrder()));
-
-		sb.append(" LIMIT " + page.getNbLines());
-		sb.append(" OFFSET " + page.getNbLines() * (page.getPageToDisplay() - 1));
-
-		computerList = vJdbcTemplate.query(sb.toString(), new ComputerDAOMapper());
+		querySQL.append(doFilter(page.getFilter()));
+		querySQL.append(doOrder(page.getOrder()));
+		querySQL.append(" LIMIT "+page.getNbLines()+ " OFFSET "+page.getPageToDisplay());
+		computerList = vJdbcTemplate.query(querySQL.toString(), new ComputerDAOMapper());
 
 		return computerList;
 
@@ -66,18 +56,17 @@ public class ComputerDAO extends DAO<Computer> {
 	 * Ajoute un ordinateur a la BDD
 	 * 
 	 * @param computerToAdd
-	 * @return affiche l'ordinateur entré
 	 * @throws SQLException
 	 */
-	public void add(DTOComputer dtoComputer) throws SQLException {
+	public void add(Computer computerToAdd) throws SQLException {
 
 		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate((connectionHikari.getDataSource()));
 		MapSqlParameterSource vParams = new MapSqlParameterSource();
-		vParams.addValue("name", dtoComputer.getName(), Types.VARCHAR);
-		vParams.addValue("introduced", dtoComputer.getIntroduced(), Types.DATE);
-		vParams.addValue("discontinued", dtoComputer.getDiscontinued(), Types.DATE);
-		String companyId = dtoComputer.getDtoCompany().getId();
-		if (companyId.equals("0")) {
+		vParams.addValue("name", computerToAdd.getName(), Types.VARCHAR);
+		vParams.addValue("introduced", computerToAdd.getIntroduced(), Types.DATE);
+		vParams.addValue("discontinued", computerToAdd.getDiscontinued(), Types.DATE);
+		Long companyId = computerToAdd.getCompany().getId();
+		if (companyId==0L) {
 			companyId = null;
 		}
 		vParams.addValue("companyId", companyId, Types.BIGINT);
@@ -103,23 +92,24 @@ public class ComputerDAO extends DAO<Computer> {
 		return vJdbcTemplate.query(GET_LAST_QUERY, new ComputerDAOMapper()).get(0);
 	}
 
-	public void deleteComputer(String id) {
+	public int deleteComputer(String id) {
 		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate((connectionHikari.getDataSource()));
 		MapSqlParameterSource vParams = new MapSqlParameterSource();
 		vParams.addValue("id", id);
-		vJdbcTemplate.update(DELETE_QUERY, vParams);
+		return vJdbcTemplate.update(DELETE_QUERY, vParams);
 	}
 
-	public void edit(String id, DTOComputer dtoComputer) {
+	public void edit(String id, Computer computerToEdit) {
 		
 		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate((connectionHikari.getDataSource()));
 		MapSqlParameterSource vParams = new MapSqlParameterSource();
-		vParams.addValue("name", dtoComputer.getName());
-		vParams.addValue("introduced", dtoComputer.getIntroduced());
-		vParams.addValue("discontinued", dtoComputer.getDiscontinued());
-		String companyId = dtoComputer.getDtoCompany().getId();
-		if (companyId.equals("0")) {
+		vParams.addValue("name", computerToEdit.getName());
+		vParams.addValue("introduced", computerToEdit.getIntroduced());
+		vParams.addValue("discontinued", computerToEdit.getDiscontinued());
+		Long companyId = computerToEdit.getCompany().getId();
+		if (companyId==0L) {
 			companyId = null;
+			
 		}
 		vParams.addValue("companyId", companyId, Types.BIGINT);
 		vParams.addValue("id", id);
@@ -129,18 +119,16 @@ public class ComputerDAO extends DAO<Computer> {
 
 	public int countEntries(String filter) {
 
-		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate((connectionHikari.getDataSource()));
-		MapSqlParameterSource vParams = new MapSqlParameterSource();
-		
-		if (!"".equals(filter)) {
-			vParams.addValue("filter", filter);
-		}
-		
+		JdbcTemplate vJdbcTemplate = new JdbcTemplate(connectionHikari.getDataSource());
+		StringBuilder querySQL = new StringBuilder(COUNT_QUERY);
+		querySQL.append(doFilter(filter));
 
-		return vJdbcTemplate.queryForObject(COUNT_QUERY, vParams, Integer.class);
+		return vJdbcTemplate.queryForObject(querySQL.toString(), Integer.class);
 	}
 
 	public String doFilter(String filter) {
+		
+		
 
 		if (!filter.equals("")) {
 			return (" WHERE computer.name LIKE '%" + filter + "%' or company.name LIKE '%" + filter + "%'");
