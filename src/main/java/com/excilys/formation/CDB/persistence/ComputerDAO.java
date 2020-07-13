@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.excilys.formation.CDB.DTO.PageDTO;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.mapper.ComputerDAOMapper;
 import com.excilys.formation.CDB.model.Computer;
@@ -38,14 +39,14 @@ public class ComputerDAO extends DAO<Computer> {
 	}
 
 	@Override
-	public List<Computer> getAll(Page page) {
+	public List<Computer> getAll(PageDTO pageDto) {
 		
 		JdbcTemplate vJdbcTemplate = new JdbcTemplate(connectionHikari.getDataSource());
 		StringBuilder querySQL = new StringBuilder(VIEW_ALL_QUERY);		
 		List<Computer> computerList = new ArrayList<>();
-		querySQL.append(doFilter(page.getFilter()));
-		querySQL.append(doOrder(page.getOrder()));
-		querySQL.append(" LIMIT "+page.getNbLines()+ " OFFSET "+page.getPageToDisplay());
+		querySQL.append(doFilter(pageDto.getSearch()));
+		querySQL.append(doOrder(pageDto.getOrder()));
+		querySQL.append(" LIMIT "+pageDto.getComputerPerPage()+ " OFFSET "+pageDto.getPageToDisplay());
 		computerList = vJdbcTemplate.query(querySQL.toString(), new ComputerDAOMapper());
 
 		return computerList;

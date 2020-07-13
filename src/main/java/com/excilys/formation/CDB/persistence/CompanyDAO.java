@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.excilys.formation.CDB.DTO.PageDTO;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.mapper.CompanyDAOMapper;
 import com.excilys.formation.CDB.model.Company;
@@ -34,7 +35,7 @@ public class CompanyDAO extends DAO<Company> {
 	}
 
 	@Override
-	public List<Company> getAll(Page page) {
+	public List<Company> getAll(PageDTO pageDto) {
 
 		List<Company> companyList = new ArrayList<Company>();
 

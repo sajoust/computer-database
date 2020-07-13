@@ -20,7 +20,7 @@ import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.model.Page;
 import com.excilys.formation.CDB.service.ComputerService;
 
-@WebServlet(name = "Dashboard", urlPatterns = { "/home" })
+@WebServlet(name = "Dashboard", urlPatterns = { "/home_old" })
 public class Dashboard extends HttpServlet {
 
 	private static Logger logger = LoggerFactory.getLogger(ComputerService.class);

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.excilys.formation.CDB.DTO.DTOCompany;
+import com.excilys.formation.CDB.DTO.PageDTO;
 import com.excilys.formation.CDB.mapper.CompanyDTOMapper;
 import com.excilys.formation.CDB.model.Company;
 import com.excilys.formation.CDB.model.Page;
@@ -23,10 +24,10 @@ public class CompanyService {
 		this.companyDAO=companyDAO;
 	}
 	
-	public List<DTOCompany> getAll(Page page) {
+	public List<DTOCompany> getAll(PageDTO pageDto) {
 		
 		
-		List<Company> companyList = companyDAO.getAll(page);
+		List<Company> companyList = companyDAO.getAll(pageDto);
 		List<DTOCompany> dtoCompanyList=new ArrayList<DTOCompany>();
 		
 		for (Company company : companyList) {

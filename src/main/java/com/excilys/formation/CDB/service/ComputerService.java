@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.excilys.formation.CDB.DTO.DTOComputer;
+import com.excilys.formation.CDB.DTO.PageDTO;
 import com.excilys.formation.CDB.mapper.ComputerDTOMapper;
 import com.excilys.formation.CDB.model.Computer;
-import com.excilys.formation.CDB.model.Page;
 import com.excilys.formation.CDB.persistence.ComputerDAO;
 
 @Service
@@ -27,9 +27,9 @@ public class ComputerService {
 	
 	}
 
-	public List<DTOComputer> getAll(Page page) {
+	public List<DTOComputer> getAll(PageDTO pageDto) {
 
-		List<Computer> computerList = computerDAO.getAll(page);
+		List<Computer> computerList = computerDAO.getAll(pageDto);
 		List<DTOComputer> dtoComputerList = new ArrayList<>();
 
 		for (Computer computer : computerList) {
