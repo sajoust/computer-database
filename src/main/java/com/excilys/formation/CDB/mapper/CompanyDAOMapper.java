@@ -44,7 +44,6 @@ public class CompanyDAOMapper implements RowMapper<Company> {
 
 	@Override
 	public Company mapRow(ResultSet rs, int rowNum) throws SQLException {
-		// TODO Auto-generated method stub
 		return resultSetToCompany(rs);
 	}
 	

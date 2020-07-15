@@ -28,7 +28,6 @@ public class ComputerDAO extends DAO<Computer> {
 	private static final String COUNT_QUERY = "SELECT COUNT(computer.name) FROM computer LEFT JOIN company ON computer.company_id=company.id ";
 	private static final String GET_LAST_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id, company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id ORDER BY ID DESC LIMIT 1";
 
-	
 	private ConnectionHikari connectionHikari;
 
 	@Autowired
@@ -40,15 +39,16 @@ public class ComputerDAO extends DAO<Computer> {
 
 	@Override
 	public List<Computer> getAll(PageDTO pageDto) {
-		
+
 		JdbcTemplate vJdbcTemplate = new JdbcTemplate(connectionHikari.getDataSource());
-		StringBuilder querySQL = new StringBuilder(VIEW_ALL_QUERY);		
+		StringBuilder querySQL = new StringBuilder(VIEW_ALL_QUERY);
 		List<Computer> computerList = new ArrayList<>();
 		querySQL.append(doFilter(pageDto.getSearch()));
 		querySQL.append(doOrder(pageDto.getOrder()));
-		querySQL.append(" LIMIT "+pageDto.getComputerPerPage()+ " OFFSET "+(pageDto.getPageToDisplay()-1)*pageDto.getComputerPerPage());
+		querySQL.append(" LIMIT " + pageDto.getComputerPerPage() + " OFFSET "
+				+ (pageDto.getPageToDisplay() - 1) * pageDto.getComputerPerPage());
 		computerList = vJdbcTemplate.query(querySQL.toString(), new ComputerDAOMapper());
-		System.out.println("QUERY VIEW ALL --------------------------  "+querySQL.toString());
+		System.out.println("QUERY VIEW ALL --------------------------  " + querySQL.toString());
 		return computerList;
 
 	}
@@ -67,7 +67,7 @@ public class ComputerDAO extends DAO<Computer> {
 		vParams.addValue("introduced", computerToAdd.getIntroduced(), Types.DATE);
 		vParams.addValue("discontinued", computerToAdd.getDiscontinued(), Types.DATE);
 		Long companyId = computerToAdd.getCompany().getId();
-		if (companyId==0L) {
+		if (companyId == 0L) {
 			companyId = null;
 		}
 		vParams.addValue("companyId", companyId, Types.BIGINT);
@@ -83,7 +83,7 @@ public class ComputerDAO extends DAO<Computer> {
 		MapSqlParameterSource vParams = new MapSqlParameterSource();
 		vParams.addValue("id", id);
 		return vJdbcTemplate.query(GET_BY_ID_QUERY, vParams, new ComputerDAOMapper()).get(0);
-		
+
 	}
 
 	public Computer getLast() {
@@ -101,16 +101,16 @@ public class ComputerDAO extends DAO<Computer> {
 	}
 
 	public void edit(String id, Computer computerToEdit) {
-		
+
 		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate((connectionHikari.getDataSource()));
 		MapSqlParameterSource vParams = new MapSqlParameterSource();
 		vParams.addValue("name", computerToEdit.getName());
 		vParams.addValue("introduced", computerToEdit.getIntroduced());
 		vParams.addValue("discontinued", computerToEdit.getDiscontinued());
 		Long companyId = computerToEdit.getCompany().getId();
-		if (companyId==0L) {
+		if (companyId == 0L) {
 			companyId = null;
-			
+
 		}
 		vParams.addValue("companyId", companyId, Types.BIGINT);
 		vParams.addValue("id", id);
@@ -125,15 +125,12 @@ public class ComputerDAO extends DAO<Computer> {
 		querySQL.append(doFilter(filter));
 
 		return vJdbcTemplate.queryForObject(querySQL.toString(), Integer.class);
-		
-		
+
 	}
 
 	public String doFilter(String filter) {
-		
-		
 
-		if (!filter.equals("")) {
+		if (!"".equals(filter)) {
 			return (" WHERE computer.name LIKE '%" + filter + "%' OR company.name LIKE '%" + filter + "%'");
 		}
 		return "";
@@ -142,7 +139,7 @@ public class ComputerDAO extends DAO<Computer> {
 
 	public String doOrder(String order) {
 
-		if (!order.equals("")) {
+		if (!"".equals(order)) {
 			String[] arrayOrder = order.split("-");
 			return " ORDER BY " + arrayOrder[0] + " " + arrayOrder[1];
 

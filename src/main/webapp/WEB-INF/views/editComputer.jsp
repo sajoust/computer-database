@@ -25,8 +25,8 @@
 						<c:out value="${computerToEdit}"></c:out>
 					</div>
 					<h1>Edit Computer</h1>
-					<form:form method="POST" action="addComputer" modelAttribute="dtoComputer" accept-charset="UTF-8" onsubmit="return nameValidator() & dateValidator()">
-						<input type="hidden" value="${computerToEdit}" name="computerToEdit" id="id" />
+					<form:form method="POST" action="editComputer" modelAttribute="dtoComputer" accept-charset="UTF-8" onsubmit="return nameValidator() & dateValidator()">
+						<input type="hidden" value="${computerToEdit}" name="id" id="id" />
 						<fieldset>
 							<div class="form-group">
 								<form:label path="name">Computer name*</form:label>
@@ -46,11 +46,11 @@
 							<div class="form-group">
 								<form:label path="dtoCompany">Company</form:label>
 								<select class="form-control" name="dtoCompany">
-									<option value="${companyIDComputerToEdit}"><c:out value="${companyIDComputerToEdit} -- ${companyNameComputerToEdit}"></c:out></option>
+									<option value="${companyIDComputerToEdit}"><c:out value="${companyNameComputerToEdit}"></c:out></option>
 									<c:forEach items="${DTOList}" var="DTO" varStatus="status">
 										<option value="${DTO.id}"><c:out value="${DTO.name}"></c:out></option>
 									</c:forEach>
-									<option value="0"> -- Unknown company</option>
+									<option value="0">Unknown company</option>
 
 								</select>
 							</div>
