@@ -15,21 +15,22 @@ import com.excilys.formation.CDB.service.ComputerService;
 @Controller
 public class DashboardController {
 
-	
 	@Autowired
 	private ComputerService computerService;
 	private List<DTOComputer> computerDTOList;
 
 	@RequestMapping(path = "/home", method = RequestMethod.GET)
-	public ModelAndView get(PageDTO pageDto) { 
-		
+	public ModelAndView get(PageDTO pageDto) {
+
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("Dashboard");
 		
-		computerDTOList = computerService.getAll(pageDto);
+		
+		
 		int nbEntries = computerService.countEntries(pageDto.getSearch());
 		int nbPages = (nbEntries / pageDto.getComputerPerPage()) + 1;
 		pageDto.setPageToDisplay(Math.min(pageDto.getPageToDisplay(), nbPages));
+		computerDTOList = computerService.getAll(pageDto);
 		
 		
 		mv.getModel().put("search", pageDto.getSearch());
@@ -39,9 +40,9 @@ public class DashboardController {
 		mv.getModel().put("DTOList", computerDTOList);
 		mv.getModel().put("entriesCount", nbEntries);
 		mv.getModel().put("order", pageDto.getOrder());
-		
+
 		return mv;
-		
+
 	}
-	
+
 }

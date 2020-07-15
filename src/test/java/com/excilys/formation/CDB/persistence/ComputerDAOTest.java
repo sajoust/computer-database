@@ -18,15 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.excilys.formation.CDB.DTO.DTOCompany;
-import com.excilys.formation.CDB.DTO.DTOComputer;
+import com.excilys.formation.CDB.DTO.PageDTO;
 import com.excilys.formation.CDB.configuration.SpringConfig;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
-import com.excilys.formation.CDB.mapper.CompanyDTOMapper;
-import com.excilys.formation.CDB.mapper.ComputerDAOMapper;
 import com.excilys.formation.CDB.model.Company;
 import com.excilys.formation.CDB.model.Computer;
-import com.excilys.formation.CDB.model.Page;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = SpringConfig.class)
@@ -34,8 +30,6 @@ public class ComputerDAOTest extends DBTestCase {
 
 	@Autowired
 	private ComputerDAO computerDAO;
-	@Autowired
-	private CompanyDAO companyDAO;
 	@Autowired
 	private ConnectionHikari connectionHikari;
 	private final Long ID = 1L;
@@ -68,13 +62,6 @@ public class ComputerDAOTest extends DBTestCase {
 		return DatabaseOperation.CLEAN_INSERT;
 	}
 
-//	@Override
-//	protected DatabaseOperation getTearDownOperation() throws Exception {
-//
-//		return DatabaseOperation.REFRESH;
-//	}
-
-//
 	@Test
 	public void testGet() {
 		String id = "1";
@@ -88,7 +75,7 @@ public class ComputerDAOTest extends DBTestCase {
 	public void testGetNoSearchNoOrder() throws DataSetException, Exception {
 
 		int nbRowsDataSet = getDataSet().getTable("computer").getRowCount();
-		Page page = new Page(10, 1, "", "");
+		PageDTO page = new PageDTO( "", "",1,10);
 
 		assertEquals(computerDAO.getAll(page).size(), nbRowsDataSet);
 
@@ -97,7 +84,7 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testGetSearchNoOrder() throws DataSetException, Exception {
 
-		Page page = new Page(10, 1, "Firts", "");
+		PageDTO page = new PageDTO("Firts", "",10, 1);
 
 		assertEquals(computerDAO.getAll(page).size(), 1);
 
@@ -106,7 +93,7 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testGetNoSearchOrder() throws DataSetException, Exception {
 
-		Page page = new Page(10, 1, "", "name-DESC");
+		PageDTO page = new PageDTO( "", "name-DESC",10, 1);
 
 		assertEquals(computerDAO.getAll(page).get(0).getName(), "Tirdh");
 

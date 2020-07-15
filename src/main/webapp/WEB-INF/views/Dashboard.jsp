@@ -66,8 +66,8 @@
 						<!-- Table header for Company -->
 						
 						<th>Company 
-						<a class="glyphicon glyphicon-chevron-up" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=company_id-ASC"></a>
-						<a class="glyphicon glyphicon-chevron-down" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=company_id-DESC"></a></th>
+						<a class="glyphicon glyphicon-chevron-up" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=company_name-ASC"></a>
+						<a class="glyphicon glyphicon-chevron-down" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=company_name-DESC"></a></th>
 
 					</tr>
 				</thead>
@@ -79,7 +79,7 @@
 							<td><a href="editComputer?computerToEdit=${DTO.id}" onclick=""><c:out value="${DTO.name}"></c:out></a></td>
 							<td><c:out value="${DTO.introduced}"></c:out></td>
 							<td><c:out value="${DTO.discontinued}"></c:out></td>
-							<td><c:out value="${DTO.dtoCompany.getId()}  ${DTO.dtoCompany.getName()}"></c:out></td>
+							<td><c:out value="${DTO.dtoCompany.getName()}"></c:out></td>
 
 						</tr>
 					</c:forEach>

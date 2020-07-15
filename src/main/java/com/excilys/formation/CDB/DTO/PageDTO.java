@@ -46,6 +46,13 @@ public class PageDTO {
 	public void setComputerPerPage(int computerPerPage) {
 		this.computerPerPage = computerPerPage;
 	}
+	@Override
+	public String toString() {
+		return "PageDTO [search=" + search + ", order=" + order + ", pageToDisplay=" + pageToDisplay
+				+ ", computerPerPage=" + computerPerPage + "]";
+	}
+	
+	
 	
 	
 }

@@ -24,8 +24,8 @@ import com.excilys.formation.CDB.service.ComputerService;
 import com.excilys.formation.CDB.validation.ValidationComputer;
 
 
-@WebServlet(name = "AddComputerServlet", urlPatterns = { "/addComputer" })
-public class AddComputerServlet extends HttpServlet {
+@WebServlet(name = "AddComputerServlet", urlPatterns = { "/addComputer_old" })
+public class AddComputerServlet_old extends HttpServlet {
 	@Autowired
 	private ComputerService computerService;
 	@Autowired
@@ -46,7 +46,7 @@ public class AddComputerServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		DTOList = companyService.getAll(new Page());
+		DTOList = companyService.getAll(new PageDTO());
 		request.setAttribute("DTOList", DTOList);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/AddComputer.jsp").forward(request, response);
 	}

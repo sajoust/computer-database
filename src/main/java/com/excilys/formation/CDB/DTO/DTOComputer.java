@@ -2,25 +2,25 @@ package com.excilys.formation.CDB.DTO;
 
 public class DTOComputer {
 	private String id;
-	private String computerName;
+	private String name;
 	private String introduced;
 	private String discontinued;
 	private DTOCompany dtoCompany;
 	
 	
 	
-	public DTOComputer(String computerName, String introduced, String discontinued, DTOCompany dtoCompany) {
+	public DTOComputer(String name, String introduced, String discontinued, DTOCompany dtoCompany) {
 
-		this.computerName = computerName;
+		this.name = name;
 		this.introduced = introduced;
 		this.discontinued = discontinued;
 		this.dtoCompany = dtoCompany;
 	}
 	
-	public DTOComputer(String id, String computerName, String introduced, String discontinued, DTOCompany dtoCompany) {
+	public DTOComputer(String id, String name, String introduced, String discontinued, DTOCompany dtoCompany) {
 
 		this.id=id;
-		this.computerName = computerName;
+		this.name = name;
 		this.introduced = introduced;
 		this.discontinued = discontinued;
 		this.dtoCompany = dtoCompany;
@@ -43,11 +43,11 @@ public class DTOComputer {
 	}
 
 	public String getName() {
-		return computerName;
+		return name;
 	}
 
 	public void setName(String name) {
-		this.computerName = name;
+		this.name = name;
 	}
 
 	public String getIntroduced() {
@@ -78,7 +78,7 @@ public class DTOComputer {
 
 	@Override
 	public String toString() {
-		return "DTOComputer [name=" + computerName + ", introduced=" + introduced + ", discontinued=" + discontinued
+		return "DTOComputer [name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued
 				+ ", dtoCompany=" + dtoCompany + "]";
 	}
 

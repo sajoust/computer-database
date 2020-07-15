@@ -25,7 +25,7 @@ public class ComputerDAO extends DAO<Computer> {
 	private static final String ADD_QUERY = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (:name,:introduced,:discontinued,:companyId)";
 	private static final String DELETE_QUERY = "DELETE FROM computer WHERE id=:id";
 	private static final String UPDATE_QUERY = "UPDATE computer SET name = :name , introduced = :introduced , discontinued = :discontinued , company_id = :companyId WHERE id = :id";
-	private static final String COUNT_QUERY = "SELECT COUNT(computer.id) FROM computer LEFT JOIN company ON computer.company_id=company.id ";
+	private static final String COUNT_QUERY = "SELECT COUNT(computer.name) FROM computer LEFT JOIN company ON computer.company_id=company.id ";
 	private static final String GET_LAST_QUERY = "SELECT computer.id,computer.name,introduced,discontinued,company_id, company.name AS company_name FROM computer LEFT JOIN company ON computer.company_id=company.id ORDER BY ID DESC LIMIT 1";
 
 	
@@ -46,9 +46,9 @@ public class ComputerDAO extends DAO<Computer> {
 		List<Computer> computerList = new ArrayList<>();
 		querySQL.append(doFilter(pageDto.getSearch()));
 		querySQL.append(doOrder(pageDto.getOrder()));
-		querySQL.append(" LIMIT "+pageDto.getComputerPerPage()+ " OFFSET "+pageDto.getPageToDisplay());
+		querySQL.append(" LIMIT "+pageDto.getComputerPerPage()+ " OFFSET "+(pageDto.getPageToDisplay()-1)*pageDto.getComputerPerPage());
 		computerList = vJdbcTemplate.query(querySQL.toString(), new ComputerDAOMapper());
-
+		System.out.println("QUERY VIEW ALL --------------------------  "+querySQL.toString());
 		return computerList;
 
 	}
@@ -125,6 +125,8 @@ public class ComputerDAO extends DAO<Computer> {
 		querySQL.append(doFilter(filter));
 
 		return vJdbcTemplate.queryForObject(querySQL.toString(), Integer.class);
+		
+		
 	}
 
 	public String doFilter(String filter) {
@@ -132,7 +134,7 @@ public class ComputerDAO extends DAO<Computer> {
 		
 
 		if (!filter.equals("")) {
-			return (" WHERE computer.name LIKE '%" + filter + "%' or company.name LIKE '%" + filter + "%'");
+			return (" WHERE computer.name LIKE '%" + filter + "%' OR company.name LIKE '%" + filter + "%'");
 		}
 		return "";
 

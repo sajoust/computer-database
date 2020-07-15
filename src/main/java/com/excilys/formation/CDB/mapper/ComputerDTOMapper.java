@@ -19,8 +19,10 @@ public class ComputerDTOMapper {
 		String name = computer.getName();
 		String introduced = computer.getIntroduced() == null ? "" : computer.getIntroduced().toString();
 		String discontinued = computer.getDiscontinued() == null ? "" : computer.getDiscontinued().toString();
-		DTOCompany dtoCompany = new DTOCompany(String.valueOf(computer.getCompany().getId()),
-				computer.getCompany().getName());
+		String companyName = computer.getCompany().getName() == null ? "Unknown Company"
+				: computer.getCompany().getName();
+		System.out.println("COMPANY NAME COMPUTERDTOMAPPER -------------------------- " + companyName);
+		DTOCompany dtoCompany = new DTOCompany(String.valueOf(computer.getCompany().getId()), companyName);
 
 		DTOComputer dtoComputer = new DTOComputer(id, name, introduced, discontinued, dtoCompany);
 		return dtoComputer;

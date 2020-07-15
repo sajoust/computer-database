@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.formation.CDB.DTO.DTOComputer;
+import com.excilys.formation.CDB.DTO.PageDTO;
 import com.excilys.formation.CDB.model.Page;
 import com.excilys.formation.CDB.service.ComputerService;
 
@@ -44,18 +45,18 @@ public class Dashboard extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		
-		Page page = paginate(request);
+		PageDTO page = paginate(request);
 		computerDTOList = computerService.getAll(page);
-		int nbEntries = computerService.countEntries(page.getFilter());
-		int nbPages = (nbEntries / page.getNbLines()) + 1;
+		int nbEntries = computerService.countEntries(page.getSearch());
+		int nbPages = (nbEntries / page.getComputerPerPage()) + 1;
 		page.setPageToDisplay(Math.min(page.getPageToDisplay(), nbPages));
 		
 
 		
-		request.setAttribute("search", page.getFilter());
+		request.setAttribute("search", page.getSearch());
 		request.setAttribute("nbPages", nbPages);
 		request.setAttribute("pageToDisplay", page.getPageToDisplay());
-		request.setAttribute("computerPerPage", page.getNbLines());
+		request.setAttribute("computerPerPage", page.getComputerPerPage());
 		request.setAttribute("DTOList", computerDTOList);
 		request.setAttribute("entriesCount", nbEntries);
 		request.setAttribute("order", page.getOrder());
@@ -73,7 +74,8 @@ public class Dashboard extends HttpServlet {
 		doGet(request, response);
 	}
 
-	public Page paginate(HttpServletRequest request) {
+	
+	public PageDTO paginate(HttpServletRequest request) {
 
 		int pageToDisplay = (request.getParameter("pageToDisplay") != null)
 				? Integer.parseInt(request.getParameter("pageToDisplay"))
@@ -89,7 +91,7 @@ public class Dashboard extends HttpServlet {
 				? Integer.parseInt(request.getParameter("computerPerPage"))
 				: 10;
 
-		Page page = new Page(computerPerPage, pageToDisplay, search, order);
+		PageDTO page = new PageDTO(search,order,pageToDisplay,computerPerPage);
 		return page;
 	}
 
