@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,7 +46,7 @@ public class AddComputerController {
 	}
 
 	@RequestMapping(path = "/addComputer", method = RequestMethod.POST)
-	public String post(@ModelAttribute("dtoComputer") DTOComputer dtoComputer, ModelAndView mv) {
+	public String post(@ModelAttribute("dtoComputer") @Validated DTOComputer dtoComputer, ModelAndView mv) {
 
 		Map<String, String> errors = new HashMap<String, String>();
 		mv.getModel().put("errors", errors);
@@ -54,6 +55,7 @@ public class AddComputerController {
 		if (errors.isEmpty()) {
 			computerService.add(dtoComputer);
 		}
+		
 		//get((PageDTO) mv.getModel().get("page"));
 		return "redirect:addComputer";
 	}

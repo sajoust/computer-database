@@ -3,13 +3,11 @@ package com.excilys.formation.CDB.validation;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import org.springframework.web.servlet.ModelAndView;
-
 import com.excilys.formation.CDB.DTO.DTOComputer;
 import com.excilys.formation.CDB.exceptions.ComputerDateException;
 import com.excilys.formation.CDB.exceptions.ComputerNameException;
 
-public class ValidationComputer {
+public class ValidationComputerSpring  {
 	
 	final static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -36,4 +34,6 @@ public class ValidationComputer {
 
 		
 	}
+
+
 }

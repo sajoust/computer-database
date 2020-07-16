@@ -39,8 +39,8 @@
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
-						<input type="search" id="searchbox" name="search" class="form-control" placeholder=<spring:message code="label.filterField"/> />
-						<input type="submit" id="searchsubmit" value=<spring:message code="label.filter"/> class="btn btn-primary" />
+						<input type="search" id="searchbox" name="search" class="form-control" placeholder="<spring:message code="label.filterField"/>" />
+						<input type="submit" id="searchsubmit" value="<spring:message code="label.filter"/>" class="btn btn-primary" />
 					</form>
 				</div>
 				<div class="pull-right">
