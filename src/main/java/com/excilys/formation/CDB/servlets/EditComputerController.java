@@ -47,6 +47,7 @@ public class EditComputerController {
 		mv.getModel().put("discontinuedComputerToEdit", dtoComputer.getDiscontinued());
 		mv.getModel().put("companyIDComputerToEdit", dtoComputer.getDtoCompany().getId());
 		mv.getModel().put("companyNameComputerToEdit", dtoComputer.getDtoCompany().getName());
+		
 
 		return mv;
 
@@ -69,6 +70,7 @@ public class EditComputerController {
 			
 			return new RedirectView("redirect:/editComputer?computerToEdit=" + dtoComputer.getId());
 		}
+
 
 	}
 

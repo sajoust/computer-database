@@ -27,30 +27,35 @@ public class AddComputerController {
 	private ComputerService computerService;
 	@Autowired
 	private CompanyService companyService;
+	
+	
 	private List<DTOCompany> DTOList;
 
 	@RequestMapping(path = "/addComputer", method = RequestMethod.GET)
 	public ModelAndView get(PageDTO pageDto) {
-
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("dtoComputer", new DTOComputer());
+		mv.addObject("page", pageDto);
 		mv.setViewName("addComputer");
 		DTOList = companyService.getAll(pageDto);
 		mv.getModel().put("DTOList", DTOList);
-
+		mv.getModel().get("errors");
 		return mv;
 
 	}
 
 	@RequestMapping(path = "/addComputer", method = RequestMethod.POST)
-	public ModelAndView post(@ModelAttribute("dtoComputer") DTOComputer dtoComputer, ModelAndView mv) {
+	public String post(@ModelAttribute("dtoComputer") DTOComputer dtoComputer, ModelAndView mv) {
 
-		Map<String, String> errors = isValid(dtoComputer);
+		Map<String, String> errors = new HashMap<String, String>();
 		mv.getModel().put("errors", errors);
+		errors = isValid(dtoComputer);
+
 		if (errors.isEmpty()) {
 			computerService.add(dtoComputer);
 		}
-		return mv;
+		//get((PageDTO) mv.getModel().get("page"));
+		return "redirect:addComputer";
 	}
 
 	private Map<String, String> isValid(DTOComputer dtoComputer) {

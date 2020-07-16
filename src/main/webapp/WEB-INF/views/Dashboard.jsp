@@ -1,9 +1,18 @@
+
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%-- <%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/fmt" %> --%>
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
-<title>Computer Database</title>
+<title><spring:message code="label.title" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="css/font-awesome.css" rel="stylesheet" media="screen">
@@ -12,7 +21,12 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="home"> Application - Computer Database</a>
+			<a class="navbar-brand" href="home"><spring:message code="label.navbar" /></a>
+			<div class="pull-right">
+				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=${order}&lang=fr"><img alt="fr" src="images/french_flag.png" width="16" height="16"></a>
+				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=${order}&lang=en"><img alt="en" src="images/uk_flag.png" width="16" height="16"></a>
+				
+			</div>
 		</div>
 	</header>
 
@@ -20,17 +34,17 @@
 		<div class="container">
 			<h1 id="homeTitle">
 				<c:out value="${entriesCount}">ERREUR</c:out>
-				Computers found
+				<spring:message code="label.found" />
 			</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
-						<input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
-						<input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
+						<input type="search" id="searchbox" name="search" class="form-control" placeholder=<spring:message code="label.filterField"/> />
+						<input type="submit" id="searchsubmit" value=<spring:message code="label.filter"/> class="btn btn-primary" />
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a> <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
+					<a class="btn btn-success" id="addComputer" href="addComputer"><spring:message code="label.add" /></a> <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="label.edit"/></a>
 				</div>
 			</div>
 		</div>
@@ -46,28 +60,27 @@
 						<!-- Variable declarations for passing labels as parameters -->
 						<!-- Table header for Computer Name -->
 
-						<th class="editMode" style="width: 60px; height: 22px;"><input type="checkbox" id="selectall" />
-							<span style="vertical-align: top;">
+						<th class="editMode" style="width: 60px; height: 22px;"><input type="checkbox" id="selectall" /> <span style="vertical-align: top;">
 								- <a href="#" id="deleteSelected" onclick="$.fn.deleteSelected();"> <i class="fa fa-trash-o fa-lg"></i>
 								</a>
 							</span></th>
-						<th>Computer name 
-						<a class="glyphicon glyphicon-chevron-up" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=computer.name-ASC"></a>
-						<a class="glyphicon glyphicon-chevron-down" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=computer.name-DESC"></a></th>
-						
-						<th>Introduced date 
-						<a class="glyphicon glyphicon-chevron-up" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=introduced-ASC"></a>
-						<a class="glyphicon glyphicon-chevron-down" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=introduced-DESC"></a></th>
+						<th><spring:message code="label.computerName" /> <a class="glyphicon glyphicon-chevron-up" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=computer.name-ASC"></a> <a
+							class="glyphicon glyphicon-chevron-down" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=computer.name-DESC"
+						></a></th>
+
+						<th><spring:message code="label.introduced"/><a class="glyphicon glyphicon-chevron-up" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=introduced-ASC"></a> <a
+							class="glyphicon glyphicon-chevron-down" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=introduced-DESC"
+						></a></th>
 						<!-- Table header for Discontinued Date -->
-						
-						<th>Discontinued date 
-						<a class="glyphicon glyphicon-chevron-up" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=discontinued-ASC"></a>
-						<a class="glyphicon glyphicon-chevron-down" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=discontinued-DESC"></a></th>
+
+						<th><spring:message code="label.discontinued" /><a class="glyphicon glyphicon-chevron-up" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=discontinued-ASC"></a> <a
+							class="glyphicon glyphicon-chevron-down" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=discontinued-DESC"
+						></a></th>
 						<!-- Table header for Company -->
-						
-						<th>Company 
-						<a class="glyphicon glyphicon-chevron-up" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=company_name-ASC"></a>
-						<a class="glyphicon glyphicon-chevron-down" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=company_name-DESC"></a></th>
+
+						<th><spring:message code="label.company" /><a class="glyphicon glyphicon-chevron-up" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=company_name-ASC"></a> <a
+							class="glyphicon glyphicon-chevron-down" href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=company_name-DESC"
+						></a></th>
 
 					</tr>
 				</thead>
@@ -97,7 +110,7 @@
 					<li><a href="home?pageToDisplay=${pageToDisplay-1}&computerPerPage=${computerPerPage}&search=${search}&order=${order}" aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 					</a></li>
 				</c:if>
-<%-- 				<c:if test="${pageToDisplay>nbPages}" var="testPages"></c:if> --%>
+				<%-- 				<c:if test="${pageToDisplay>nbPages}" var="testPages"></c:if> --%>
 
 				<c:forEach var="i" begin="${Math.max(pageToDisplay-2,1)}" end="${Math.min(pageToDisplay+2,nbPages+0)}">
 
@@ -116,9 +129,11 @@
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
 
-				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=10&search=${search}&order=${order}"><button type="button" class="btn btn-default">10</button></a> 
-				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=50&search=${search}&order=${order}"><button type="button" class="btn btn-default">50</button></a>
-				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=100&search=${search}&order=${order}"><button type="button" class="btn btn-default">100</button></a>
+				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=10&search=${search}&order=${order}"><button type="button" class="btn btn-default">10</button></a> <a
+					href="home?pageToDisplay=${pageToDisplay}&computerPerPage=50&search=${search}&order=${order}"
+				><button type="button" class="btn btn-default">50</button></a> <a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=100&search=${search}&order=${order}"><button type="button"
+						class="btn btn-default"
+					>100</button></a>
 			</div>
 		</div>
 	</footer>
