@@ -19,6 +19,7 @@ import com.excilys.formation.CDB.persistence.ComputerDAO;
 public class ComputerService {
 
 	private ComputerDAO computerDAO;
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(ComputerService.class);
 
 	@Autowired
@@ -33,6 +34,7 @@ public class ComputerService {
 		List<DTOComputer> dtoComputerList = new ArrayList<>();
 
 		for (Computer computer : computerList) {
+			System.out.println("COMPUTER SERVICE GETALL --- ORDI PARSE ---- "+computerList.indexOf(computer));
 			dtoComputerList.add(ComputerDTOMapper.ComputerToDTO(computer));
 		}
 		return dtoComputerList;

@@ -12,16 +12,20 @@ import com.excilys.formation.CDB.model.Computer;
 
 public class ComputerDTOMapper {
 
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(ComputerDTOMapper.class);
 
 	public static DTOComputer ComputerToDTO(Computer computer) {
 		String id = String.valueOf(computer.getId());
 		String name = computer.getName();
 		String introduced = computer.getIntroduced() == null ? "" : computer.getIntroduced().toString();
+		
 		String discontinued = computer.getDiscontinued() == null ? "" : computer.getDiscontinued().toString();
-		String companyName = computer.getCompany().getName() == null ? "Unknown Company"
+		
+		String companyName = computer.getCompany() == null ? "Unknown Company"
 				: computer.getCompany().getName();
-		DTOCompany dtoCompany = new DTOCompany(String.valueOf(computer.getCompany().getId()), companyName);
+		String companyId = computer.getCompany()==null?null:String.valueOf(computer.getCompany().getId());
+		DTOCompany dtoCompany = new DTOCompany(companyId, companyName);
 
 		DTOComputer dtoComputer = new DTOComputer(id, name, introduced, discontinued, dtoCompany);
 		return dtoComputer;

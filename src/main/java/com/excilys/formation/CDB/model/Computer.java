@@ -2,12 +2,27 @@ package com.excilys.formation.CDB.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+@Entity(name = "Computer")
+@Table(name = "computer")
 public class Computer {
 
+	@Id @GeneratedValue
+	@Column(name = "id")
 	private Long id;
+	@Column(name="name", nullable = false)
 	private String name;
+	@Column(name = "introduced")
 	private LocalDate introduced;
+	@Column(name="discontinued")
 	private LocalDate discontinued;
+	@ManyToOne @JoinColumn(name = "company_id",nullable = true)
 	private Company company;
 
 	public Computer() {

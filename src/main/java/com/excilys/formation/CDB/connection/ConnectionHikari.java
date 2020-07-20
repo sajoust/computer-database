@@ -22,7 +22,9 @@ public class ConnectionHikari {
 	public ConnectionHikari(HikariDataSource dataSource) {
 		//config = new HikariConfig("/connector.properties");
 		this.dataSource = dataSource;
+
 	}
+
 
 //	private static class ConnectionHikariHolder {
 //		private final static ConnectionHikari instance = new ConnectionHikari();
