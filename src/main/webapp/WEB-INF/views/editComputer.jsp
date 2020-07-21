@@ -22,11 +22,11 @@
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<div class="label label-default pull-right">
 						id:
-						<c:out value="${computerToEdit}"></c:out>
+						<c:out value="${computerToEditiD}"></c:out>
 					</div>
 					<h1>Edit Computer</h1>
 					<form:form method="POST" action="editComputer" modelAttribute="dtoComputer" accept-charset="UTF-8" onsubmit="return nameValidator() & dateValidator()">
-						<input type="hidden" value="${computerToEdit}" name="id" id="id" />
+						<input type="hidden" value="${computerToEditiD}" name="id" id="id" />
 						<fieldset>
 							<div class="form-group">
 								<form:label path="name">Computer name*</form:label>

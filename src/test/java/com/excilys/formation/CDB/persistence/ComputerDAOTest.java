@@ -19,13 +19,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.excilys.formation.CDB.DTO.PageDTO;
-import com.excilys.formation.CDB.configuration.SpringConfig;
+import com.excilys.formation.CDB.configuration.SpringMVCConfig;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.model.Company;
 import com.excilys.formation.CDB.model.Computer;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = SpringConfig.class)
+@ContextConfiguration(classes = SpringMVCConfig.class)
 public class ComputerDAOTest extends DBTestCase {
 
 	@Autowired
@@ -36,7 +36,7 @@ public class ComputerDAOTest extends DBTestCase {
 	private final String NAME = "Pierre Palmade";
 	private final LocalDate INTRODUCED = LocalDate.parse("1997-01-01");
 	private final LocalDate DISCONTINUED = LocalDate.parse("1998-01-01");
-	private final Company COMPANY = new Company(1, "laCompanyCreole");
+	private final Company COMPANY = new Company(1L, "laCompanyCreole");
 	private final Computer testComputer = new Computer(ID, NAME, INTRODUCED, DISCONTINUED, COMPANY);
 	private final Computer testComputerNoID = new Computer(NAME, INTRODUCED, DISCONTINUED, COMPANY);
 	DatabaseConnection dbConnection;
@@ -84,7 +84,7 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testGetSearchNoOrder() throws DataSetException, Exception {
 
-		PageDTO page = new PageDTO("Firts", "",10, 1);
+		PageDTO page = new PageDTO("Firts", "",1, 10);
 
 		assertEquals(computerDAO.getAll(page).size(), 1);
 
@@ -93,7 +93,7 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testGetNoSearchOrder() throws DataSetException, Exception {
 
-		PageDTO page = new PageDTO( "", "name-DESC",10, 1);
+		PageDTO page = new PageDTO( "", "computer.name-DESC",1, 10);
 
 		assertEquals(computerDAO.getAll(page).get(0).getName(), "Tirdh");
 
@@ -104,21 +104,24 @@ public class ComputerDAOTest extends DBTestCase {
 
 		computerDAO.add(testComputerNoID);		
 		assertEquals(computerDAO.getLast().getName(), testComputerNoID.getName());
-
-
 	}
 
 	@Test
 	public void testDelete() throws DataSetException, Exception {
-	
-		assertNotNull(computerDAO.get(ID.toString()));
-		assertEquals(1, computerDAO.deleteComputer(ID.toString()));
+		String idStr = String.valueOf(ID);
+		computerDAO.deleteComputer(idStr);
+		assertNull(computerDAO.get(idStr));
 		
 	}
 
 	@Test
 	public void testCountEntries() {
 		assertEquals(3, computerDAO.countEntries(""));
+	}
+	
+	@Test
+	public void testCountEntriesFilter() {
+		assertEquals(1, computerDAO.countEntries("Firts"));
 	}
 
 	@Test

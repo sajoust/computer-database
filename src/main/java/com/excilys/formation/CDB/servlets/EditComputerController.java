@@ -32,15 +32,15 @@ public class EditComputerController {
 	private List<DTOCompany> companyDtoList;
 
 	@RequestMapping(path = "/editComputer", method = RequestMethod.GET)
-	public ModelAndView get(PageDTO pageDto, @RequestParam String computerToEdit, ModelAndView mv) {
+	public ModelAndView get(PageDTO pageDto, @RequestParam String computerToEditiD, ModelAndView mv) {
 
-		DTOComputer dtoComputer = computerService.get(computerToEdit);
+		DTOComputer dtoComputer = computerService.get(computerToEditiD);
 		mv.addObject("dtoComputer", new DTOComputer());
 		mv.setViewName("editComputer");
 		companyDtoList = companyService.getAll(pageDto);
 		mv.addObject("DTOList", companyDtoList);
 
-		mv.getModel().put("computerToEdit", computerToEdit);
+		mv.getModel().put("computerToEditiD", computerToEditiD);
 		mv.getModel().put("DTOList", companyDtoList);
 		mv.getModel().put("computerToEditName", dtoComputer.getName());
 		mv.getModel().put("introducedComputerToEdit", dtoComputer.getIntroduced());
@@ -68,7 +68,7 @@ public class EditComputerController {
 
 		} else {
 			
-			return new RedirectView("redirect:/editComputer?computerToEdit=" + dtoComputer.getId());
+			return new RedirectView("redirect:/editComputer?computerToEditD=" + dtoComputer.getId());
 		}
 
 

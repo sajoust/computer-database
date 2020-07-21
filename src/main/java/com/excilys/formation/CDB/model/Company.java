@@ -3,20 +3,22 @@ package com.excilys.formation.CDB.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity(name = "Company")
 @Table(name = "company")
 public class Company {
-	@Id @GeneratedValue
+	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
 	private Long id;
 	@Column(name="name")
 	private String name;
 	
 	
-	public Company(long id, String name) {
+	public Company(Long id, String name) {
 		
 		this.id = id;
 		this.name = name;

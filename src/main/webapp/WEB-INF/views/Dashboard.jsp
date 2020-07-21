@@ -89,7 +89,7 @@
 					<c:forEach items="${DTOList}" var="DTO" varStatus="status">
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb" class="cb" value="${DTO.id}"></td>
-							<td><a href="editComputer?computerToEdit=${DTO.id}" onclick=""><c:out value="${DTO.name}"></c:out></a></td>
+							<td><a href="editComputer?computerToEditiD=${DTO.id}" onclick=""><c:out value="${DTO.name}"></c:out></a></td>
 							<td><c:out value="${DTO.introduced}"></c:out></td>
 							<td><c:out value="${DTO.discontinued}"></c:out></td>
 							<td><c:out value="${DTO.dtoCompany.getName()}"></c:out></td>

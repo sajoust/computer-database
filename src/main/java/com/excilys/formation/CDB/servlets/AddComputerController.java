@@ -56,7 +56,6 @@ public class AddComputerController {
 			computerService.add(dtoComputer);
 		}
 		
-		//get((PageDTO) mv.getModel().get("page"));
 		return "redirect:addComputer";
 	}
 

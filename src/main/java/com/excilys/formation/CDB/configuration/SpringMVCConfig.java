@@ -5,13 +5,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
@@ -23,7 +26,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@EnableWebMvc
+@EnableTransactionManagement
 @ComponentScan({ "com.excilys.formation.CDB.connection", "com.excilys.formation.CDB.persistence",
 		"com.excilys.formation.CDB.service", "com.excilys.formation.CDB.servlets" })
 public class SpringMVCConfig implements WebMvcConfigurer {
@@ -83,6 +86,19 @@ public class SpringMVCConfig implements WebMvcConfigurer {
 		LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
 		localeChangeInterceptor.setParamName("lang");
 		registry.addInterceptor(localeChangeInterceptor);
+	}
+	
+	@Bean
+	public PlatformTransactionManager transactionManager() {
+	    JpaTransactionManager transactionManager = new JpaTransactionManager();
+	    transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+	 
+	    return transactionManager;
+	}
+	 
+	@Bean
+	public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+	    return new PersistenceExceptionTranslationPostProcessor();
 	}
 
 }

@@ -2,8 +2,6 @@ package com.excilys.formation.CDB.persistence;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +14,6 @@ import com.excilys.formation.CDB.DTO.PageDTO;
 import com.excilys.formation.CDB.connection.ConnectionHikari;
 import com.excilys.formation.CDB.mapper.CompanyDAOMapper;
 import com.excilys.formation.CDB.model.Company;
-import com.excilys.formation.CDB.model.Page;
 
 @Component
 public class CompanyDAO extends DAO<Company> {

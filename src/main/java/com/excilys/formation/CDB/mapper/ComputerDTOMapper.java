@@ -44,9 +44,10 @@ public class ComputerDTOMapper {
 				: LocalDate.parse(dtoComputer.getIntroduced()));
 		LocalDate discontinued = (dtoComputer.getDiscontinued() == null ? null
 				: LocalDate.parse(dtoComputer.getDiscontinued()));
-		Long companyId = Long.parseLong(dtoComputer.getDtoCompany().getId());
+		
 		String companyName = dtoComputer.getDtoCompany().getName();
-		Company company = new Company(companyId, companyName);
+		Company company = dtoComputer.getDtoCompany().getId().equals("0")?null:new Company(Long.valueOf(dtoComputer.getDtoCompany().getId()), companyName);
+		
 		if (dtoComputer.getId() != null) {
 			Long id = Long.parseLong(dtoComputer.getId());
 			return new Computer(id, name, introduced, discontinued, company);
