@@ -3,9 +3,9 @@ package com.excilys.validator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import com.excilys.formation.CDB.DTO.DTOComputer;
-import com.excilys.formation.CDB.exceptions.ComputerDateException;
-import com.excilys.formation.CDB.exceptions.ComputerNameException;
+import com.excilys.dto.DTOComputer;
+import com.excilys.exception.ComputerDateException;
+import com.excilys.exception.ComputerNameException;
 
 public class ValidationComputerSpring  {
 	

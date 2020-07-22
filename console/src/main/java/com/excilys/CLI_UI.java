@@ -1,65 +1,59 @@
 package com.excilys;
 
+import java.sql.SQLException;
 import java.util.Scanner;
+
+import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.excilys.formation.CDB.DTO.DTOComputer;
-import com.excilys.formation.CDB.service.CompanyService;
-import com.excilys.formation.CDB.service.ComputerService;
-
+import com.excilys.service.CompanyService;
 
 @Component
 public class CLI_UI {
 
-	@Autowired
-	private static ComputerService computerService;
+
 	@Autowired
 	private static CompanyService companyService;
-	
 
-	private final static int NB_LINES = 100;
+
 
 	public static void main(String[] args) {
-	
 
 		Scanner userEntry = new Scanner(System.in);
 		String choix = "";
 		while (!choix.equals("x")) {
 
 			showMenu();
-			
 
 			choix = userEntry.nextLine();
 
 			switch (choix) {
 			case "1":
-				PageComputer pageComputer = new PageComputer(NB_LINES);
-				pageComputer.loadPage(); // to do truc avec count pour avoir nb pages total
-				break;
 
+				break;
 			case "2":
-				PageCompany pageCompany = new PageCompany();
-				pageCompany.loadPage();
 
 				break;
 
 			case "3":
 
-				System.out.println("computer's id ?");
-				String id = userEntry.nextLine();
-				DTOComputer result = computerService.get(id);
-				System.out.println(result);
-
 				break;
 			case "4":
-				
+
 				System.out.println("company to delete id ?");
 				String idCompany = userEntry.nextLine();
-				companyService.delete(idCompany);
+				try {
+					companyService.delete(idCompany);
+				} catch (PersistenceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				break;
-
 
 			default:
 				System.out.println("wrong entry or unimplemented");
@@ -108,7 +102,7 @@ public class CLI_UI {
 			}
 
 			String[] infoComputer = { name, introduced, discontinued, company_id };
-			
+
 			userEntry.close();
 			return infoComputer;
 		} catch (Exception e) {

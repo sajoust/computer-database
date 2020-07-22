@@ -1,8 +1,11 @@
 package com.excilys.controller;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.excilys.formation.CDB.DTO.DTOCompany;
-import com.excilys.formation.CDB.DTO.DTOComputer;
-import com.excilys.formation.CDB.DTO.PageDTO;
-import com.excilys.formation.CDB.exceptions.ComputerDateException;
-import com.excilys.formation.CDB.exceptions.ComputerNameException;
-import com.excilys.formation.CDB.service.CompanyService;
-import com.excilys.formation.CDB.service.ComputerService;
-import com.excilys.formation.CDB.validation.ValidationComputer;
+import com.excilys.dto.DTOCompany;
+import com.excilys.dto.DTOComputer;
+import com.excilys.dto.PageDTO;
+import com.excilys.exception.ComputerDateException;
+import com.excilys.exception.ComputerNameException;
+import com.excilys.service.CompanyService;
+import com.excilys.service.ComputerService;
+import com.excilys.validator.ValidationComputer;
 
 @Controller
 public class AddComputerController {
@@ -53,7 +56,15 @@ public class AddComputerController {
 		errors = isValid(dtoComputer);
 
 		if (errors.isEmpty()) {
-			computerService.add(dtoComputer);
+			try {
+				computerService.add(dtoComputer);
+			} catch (PersistenceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return "redirect:addComputer";

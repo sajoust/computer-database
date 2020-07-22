@@ -11,8 +11,10 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
-import com.excilys.dto.PageDTO;
-import com.excilys.model.*;
+import com.excilys.model.Computer;
+import com.excilys.model.Page;
+import com.excilys.model.QCompany;
+import com.excilys.model.QComputer;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 
@@ -26,7 +28,7 @@ public class ComputerDAO extends DAO<Computer> {
 
 
 	@Override
-	public List<Computer> getAll(PageDTO pageDto) {
+	public List<Computer> getAll(Page currentPage) {
 
 		List<Computer> computerList = new ArrayList<>();
 
@@ -36,10 +38,10 @@ public class ComputerDAO extends DAO<Computer> {
 
 		computerList = query.from(qComputer)
 				.leftJoin(qCompany).on(qComputer.company.id.eq(qCompany.id))
-				.where(qComputer.name.contains(pageDto.getSearch()).or(qCompany.name.contains(pageDto.getSearch())))
-				.orderBy(doOrder(pageDto))
-				.limit(pageDto.getComputerPerPage())
-				.offset((pageDto.getPageToDisplay()-1)*pageDto.getComputerPerPage())
+				.where(qComputer.name.contains(currentPage.getSearch()).or(qCompany.name.contains(currentPage.getSearch())))
+				.orderBy(doOrder(currentPage))
+				.limit(currentPage.getComputerPerPage())
+				.offset((currentPage.getPageToDisplay()-1)*currentPage.getComputerPerPage())
 				.fetch();
 
 		return computerList;
@@ -96,12 +98,12 @@ public class ComputerDAO extends DAO<Computer> {
 	}
 	
 
-	private OrderSpecifier<?> doOrder(PageDTO pageDTO) {
+	private OrderSpecifier<?> doOrder(Page currentPage) {
 		QComputer computer = QComputer.computer;
 		QCompany company = QCompany.company;
 		
 
-		String[] order = pageDTO.getOrder().split("-");
+		String[] order = currentPage.getOrder().split("-");
 
 		switch (order[0]) {
 		case "computer.name":

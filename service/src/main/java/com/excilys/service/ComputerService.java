@@ -4,16 +4,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.excilys.formation.CDB.DTO.DTOComputer;
-import com.excilys.formation.CDB.DTO.PageDTO;
-import com.excilys.formation.CDB.mapper.ComputerDTOMapper;
-import com.excilys.formation.CDB.model.Computer;
-import com.excilys.formation.CDB.persistence.ComputerDAO;
+import com.excilys.dao.ComputerDAO;
+import com.excilys.dto.DTOComputer;
+import com.excilys.dto.PageDTO;
+import com.excilys.mapper.ComputerDTOMapper;
+import com.excilys.mapper.PageMapper;
+import com.excilys.model.Computer;
+import com.excilys.model.Page;
 
 @Service
 public class ComputerService {
@@ -30,11 +34,12 @@ public class ComputerService {
 
 	public List<DTOComputer> getAll(PageDTO pageDto) {
 
-		List<Computer> computerList = computerDAO.getAll(pageDto);
+		Page currentPage = PageMapper.dtoToPage(pageDto);
+		List<Computer> computerList = computerDAO.getAll(currentPage);
 		List<DTOComputer> dtoComputerList = new ArrayList<>();
 
 		for (Computer computer : computerList) {
-			System.out.println("COMPUTER SERVICE GETALL --- ORDI PARSE ---- "+computerList.indexOf(computer));
+
 			dtoComputerList.add(ComputerDTOMapper.ComputerToDTO(computer));
 		}
 		return dtoComputerList;
@@ -52,22 +57,18 @@ public class ComputerService {
 
 
 
-	public void add(DTOComputer dtoComputer) {
+	public void add(DTOComputer dtoComputer) throws PersistenceException, SQLException {
 
-		try {	
+		
 			computerDAO.add(ComputerDTOMapper.dtoToComputer(dtoComputer));
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
 
 	}
 
-	public void delete(String id) {
+	public void delete(String id) throws PersistenceException, SQLException {
 		computerDAO.deleteComputer(id);
 	}
 
-	public void edit(String id, DTOComputer dtoComputer) {
+	public void edit(String id, DTOComputer dtoComputer) throws PersistenceException, SQLException {
 
 		computerDAO.edit(id, ComputerDTOMapper.dtoToComputer(dtoComputer));
 

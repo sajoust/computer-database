@@ -1,4 +1,4 @@
-package com.excilys.formation.CDB.connection;
+package com.excilys.config;
 
 import java.sql.Connection;
 import java.sql.SQLException;

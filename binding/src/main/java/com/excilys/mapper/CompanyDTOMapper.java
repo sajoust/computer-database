@@ -3,11 +3,14 @@ package com.excilys.mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.formation.CDB.DTO.DTOCompany;
-import com.excilys.formation.CDB.model.Company;
+import com.excilys.dto.DTOCompany;
+import com.excilys.model.Company;
+
+
 
 public class CompanyDTOMapper {
 
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(CompanyDTOMapper.class);
 
 

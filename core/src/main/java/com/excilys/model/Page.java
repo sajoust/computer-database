@@ -1,19 +1,22 @@
 package com.excilys.model;
 
 public class Page {
-
-	private int nbLines=10;
-	private int pageToDisplay=1;
-	private String filter="";
+	
+	
+	private String search="";
 	private String order="";
+	private int pageToDisplay=1;
+	private int computerPerPage=10;
+	
+
 	
 	
 	
-	public Page(int nbLines, int pageToDisplay, String filter, String order) {
+	public Page(String search, String order, int computerPerPage, int pageToDisplay) {
 		super();
-		this.nbLines = nbLines;
+		this.computerPerPage = computerPerPage;
 		this.pageToDisplay = pageToDisplay;
-		this.filter = filter;
+		this.search = search;
 		this.order = order;
 	}
 	
@@ -23,14 +26,14 @@ public class Page {
 
 
 
-	public int getNbLines() {
-		return nbLines;
+	public int getComputerPerPage() {
+		return computerPerPage;
 	}
 
 
 
-	public void setNbLines(int nbLines) {
-		this.nbLines = nbLines;
+	public void setComputerPerPage(int nbLines) {
+		this.computerPerPage = nbLines;
 	}
 
 
@@ -47,14 +50,14 @@ public class Page {
 
 
 
-	public String getFilter() {
-		return filter;
+	public String getSearch() {
+		return search;
 	}
 
 
 
-	public void setFilter(String filter) {
-		this.filter = filter;
+	public void setSearch(String search) {
+		this.search = search;
 	}
 
 

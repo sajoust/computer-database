@@ -7,7 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.excilys.formation.CDB.model.Company;
+import com.excilys.model.Company;
+
 
 public class CompanyDAOMapper implements RowMapper<Company> {
 

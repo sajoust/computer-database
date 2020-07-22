@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.excilys.formation.CDB.DTO.DTOComputer;
-import com.excilys.formation.CDB.DTO.PageDTO;
-import com.excilys.formation.CDB.service.ComputerService;
+import com.excilys.dto.DTOComputer;
+import com.excilys.dto.PageDTO;
+import com.excilys.service.ComputerService;
 
 @Controller
 public class DashboardController {
