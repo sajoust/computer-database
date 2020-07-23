@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity(name = "Company")
+@Entity
 @Table(name = "company")
 public class Company {
 	@Id 

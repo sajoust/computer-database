@@ -47,7 +47,7 @@ public class SpringMVCConfig implements WebMvcConfigurer {
 		
 		LocalContainerEntityManagerFactoryBean entityManager= new LocalContainerEntityManagerFactoryBean();
 		entityManager.setDataSource(hikariDataSource());
-		entityManager.setPackagesToScan("com.excilys.formation.CDB.model");
+		entityManager.setPackagesToScan("com.excilys.model");
 		
 	
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
