@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
@@ -27,8 +28,8 @@ import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({ "com.excilys.formation.CDB.connection", "com.excilys.formation.CDB.persistence",
-		"com.excilys.formation.CDB.service", "com.excilys.formation.CDB.servlets" })
+@EnableWebMvc
+@ComponentScan({ "com.excilys" })
 public class SpringMVCConfig implements WebMvcConfigurer {
 
 	@Bean
