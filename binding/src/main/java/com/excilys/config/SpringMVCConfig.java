@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -44,12 +45,11 @@ public class SpringMVCConfig implements WebMvcConfigurer {
 
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-		
-		LocalContainerEntityManagerFactoryBean entityManager= new LocalContainerEntityManagerFactoryBean();
+
+		LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
 		entityManager.setDataSource(hikariDataSource());
 		entityManager.setPackagesToScan("com.excilys.model");
-		
-	
+
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		entityManager.setJpaVendorAdapter(vendorAdapter);
 		return entityManager;
@@ -88,18 +88,25 @@ public class SpringMVCConfig implements WebMvcConfigurer {
 		localeChangeInterceptor.setParamName("lang");
 		registry.addInterceptor(localeChangeInterceptor);
 	}
-	
+
 	@Bean
 	public PlatformTransactionManager transactionManager() {
-	    JpaTransactionManager transactionManager = new JpaTransactionManager();
-	    transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-	 
-	    return transactionManager;
+		JpaTransactionManager transactionManager = new JpaTransactionManager();
+		transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+
+		return transactionManager;
 	}
-	 
+
 	@Bean
-	public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
-	    return new PersistenceExceptionTranslationPostProcessor();
+	public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+		return new PersistenceExceptionTranslationPostProcessor();
+	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
+		registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
+		registry.addResourceHandler("/fonts/**").addResourceLocations("/resources/fonts/");
 	}
 
 }
