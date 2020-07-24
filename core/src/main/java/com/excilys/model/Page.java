@@ -12,7 +12,7 @@ public class Page {
 	
 	
 	
-	public Page(String search, String order, int computerPerPage, int pageToDisplay) {
+	public Page(String search, String order,int pageToDisplay, int computerPerPage) {
 		super();
 		this.computerPerPage = computerPerPage;
 		this.pageToDisplay = pageToDisplay;

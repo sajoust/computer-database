@@ -114,7 +114,7 @@
 				</c:if>
 				<%-- 				<c:if test="${pageToDisplay>nbPages}" var="testPages"></c:if> --%>
 
-				<c:forEach var="i" begin="1" end="2">
+				<c:forEach var="i" begin="${Math.max(pageToDisplay-2,1)}" end="${Math.min(pageToDisplay+2,nbPages+0)}">
 
 
 					<li><a href="home?pageToDisplay=${i}&computerPerPage=${computerPerPage}&search=${search}&order=${order}">${i}</a></li>
