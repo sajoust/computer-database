@@ -1,6 +1,7 @@
 package com.excilys.dao;
 
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.excilys.model.Computer;
 import com.excilys.model.Page;
@@ -18,6 +20,7 @@ import com.excilys.model.QComputer;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 
+@EnableTransactionManagement
 @Repository
 public class ComputerDAO extends DAO<Computer> {
 
@@ -28,13 +31,16 @@ public class ComputerDAO extends DAO<Computer> {
 
 
 	@Override
+	@Transactional
 	public List<Computer> getAll(Page currentPage) {
 
 		List<Computer> computerList = new ArrayList<>();
 
-		JPAQuery<Computer> query = new JPAQuery<Computer>(entityManager);
+		JPAQuery<Computer> query = new JPAQuery<>(entityManager);
 		QComputer qComputer = QComputer.computer;
 		QCompany qCompany = QCompany.company;
+	
+				
 
 		computerList = query.from(qComputer)
 				.leftJoin(qCompany).on(qComputer.company.id.eq(qCompany.id))

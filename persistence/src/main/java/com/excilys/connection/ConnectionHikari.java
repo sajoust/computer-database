@@ -1,4 +1,4 @@
-package com.excilys.config;
+package com.excilys.connection;
 
 import java.sql.Connection;
 import java.sql.SQLException;

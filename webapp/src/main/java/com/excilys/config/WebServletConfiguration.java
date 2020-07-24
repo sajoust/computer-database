@@ -14,7 +14,7 @@ public class WebServletConfiguration implements WebApplicationInitializer {
 	public void onStartup(ServletContext ctx) {
 
 		AnnotationConfigWebApplicationContext webCtx = new AnnotationConfigWebApplicationContext();
-		webCtx.register(SpringMVCConfig.class);
+		webCtx.register(PersistenceConfig.class,WebappConfig.class);
 		webCtx.setServletContext(ctx);
 		ServletRegistration.Dynamic servlet = ctx.addServlet("dispatcher", new DispatcherServlet(webCtx));
 		servlet.setLoadOnStartup(1);

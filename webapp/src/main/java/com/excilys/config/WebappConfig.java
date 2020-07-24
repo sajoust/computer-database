@@ -6,11 +6,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
@@ -27,11 +22,12 @@ import org.springframework.web.servlet.view.JstlView;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+//CONFIG FOR WEBAPP
 @Configuration
 @EnableTransactionManagement
 @EnableWebMvc
 @ComponentScan({ "com.excilys" })
-public class SpringMVCConfig implements WebMvcConfigurer {
+public class WebappConfig implements WebMvcConfigurer {
 
 	@Bean
 	public ViewResolver viewResolver() {
@@ -43,17 +39,7 @@ public class SpringMVCConfig implements WebMvcConfigurer {
 		return viewResolver;
 	}
 
-	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 
-		LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
-		entityManager.setDataSource(hikariDataSource());
-		entityManager.setPackagesToScan("com.excilys.model");
-
-		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-		entityManager.setJpaVendorAdapter(vendorAdapter);
-		return entityManager;
-	}
 
 	@Bean
 	public HikariDataSource hikariDataSource() {
@@ -87,14 +73,6 @@ public class SpringMVCConfig implements WebMvcConfigurer {
 		LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
 		localeChangeInterceptor.setParamName("lang");
 		registry.addInterceptor(localeChangeInterceptor);
-	}
-
-	@Bean
-	public PlatformTransactionManager transactionManager() {
-		JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-
-		return transactionManager;
 	}
 
 	@Bean

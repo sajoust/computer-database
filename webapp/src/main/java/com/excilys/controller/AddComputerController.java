@@ -56,15 +56,16 @@ public class AddComputerController {
 		errors = isValid(dtoComputer);
 
 		if (errors.isEmpty()) {
-			try {
-				computerService.add(dtoComputer);
-			} catch (PersistenceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				try {
+					computerService.add(dtoComputer);
+				} catch (PersistenceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		}
 		
 		return "redirect:addComputer";

@@ -19,7 +19,7 @@ public class DashboardController {
 	private ComputerService computerService;
 	private List<DTOComputer> computerDTOList;
 
-	@RequestMapping(path = "/home", method = RequestMethod.GET)
+	@RequestMapping(path = {"/home","/"}, method = RequestMethod.GET)
 	public ModelAndView get(PageDTO pageDto) {
 
 		ModelAndView mv = new ModelAndView();
