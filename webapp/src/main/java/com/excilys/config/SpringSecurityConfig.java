@@ -61,13 +61,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 	
-
-
-//	@Bean
-//	@Override
-//	protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
-//		authenticationManagerBuilder.userDetailsService(userDetailsServiceBean());
-//	}
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
@@ -75,31 +68,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider());
 
     }
-	
-//	@Bean
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception {
-//		
-//		http.addFilter(digestAuthenticationFilter())
-//		.exceptionHandling().authenticationEntryPoint(digestEntryPoint())
-//		.and()
-//		.authorizeRequests().antMatchers("/login", "/resource/**").permitAll()
-//		.and()
-//		.formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password").permitAll()
-//		.loginProcessingUrl("/doLogin")
-//		.defaultSuccessUrl("/postLogin")
-//		.failureUrl("/loginFailed")
-//		.and()
-//		.logout().logoutUrl("/doLogout").logoutSuccessUrl("/logout").permitAll()
-//		.and()
-//		.csrf().disable();
-//		
-//		
-//		
-//		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//		
-//		
-//	}
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
