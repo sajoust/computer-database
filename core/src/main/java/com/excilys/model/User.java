@@ -73,11 +73,11 @@ public class User implements Serializable{
 		this.password = password;
 	}
 
-	public Set<Authority> getAutorities() {
+	public Set<Authority> getAuthorities() {
 		return authorities;
 	}
 
-	public void setAutorities(Set<Authority> authorities) {
+	public void setAuthorities(Set<Authority> authorities) {
 		this.authorities = authorities;
 	}
 	

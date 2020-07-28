@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ page isELIgnored="false"%>
 <%-- <%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/fmt" %> --%>
 
@@ -24,7 +24,9 @@
 			<a class="navbar-brand" href="home"><spring:message code="label.navbar" /></a>
 			<div class="pull-right">
 				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=${order}&lang=fr"><img alt="fr" src="images/french_flag.png" width="16" height="16"></a>
-				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=${order}&lang=en"><img alt="en" src="images/uk_flag.png" width="16" height="16"></a>
+				<a href="home?pageToDisplay=${pageToDisplay}&computerPerPage=${computerPerPage}&search=${search}&order=${order}&lang=en"><img alt="en" src="images/uk_flag.png" width="16" height="16"></a> <a
+					href="<c:url value="/logout" />"
+				>Logout</a>
 
 			</div>
 		</div>

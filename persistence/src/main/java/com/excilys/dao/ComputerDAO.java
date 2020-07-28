@@ -1,7 +1,6 @@
 package com.excilys.dao;
 
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.excilys.model.Computer;
 import com.excilys.model.Page;
@@ -20,7 +18,6 @@ import com.excilys.model.QComputer;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 
-@EnableTransactionManagement
 @Repository
 public class ComputerDAO extends DAO<Computer> {
 

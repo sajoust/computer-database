@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "autority")
+@Table(name = "authority")
 public class Authority {
 
 	@Id
@@ -42,6 +42,8 @@ public class Authority {
 	public void setName(AuthorityType name) {
 		this.name = name;
 	}
+	
+	
 	
 	
 }

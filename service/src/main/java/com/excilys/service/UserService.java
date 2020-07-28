@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.excilys.dao.UserDAO;
+import com.excilys.model.CustomUserDetails;
 import com.excilys.model.Page;
 import com.excilys.model.User;
 
@@ -23,10 +24,11 @@ public class UserService implements UserDetailsService {
 		
 		
 		User user = userDAO.getByName(username);
-		return org.springframework.security.core.userdetails.User.builder()
-				.username(user.getUsername())
-				.password(user.getPassword())
-				.build();
+		if (user==null) {
+			throw new UsernameNotFoundException("User not found");
+		}
+		
+		return new CustomUserDetails(user);
 
 	}
 	
