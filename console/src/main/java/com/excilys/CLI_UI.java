@@ -1,6 +1,8 @@
 package com.excilys;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.persistence.PersistenceException;
@@ -8,7 +10,10 @@ import javax.persistence.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.excilys.dto.DTOComputer;
+import com.excilys.model.Page;
 import com.excilys.service.CompanyService;
+import com.excilys.service.ComputerService;
 
 @Component
 public class CLI_UI {
@@ -16,6 +21,7 @@ public class CLI_UI {
 
 	@Autowired
 	private static CompanyService companyService;
+	
 
 
 
@@ -31,8 +37,14 @@ public class CLI_UI {
 
 			switch (choix) {
 			case "1":
-
+				
+				
+				Navigable nav = new Navigable(new Page());
+				nav.navigate();
+				
 				break;
+				
+				
 			case "2":
 
 				break;
@@ -121,7 +133,9 @@ public class CLI_UI {
 		System.out.println("1 - List computers");
 		System.out.println("2 - List companies");
 		System.out.println("3 - Show computer details");
-		System.out.println("4 - Delete a Company");
+		System.out.println("4 - Add a Computer");
+		System.out.println("5 - Modify a Computer");
+		System.out.println("6 - Delete a Company");
 
 		System.out.println();
 		System.out.println("press x to quit");

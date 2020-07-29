@@ -51,6 +51,21 @@ public class ComputerDAO extends DAO<Computer> {
 
 	}
 	
+	
+	@Transactional
+	public List<Computer> getAll(){
+		List<Computer> computerList = new ArrayList<>();
+
+		JPAQuery<Computer> query = new JPAQuery<>(entityManager);
+		QComputer qComputer = QComputer.computer;
+		QCompany qCompany = QCompany.company;
+		computerList = query.from(qComputer)
+				.leftJoin(qCompany).on(qComputer.company.id.eq(qCompany.id))
+				.fetch();
+	
+		return computerList;
+	}
+	
 	@Override
 	public Computer get(String id) {
 		JPAQuery<Computer> query = new JPAQuery<Computer>(entityManager);

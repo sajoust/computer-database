@@ -30,6 +30,17 @@ public class DTOComputer {
 		
 	}
 
+	public DTOComputer(Builder builder) {
+		
+		this.id=builder.idBuild;
+		this.name=builder.nameBuild;
+		this.introduced=builder.introducedBuild;
+		this.discontinued=builder.discontinuedBuild;
+		this.dtoCompany=builder.dtoCompanyBuild;
+	
+	
+	}
+
 	public boolean validateData() {
 		return true;
 	}
@@ -84,7 +95,44 @@ public class DTOComputer {
 
 
 	
-	
+	public static class Builder{
+		
+		private String idBuild;
+		private String nameBuild;
+		private String introducedBuild;
+		private String discontinuedBuild;
+		private DTOCompany dtoCompanyBuild;
+		
+		public Builder setIdBuild(String id) {
+			this.idBuild = id;
+			return this;
+		}
+		
+		public Builder setNameBuild(String name) {
+			this.nameBuild=name;
+			return this;
+		}
+		
+		public Builder setIntroducedBuild(String introduced) {
+			this.introducedBuild = introduced;
+			return this;
+		}
+		
+		public Builder setDiscontinuedBuild(String dicontinued) {
+			this.discontinuedBuild = dicontinued;
+			return this;
+		}
+		
+		public Builder setDtoCompanyBuild(DTOCompany dtoCompany) {
+			this.dtoCompanyBuild = dtoCompany;
+			return this;
+		}
+		
+		public DTOComputer build() {
+			return new DTOComputer(this);
+		}
+		
+	}
 	
 	
 	

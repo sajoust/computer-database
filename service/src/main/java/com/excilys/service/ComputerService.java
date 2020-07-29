@@ -44,6 +44,17 @@ public class ComputerService {
 		}
 		return dtoComputerList;
 	}
+	
+	public List<DTOComputer> getAll(){
+		List<Computer> computerList = computerDAO.getAll();
+		List<DTOComputer> dtoComputerList = new ArrayList<>();
+		
+		for (Computer computer : computerList) {
+
+			dtoComputerList.add(ComputerDTOMapper.ComputerToDTO(computer));
+		}
+		return dtoComputerList;
+	}
 
 	public DTOComputer get(String id) {
 

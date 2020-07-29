@@ -18,23 +18,6 @@ import com.excilys.service.UserService;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	
-
-//	@Bean
-//	DigestAuthenticationFilter digestAuthenticationFilter() throws Exception {
-//		DigestAuthenticationFilter digestAuthenticationFilter = new DigestAuthenticationFilter();
-//		digestAuthenticationFilter.setUserDetailsService(userDetailsServiceBean());
-//		digestAuthenticationFilter.setAuthenticationEntryPoint(digestEntryPoint());
-//		return digestAuthenticationFilter;
-//	}
-//
-//	@Bean
-//	DigestAuthenticationEntryPoint digestEntryPoint() {
-//		DigestAuthenticationEntryPoint entryPoint = new DigestAuthenticationEntryPoint();
-//		entryPoint.setRealmName("realm");
-//		entryPoint.setKey("key");
-//		return entryPoint;
-//	}
-	
 	
     @Bean
     public UserDetailsService userDetailsService() {

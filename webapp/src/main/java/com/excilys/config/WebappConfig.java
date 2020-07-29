@@ -38,8 +38,7 @@ public class WebappConfig implements WebMvcConfigurer {
 		viewResolver.setSuffix(".jsp");
 		return viewResolver;
 	}
-
-
+	
 
 	@Bean
 	public HikariDataSource hikariDataSource() {

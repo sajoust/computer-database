@@ -1,11 +1,16 @@
 package com.excilys.controller;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.excilys.dto.DTOComputer;
@@ -13,13 +18,14 @@ import com.excilys.dto.PageDTO;
 import com.excilys.service.ComputerService;
 
 @Controller
+@RequestMapping("/home")
 public class DashboardController {
 
 	@Autowired
 	private ComputerService computerService;
 	private List<DTOComputer> computerDTOList;
 
-	@RequestMapping(path = {"/home","/"}, method = RequestMethod.GET)
+	@GetMapping
 	public ModelAndView get(PageDTO pageDto) {
 
 		ModelAndView mv = new ModelAndView();
@@ -43,6 +49,16 @@ public class DashboardController {
 
 		return mv;
 		
+	}
+	
+	@PostMapping
+	public String deleteComputer(@RequestParam(name = "selection") String selection ) throws PersistenceException, SQLException {
+		String results[] = selection.split(",");
+		System.out.println(results);
+		for(String str : results) {
+			computerService.delete(str);
+		}
+		return "redirect:/home";
 	}
 
 }
