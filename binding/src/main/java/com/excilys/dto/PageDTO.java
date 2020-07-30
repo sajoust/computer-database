@@ -5,7 +5,7 @@ public class PageDTO {
 	private String search="";
 	private String order="";
 	private int pageToDisplay=1;
-	private int computerPerPage=10;
+	private int computerPerPage=20;
 	
 		
 	
@@ -20,7 +20,17 @@ public class PageDTO {
 		
 	}
 	
+
+	public PageDTO(Builder builder) {
+		
+		this.search=builder.searchBuild;
+		this.order=builder.orderBuild;
+		this.pageToDisplay=builder.pageToDisplayBuild;
+		this.computerPerPage=builder.computerPerPageBuild;
+
 	
+	
+	}
 	
 	public String getSearch() {
 		return search;
@@ -50,6 +60,41 @@ public class PageDTO {
 	public String toString() {
 		return "PageDTO [search=" + search + ", order=" + order + ", pageToDisplay=" + pageToDisplay
 				+ ", computerPerPage=" + computerPerPage + "]";
+	}
+	
+public static class Builder{
+		
+		private String searchBuild;
+		private String orderBuild;
+		private int pageToDisplayBuild;
+		private int computerPerPageBuild;
+		
+
+		public Builder setSearchBuild(String search) {
+			this.searchBuild = search;
+			return this;
+		}
+		
+		public Builder setOrderBuild(String order) {
+			this.orderBuild=order;
+			return this;
+		}
+		
+		public Builder setPageToDisplayBuild(int pageToDisplay) {
+			this.pageToDisplayBuild = pageToDisplay;
+			return this;
+		}
+		
+		public Builder setComputerPerPageBuild(int computerPerPage) {
+			this.computerPerPageBuild = computerPerPage;
+			return this;
+		}
+		
+		
+		public PageDTO build() {
+			return new PageDTO(this);
+		}
+		
 	}
 	
 	

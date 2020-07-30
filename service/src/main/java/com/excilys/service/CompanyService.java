@@ -41,9 +41,9 @@ public class CompanyService {
 		return dtoCompanyList;
 	}
 	
-	public String get(String id) {
+	public DTOCompany get(String id) {
 				
-		return companyDAO.get(id).toString();
+		return CompanyDTOMapper.CompanyToDTO(companyDAO.get(id));
 		
 	}
 	public void delete(String id) throws PersistenceException, SQLException {

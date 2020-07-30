@@ -2,24 +2,27 @@ package com.excilys.controller;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.excilys.dto.DTOComputer;
+import com.excilys.dto.PageDTO;
 import com.excilys.service.ComputerService;
 
 @RestController
-@RequestMapping("/homeRest")
+@RequestMapping("/computers")
 public class ComputerRestController {
 
 	
@@ -28,41 +31,64 @@ public class ComputerRestController {
 	
 	
 	@GetMapping
-	public List<DTOComputer> getAll(){
-		List<DTOComputer> listComputers = computerService.getAll();
-		listComputers = computerService.getAll();
+	public List<DTOComputer> getAll(@RequestBody PageDTO pageDTO){
+		List<DTOComputer> listComputers = computerService.getAll(pageDTO);
+		
 		return listComputers;
 	}
 	
 	@GetMapping("/find/{ID}")
 	public DTOComputer findByID(@PathVariable String ID) {
-
-		@SuppressWarnings("unused")
-		Optional<DTOComputer> Optionalcomputer = Optional.empty();		
+		
 		DTOComputer dtoComputer = computerService.get(ID);
 		
 		return dtoComputer;
 	}
-	
-	@PostMapping("/add")
-	@Transactional
-	public void createComputer(@RequestBody DTOComputer dtoComputer) throws PersistenceException, SQLException {
-		System.out.println("COMPUTER TO ADD -----------------"+ dtoComputer);
-		computerService.add(dtoComputer);
+	@GetMapping("/search/{search}")
+	public List<DTOComputer> searchComputers(@PathVariable String search, PageDTO pageDTO){
+		
+		pageDTO.setSearch(search);
+		List<DTOComputer> foundComputers = computerService.getAll(pageDTO);
+		
+		
+		return foundComputers;
+		
 	}
 	
-	@PostMapping("/edit")
-	@Transactional
-	public void editComputer(@RequestBody DTOComputer dtoComputer) throws PersistenceException, SQLException {
-		System.out.println("COMPUTER TO edit -----------------"+ dtoComputer);
-		computerService.edit(dtoComputer.getId(), dtoComputer);
+	@GetMapping("/order/{order}")
+	public List<DTOComputer> orderComputers(@PathVariable String order, PageDTO pageDTO){
+		
+		pageDTO.setOrder(order);
+		List<DTOComputer> foundComputers = computerService.getAll(pageDTO);
+		
+		
+		return foundComputers;
+		
 	}
-	
 	
 	
 	@PostMapping
 	@Transactional
-	public void deleteComputer() throws PersistenceException, SQLException {
-		computerService.delete("1");
+	public void createComputer(@RequestBody DTOComputer dtoComputer) throws PersistenceException, SQLException {
+		
+		computerService.add(dtoComputer);
+	}
+	
+	
+	
+	@PutMapping
+	@Transactional
+	public void editComputer(@RequestBody DTOComputer dtoComputer) throws PersistenceException, SQLException {
+		System.out.println("COMPUTER TO edit -----------------"+ dtoComputer);
+		computerService.edit(dtoComputer.getId(), dtoComputer);
+		
+	}
+	
+	
+	
+	@DeleteMapping
+	@Transactional
+	public void deleteComputer(@RequestParam(name = "selection") String selection) throws PersistenceException, SQLException {
+		computerService.delete(selection);
 	}
 }
