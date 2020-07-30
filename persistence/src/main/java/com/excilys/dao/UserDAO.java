@@ -17,7 +17,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 
 
 @Repository
-public class UserDAO implements DAO<User> {
+public class UserDAO extends DAO<User> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

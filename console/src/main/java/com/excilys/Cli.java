@@ -1,6 +1,5 @@
 package com.excilys;
 
-import java.sql.SQLException;
 import java.util.Scanner;
 
 import javax.persistence.PersistenceException;

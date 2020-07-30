@@ -7,7 +7,7 @@ import com.excilys.model.Page;
 
 
 
-public interface DAO<T> {
+public abstract class DAO<T> {
 	
 	
 

@@ -14,7 +14,7 @@ import com.excilys.model.QCompany;
 import com.querydsl.jpa.impl.JPAQuery;
 
 @Repository
-public class CompanyDAO implements DAO<Company> {
+public class CompanyDAO extends DAO<Company> {
 
 	@PersistenceContext
 	private EntityManager entityManager;

@@ -125,7 +125,6 @@ public class Computer {
 		Computer rhs = (Computer) obj;
 
 		return new EqualsBuilder()
-				.appendSuper(super.equals(obj))
 				.append(name, rhs.name)
 				.append(introduced, rhs.introduced)
 				.append(discontinued, rhs.discontinued)

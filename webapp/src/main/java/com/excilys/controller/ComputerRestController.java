@@ -30,8 +30,7 @@ public class ComputerRestController {
 	
 	@GetMapping
 	public List<DTOComputer> getAll(@RequestBody PageDTO pageDTO){
-		
-		
+			
 		return computerService.getAll(pageDTO);
 	}
 	
@@ -56,17 +55,14 @@ public class ComputerRestController {
 
 		return computerService.getAll(pageDTO);
 		
-	}
-	
+	}	
 	
 	@PostMapping
 	@Transactional
 	public void createComputer(@RequestBody DTOComputer dtoComputer){
 		
 		computerService.add(dtoComputer);
-	}
-	
-	
+	}	
 	
 	@PutMapping
 	@Transactional
@@ -74,9 +70,7 @@ public class ComputerRestController {
 
 		computerService.edit(dtoComputer.getId(), dtoComputer);
 		
-	}
-	
-	
+	}	
 	
 	@DeleteMapping
 	@Transactional

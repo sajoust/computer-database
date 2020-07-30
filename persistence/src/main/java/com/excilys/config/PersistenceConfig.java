@@ -10,7 +10,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -20,8 +19,7 @@ import com.zaxxer.hikari.HikariDataSource;
 //CONFIG FOR DAO
 @Configuration
 @EnableTransactionManagement
-@EnableWebMvc
-@ComponentScan({ "com.excilys" })
+@ComponentScan({ "com.excilys.dao","com.excilys.connection" })
 public class PersistenceConfig implements WebMvcConfigurer {
 
 
@@ -39,7 +37,7 @@ public class PersistenceConfig implements WebMvcConfigurer {
 	@Bean
 	public HikariDataSource hikariDataSource() {
 		return new HikariDataSource(new HikariConfig("/connector.properties"));
-	}
+	} 
 	
 	
 	@Bean

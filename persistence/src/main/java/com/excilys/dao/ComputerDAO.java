@@ -16,7 +16,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 
 @Repository
-public class ComputerDAO implements DAO<Computer> {
+public class ComputerDAO extends DAO<Computer> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
