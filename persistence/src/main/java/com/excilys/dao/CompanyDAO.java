@@ -1,12 +1,9 @@
 package com.excilys.dao;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -17,7 +14,7 @@ import com.excilys.model.QCompany;
 import com.querydsl.jpa.impl.JPAQuery;
 
 @Repository
-public class CompanyDAO extends DAO<Company> {
+public class CompanyDAO implements DAO<Company> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -25,8 +22,8 @@ public class CompanyDAO extends DAO<Company> {
 	@Override
 	public List<Company> getAll(Page currentPage) {
 
-		List<Company> companyList = new ArrayList<>();
-		JPAQuery<Company> query = new JPAQuery<Company>(entityManager);
+		List<Company> companyList;
+		JPAQuery<Company> query = new JPAQuery<>(entityManager);
 		QCompany qCompany = QCompany.company;
 
 		companyList = query.from(qCompany)
@@ -41,12 +38,12 @@ public class CompanyDAO extends DAO<Company> {
 	public Company get(String id) {
 
 
-		JPAQuery<Company> query = new JPAQuery<Company>(entityManager);
+		JPAQuery<Company> query = new JPAQuery<>(entityManager);
 		QCompany qCompany = QCompany.company;
 		return query.from(qCompany).where(qCompany.id.eq(Long.valueOf(id))).fetchFirst();
 	}
 	@Transactional
-	public void delete(String id) throws SQLException, PersistenceException {
+	public void delete(String id) {
 		
 		entityManager.remove(get(id));
 

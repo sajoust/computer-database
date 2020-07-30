@@ -8,7 +8,7 @@
 
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <title><spring:message code="label.title" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,13 +59,14 @@
 
 		<div class="container" style="margin-top: 10px;">
 			<table class="table table-striped table-bordered">
+			<caption>Table regrouping the different computers</caption>
 				<thead>
 					<tr>
 						<!-- Variable declarations for passing labels as parameters -->
 						<!-- Table header for Computer Name -->
 
 						<th class="editMode" style="width: 60px; height: 22px;"><input type="checkbox" id="selectall" /> <span style="vertical-align: top;">
-								- <a href="#" id="deleteSelected" onclick="$.fn.deleteSelected();"> <i class="fa fa-trash-o fa-lg"></i>
+								- <a href="#" id="deleteSelected" onclick="$.fn.deleteSelected();"> <em class="fa fa-trash-o fa-lg"></em>
 								</a>
 							</span></th>
 						<th><spring:message code="label.computerName" /> <a class="glyphicon glyphicon-chevron-up"

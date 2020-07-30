@@ -3,6 +3,8 @@ package com.excilys;
 import java.util.List;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,8 @@ public class Navigable {
 	private Page page;
 	private int nbComputers;
 	private int nbPage;
+	
+	private static Logger logger = LoggerFactory.getLogger(Navigable.class);
 	
 	@Autowired
 	private ComputerService computerService;
@@ -49,7 +53,7 @@ public class Navigable {
 			
 			List<DTOComputer> computersList = computerService.getAll(); 
 			for (DTOComputer dtoComputer : computersList) {
-				System.out.println(dtoComputer.toString());
+				logger.info(dtoComputer.toString());
 			}
 		}
 		userEntry.close();

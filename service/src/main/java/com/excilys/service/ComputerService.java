@@ -1,10 +1,7 @@
 package com.excilys.service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.PersistenceException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +37,7 @@ public class ComputerService {
 
 		for (Computer computer : computerList) {
 
-			dtoComputerList.add(ComputerDTOMapper.ComputerToDTO(computer));
+			dtoComputerList.add(ComputerDTOMapper.computerToDto(computer));
 		}
 		return dtoComputerList;
 	}
@@ -51,38 +48,26 @@ public class ComputerService {
 		
 		for (Computer computer : computerList) {
 
-			dtoComputerList.add(ComputerDTOMapper.ComputerToDTO(computer));
+			dtoComputerList.add(ComputerDTOMapper.computerToDto(computer));
 		}
 		return dtoComputerList;
 	}
 
 	public DTOComputer get(String id) {
-
 		Computer computer = computerDAO.get(id);
-		
-		DTOComputer dtoComputer = ComputerDTOMapper.ComputerToDTO(computer);
-
-		return dtoComputer;
-
+		return ComputerDTOMapper.computerToDto(computer);
 	}
 
-
-
-	public void add(DTOComputer dtoComputer) throws PersistenceException, SQLException {
-
-		
+	public void add(DTOComputer dtoComputer) {
 			computerDAO.add(ComputerDTOMapper.dtoToComputer(dtoComputer));
-
 	}
 
-	public void delete(String id) throws PersistenceException, SQLException {
+	public void delete(String id){
 		computerDAO.deleteComputer(id);
 	}
 
-	public void edit(String id, DTOComputer dtoComputer) throws PersistenceException, SQLException {
-
+	public void edit(String id, DTOComputer dtoComputer)  {
 		computerDAO.edit(id, ComputerDTOMapper.dtoToComputer(dtoComputer));
-
 	}
 
 	public int countEntries(String filter) {

@@ -13,14 +13,17 @@ public class CompanyDTOMapper {
 	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(CompanyDTOMapper.class);
 
+	private CompanyDTOMapper() {
+		throw new AssertionError();
+	}
 
-	public static DTOCompany CompanyToDTO(Company company) {
+	public static DTOCompany companyToDto(Company company) {
 
 		String id = String.valueOf(company.getId());
 		String name = company.getName();
-		DTOCompany DTO = new DTOCompany(id, name);
+		
 
-		return DTO;
+		return new DTOCompany(id, name);
 	}
 
 }

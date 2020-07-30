@@ -1,10 +1,7 @@
 package com.excilys.service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.PersistenceException;
 
 import org.springframework.stereotype.Service;
 
@@ -32,10 +29,10 @@ public class CompanyService {
 		
 		Page currentPage = PageMapper.dtoToPage(pageDto);
 		List<Company> companyList = companyDAO.getAll(currentPage);
-		List<DTOCompany> dtoCompanyList=new ArrayList<DTOCompany>();
+		List<DTOCompany> dtoCompanyList=new ArrayList<>();
 		
 		for (Company company : companyList) {
-			dtoCompanyList.add(CompanyDTOMapper.CompanyToDTO(company));
+			dtoCompanyList.add(CompanyDTOMapper.companyToDto(company));
 		}
 		
 		return dtoCompanyList;
@@ -43,10 +40,10 @@ public class CompanyService {
 	
 	public DTOCompany get(String id) {
 				
-		return CompanyDTOMapper.CompanyToDTO(companyDAO.get(id));
+		return CompanyDTOMapper.companyToDto(companyDAO.get(id));
 		
 	}
-	public void delete(String id) throws PersistenceException, SQLException {
+	public void delete(String id) {
 		companyDAO.delete(id);
 	}
 	

@@ -24,14 +24,13 @@ public class CompanyRestController {
 	@GetMapping
 	public List<DTOCompany> getAll(@RequestBody PageDTO pageDTO){
 		
-		List<DTOCompany> listCompanies = companyService.getAll(pageDTO);
-		return listCompanies;
+		return companyService.getAll(pageDTO);
 	}
 	
 	@GetMapping("/find/{ID}")
-	public DTOCompany findById(@PathVariable String ID) {
-		DTOCompany dtoCompany = companyService.get(ID);
-		return dtoCompany;
+	public DTOCompany findById(@PathVariable String id) {
+		
+		return companyService.get(id);
 		
 	}
 	
@@ -45,9 +44,9 @@ public class CompanyRestController {
 	public List<DTOCompany> orderCompanys(@PathVariable String order, PageDTO pageDTO){
 		
 		pageDTO.setOrder(order);
-		List<DTOCompany> foundCompanies = companyService.getAll(pageDTO);
+		
 
-		return foundCompanies;
+		return companyService.getAll(pageDTO);
 		
 	}
 	

@@ -9,8 +9,11 @@ import com.excilys.exception.ComputerNameException;
 
 public class ValidationComputer {
 	
-	final static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private static final  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+	private ValidationComputer() {
+		throw new AssertionError();
+	}
 	public static void nameValidation(DTOComputer dtoComputer) throws ComputerNameException {
 
 		if (dtoComputer.getName().equals("")) {
@@ -19,8 +22,8 @@ public class ValidationComputer {
 	}
 	
 	public static void dateValidation(DTOComputer dtoComputer) throws ComputerDateException {
-		dtoComputer.setIntroduced(dtoComputer.getIntroduced()==""?null:dtoComputer.getIntroduced());
-		dtoComputer.setDiscontinued(dtoComputer.getDiscontinued()==""?null:dtoComputer.getDiscontinued());
+		dtoComputer.setIntroduced(dtoComputer.getIntroduced().equals("")?null:dtoComputer.getIntroduced());
+		dtoComputer.setDiscontinued(dtoComputer.getDiscontinued().equals("")?null:dtoComputer.getDiscontinued());
 		
 		
 		if (dtoComputer.getIntroduced()!=null && dtoComputer.getDiscontinued()!=null) {

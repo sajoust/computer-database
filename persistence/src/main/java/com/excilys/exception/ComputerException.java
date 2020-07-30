@@ -10,6 +10,6 @@ public class ComputerException extends Exception {
 
 
 	public ComputerException() {
-		
+		//default constructor
 	}
 }

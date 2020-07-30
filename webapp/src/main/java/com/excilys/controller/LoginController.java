@@ -9,8 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -34,12 +34,12 @@ public class LoginController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@GetMapping(value = "/login")
 	public String login() {
 		return "login";
 	}
 
-	@RequestMapping(value = "/loginFailed", method = RequestMethod.GET)
+	@GetMapping(value = "/loginFailed")
 	public String loginError(Model model) {
 		log.info("Login attempt failed");
 		model.addAttribute("error", "true");
@@ -47,7 +47,7 @@ public class LoginController {
 
 	}
 
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	@GetMapping(value = "/logout")
 	public String logout(SessionStatus session) {
 
 		SecurityContextHolder.getContext().setAuthentication(null);
@@ -56,7 +56,7 @@ public class LoginController {
 		
 	}
 
-	@RequestMapping(value = "/postLogin", method = RequestMethod.POST)
+	@PostMapping(value = "/postLogin")
 	public String postLogin(Model model, HttpSession session) {
 		log.info("postLogin()");
 		UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder

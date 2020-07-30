@@ -17,8 +17,10 @@ import com.excilys.service.UserService;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+	private static final String ADMIN_ROLE="ADMIN";
+	private static final String USER_ROLE="USER";
 	
-	
+	@Override
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserService();
@@ -62,13 +64,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/home")
                 .failureUrl("/loginFailed")
                 .and()
-                .authorizeRequests().antMatchers("/home").hasAnyRole("ADMIN","USER")
+                .authorizeRequests().antMatchers("/home").hasAnyRole(ADMIN_ROLE,USER_ROLE)
                 .and()
                 .logout().logoutUrl("/doLogout").logoutSuccessUrl("/logout").permitAll()
                 .and()
-                .authorizeRequests().antMatchers("/addComputer").hasRole("ADMIN")
+                .authorizeRequests().antMatchers("/addComputer").hasRole(ADMIN_ROLE)
                 .and()
-                .authorizeRequests().antMatchers("/editComputer").hasRole("ADMIN")
+                .authorizeRequests().antMatchers("/editComputer").hasRole(ADMIN_ROLE)
                 .and()
                 .logout()
                 .and()

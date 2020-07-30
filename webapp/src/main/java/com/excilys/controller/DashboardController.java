@@ -1,9 +1,6 @@
 package com.excilys.controller;
 
-import java.sql.SQLException;
 import java.util.List;
-
-import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,11 +20,13 @@ public class DashboardController {
 
 	@Autowired
 	private ComputerService computerService;
-	private List<DTOComputer> computerDTOList;
+
 
 	@GetMapping
 	public ModelAndView get(PageDTO pageDto) {
-
+		
+		
+		List<DTOComputer> computerDTOList;
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("Dashboard");
 		
@@ -52,9 +51,8 @@ public class DashboardController {
 	}
 	
 	@PostMapping
-	public String deleteComputer(@RequestParam(name = "selection") String selection ) throws PersistenceException, SQLException {
-		String results[] = selection.split(",");
-		System.out.println(results);
+	public String deleteComputer(@RequestParam(name = "selection") String selection ) {
+		String[] results = selection.split(",");
 		for(String str : results) {
 			computerService.delete(str);
 		}

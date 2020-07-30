@@ -1,9 +1,7 @@
 package com.excilys.controller;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,26 +30,22 @@ public class ComputerRestController {
 	
 	@GetMapping
 	public List<DTOComputer> getAll(@RequestBody PageDTO pageDTO){
-		List<DTOComputer> listComputers = computerService.getAll(pageDTO);
 		
-		return listComputers;
+		
+		return computerService.getAll(pageDTO);
 	}
 	
 	@GetMapping("/find/{ID}")
-	public DTOComputer findByID(@PathVariable String ID) {
-		
-		DTOComputer dtoComputer = computerService.get(ID);
-		
-		return dtoComputer;
+	public DTOComputer findByID(@PathVariable String id) {
+
+		return computerService.get(id);
 	}
+	
 	@GetMapping("/search/{search}")
 	public List<DTOComputer> searchComputers(@PathVariable String search, PageDTO pageDTO){
 		
 		pageDTO.setSearch(search);
-		List<DTOComputer> foundComputers = computerService.getAll(pageDTO);
-		
-		
-		return foundComputers;
+		return computerService.getAll(pageDTO);
 		
 	}
 	
@@ -59,17 +53,15 @@ public class ComputerRestController {
 	public List<DTOComputer> orderComputers(@PathVariable String order, PageDTO pageDTO){
 		
 		pageDTO.setOrder(order);
-		List<DTOComputer> foundComputers = computerService.getAll(pageDTO);
-		
-		
-		return foundComputers;
+
+		return computerService.getAll(pageDTO);
 		
 	}
 	
 	
 	@PostMapping
 	@Transactional
-	public void createComputer(@RequestBody DTOComputer dtoComputer) throws PersistenceException, SQLException {
+	public void createComputer(@RequestBody DTOComputer dtoComputer){
 		
 		computerService.add(dtoComputer);
 	}
@@ -78,8 +70,8 @@ public class ComputerRestController {
 	
 	@PutMapping
 	@Transactional
-	public void editComputer(@RequestBody DTOComputer dtoComputer) throws PersistenceException, SQLException {
-		System.out.println("COMPUTER TO edit -----------------"+ dtoComputer);
+	public void editComputer(@RequestBody DTOComputer dtoComputer) {
+
 		computerService.edit(dtoComputer.getId(), dtoComputer);
 		
 	}
@@ -88,7 +80,7 @@ public class ComputerRestController {
 	
 	@DeleteMapping
 	@Transactional
-	public void deleteComputer(@RequestParam(name = "selection") String selection) throws PersistenceException, SQLException {
+	public void deleteComputer(@RequestParam(name = "selection") String selection){
 		computerService.delete(selection);
 	}
 }

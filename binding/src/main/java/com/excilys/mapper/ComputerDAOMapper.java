@@ -17,7 +17,7 @@ import com.excilys.model.Computer;
 
 public class ComputerDAOMapper implements RowMapper<Computer> {
 
-	private static Logger logger = LoggerFactory.getLogger(ComputerDTOMapper.class);	
+	private static Logger logger = LoggerFactory.getLogger(ComputerDAOMapper.class);	
 	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");	
 	
 	
@@ -34,8 +34,8 @@ public class ComputerDAOMapper implements RowMapper<Computer> {
 				String companyName = resultSet.getString("company_name");
 				Long companyID = resultSet.getLong("company_id");
 				Company company = new Company(companyID, companyName);
-				Computer c = new Computer(id, name, ldIntroduced, ldDiscontinued, company);
-				return c;
+				
+				return new Computer(id, name, ldIntroduced, ldDiscontinued, company);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

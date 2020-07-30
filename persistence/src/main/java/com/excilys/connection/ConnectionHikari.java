@@ -20,19 +20,11 @@ public class ConnectionHikari {
 
 	@Autowired
 	public ConnectionHikari(HikariDataSource dataSource) {
-		//config = new HikariConfig("/connector.properties");
+
 		this.dataSource = dataSource;
 
 	}
 
-
-//	private static class ConnectionHikariHolder {
-//		private final static ConnectionHikari instance = new ConnectionHikari();
-//	}
-//
-//	public static ConnectionHikari getInstance() {
-//		return ConnectionHikariHolder.instance;
-//	}
 
 
 	public Connection getConnection() {
@@ -42,7 +34,7 @@ public class ConnectionHikari {
 				return dataSource.getConnection();
 			}
 		} catch (SQLException e) {
-			//logger.debug("datasource null");
+
 			logger.error("connection issue");
 			e.printStackTrace();
 		}

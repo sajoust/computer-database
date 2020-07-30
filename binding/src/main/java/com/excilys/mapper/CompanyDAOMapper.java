@@ -12,17 +12,17 @@ import com.excilys.model.Company;
 
 public class CompanyDAOMapper implements RowMapper<Company> {
 
-	private static Logger logger = LoggerFactory.getLogger(CompanyDTOMapper.class);
+	private static Logger logger = LoggerFactory.getLogger(CompanyDAOMapper.class);
 	
 	
 	public static Company resultSetToCompany(ResultSet resultSet) {
 
 		
 		try {
-			long ID = resultSet.getLong(1);
+			long id = resultSet.getLong(1);
 			String name = resultSet.getString("name");
-			Company c = new Company(ID, name);
-			return c;
+			return new Company(id, name);
+			
 
 		} catch (SQLException e) {
 			logger.error("probleme dans process results");

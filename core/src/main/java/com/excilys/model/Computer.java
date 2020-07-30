@@ -10,21 +10,25 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 @Entity
 @Table(name = "computer")
 public class Computer {
 
-	@Id 
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
-	@Column(name="name", nullable = false)
+	@Column(name = "name", nullable = false)
 	private String name;
 	@Column(name = "introduced")
 	private LocalDate introduced;
-	@Column(name="discontinued")
+	@Column(name = "discontinued")
 	private LocalDate discontinued;
-	@ManyToOne @JoinColumn(name = "company_id",nullable = true)
+	@ManyToOne
+	@JoinColumn(name = "company_id", nullable = true)
 	private Company company;
 
 	public Computer() {
@@ -87,15 +91,12 @@ public class Computer {
 	public void setCompany(Company company) {
 		this.company = company;
 	}
-	
 
 	@Override
 	public String toString() {
 		return "Computer [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued
 				+ ", company=" + company + "]";
 	}
-
-
 
 	@Override
 	public int hashCode() {
@@ -111,43 +112,26 @@ public class Computer {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
 			return true;
-		if (obj == null)
+		}
+		if (obj.getClass() != getClass()) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Computer other = (Computer) obj;
-		if (company == null) {
-			if (other.company != null)
-				return false;
-		} else if (!company.equals(other.company))
-			return false;
-		if (discontinued == null) {
-			if (other.discontinued != null)
-				return false;
-		} else if (!discontinued.equals(other.discontinued))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (introduced == null) {
-			if (other.introduced != null)
-				return false;
-		} else if (!introduced.equals(other.introduced))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+		}
+
+		Computer rhs = (Computer) obj;
+
+		return new EqualsBuilder()
+				.appendSuper(super.equals(obj))
+				.append(name, rhs.name)
+				.append(introduced, rhs.introduced)
+				.append(discontinued, rhs.discontinued)
+				.append(company, rhs.company)
+				.isEquals();
+
 	}
-	
-	
-	
-	
 
 }

@@ -20,7 +20,7 @@ public class UserService implements UserDetailsService {
 	private UserDAO userDAO;
 	
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) {
 		
 		
 		User user = userDAO.getByName(username);

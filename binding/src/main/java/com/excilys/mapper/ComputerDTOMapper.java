@@ -15,7 +15,13 @@ public class ComputerDTOMapper {
 	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(ComputerDTOMapper.class);
 
-	public static DTOComputer ComputerToDTO(Computer computer) {
+	
+	private ComputerDTOMapper() {
+		throw new AssertionError();
+	}
+	
+	
+	public static DTOComputer computerToDto(Computer computer) {
 		String id = String.valueOf(computer.getId());
 		String name = computer.getName();
 		String introduced = computer.getIntroduced() == null ? "" : computer.getIntroduced().toString();
@@ -26,9 +32,7 @@ public class ComputerDTOMapper {
 				: computer.getCompany().getName();
 		String companyId = computer.getCompany()==null?null:String.valueOf(computer.getCompany().getId());
 		DTOCompany dtoCompany = new DTOCompany(companyId, companyName);
-
-		DTOComputer dtoComputer = new DTOComputer(id, name, introduced, discontinued, dtoCompany);
-		return dtoComputer;
+		return new DTOComputer(id, name, introduced, discontinued, dtoCompany);
 	}
 
 	public static LocalDate stringToDate(String sDate) {

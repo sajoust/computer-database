@@ -46,7 +46,7 @@ public class User implements Serializable{
 	private Set<Authority> authorities = new HashSet<>();
 	
 	public User() {
-		
+		//default contructor for building object
 	}
 
 	public Integer getId() {

@@ -1,6 +1,5 @@
 package com.excilys.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -18,7 +17,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 
 
 @Repository
-public class UserDAO extends DAO<User> {
+public class UserDAO implements DAO<User> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -26,12 +25,10 @@ public class UserDAO extends DAO<User> {
 	@Transactional
 	@Override
 	public List<User> getAll(Page currentPage) {
-		List<User> userList = new ArrayList<>();
+
 		JPAQuery<User> query = new JPAQuery<>(entityManager);
 		QUser qUser = QUser.user;
-
-		userList = query.from(qUser).fetch();
-		return userList;
+		return query.from(qUser).fetch();
 	}
 
 	@Override

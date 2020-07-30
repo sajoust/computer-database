@@ -4,6 +4,10 @@ import com.excilys.dto.PageDTO;
 import com.excilys.model.Page;
 
 public class PageMapper {
+	
+	private PageMapper() {
+		throw new AssertionError();
+	}
 
 	public static Page dtoToPage(PageDTO pageDto) {
 		
