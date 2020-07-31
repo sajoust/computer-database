@@ -3,6 +3,7 @@ package com.excilys;
 import java.io.FileInputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.Month;
 
 import org.dbunit.DBTestCase;
 import org.dbunit.DatabaseUnitException;
@@ -91,17 +92,35 @@ public class ComputerDAOTest extends DBTestCase {
 
 		Page page = new Page("Firts", "",1, 10);
 
-		assertEquals(computerDAO.getAll(page).size(), 1);
+		assertEquals(computerDAO.getAll(page).get(0).getName(), "Firts");
 
 	}
 
 	@Test
-	public void testGetNoSearchOrder() throws DataSetException, Exception {
-
-		Page page = new Page( "", "computer.name-DESC",1, 10);
-
-		assertEquals(computerDAO.getAll(page).get(0).getName(), "Tirdh");
-
+	public void testGetAllNoPage() throws DataSetException, Exception {
+		int nbRowsDataSet = getDataSet().getTable("computer").getRowCount();
+		assertEquals(computerDAO.getAll().size(), nbRowsDataSet);
+	}
+	
+	@Test
+	public void testGetOrder() {
+		
+		Page pageNameAsc = new Page("","computer.name-ASC",1,10);
+		assertEquals(computerDAO.getAll(pageNameAsc).get(0).getName(), "Firts");
+		Page pageNameDesc = new Page("","computer.name-DESC",1,10);
+		assertEquals(computerDAO.getAll(pageNameDesc).get(0).getName(), "Tirdh");
+		Page pageIntroducedASC = new Page("","introduced-ASC",1,10);
+		assertEquals(computerDAO.getAll(pageIntroducedASC).get(0).getIntroduced(), LocalDate.of(1997, Month.MARCH, 1));
+		Page pageIntroducedDesc = new Page("","introduced-DESC",1,10);
+		assertEquals(computerDAO.getAll(pageIntroducedDesc).get(0).getIntroduced(), LocalDate.of(1997, Month.MARCH, 1));
+		Page pageDiscontinuedAsc = new Page("","discontinued-ASC",1,10);
+		assertEquals(computerDAO.getAll(pageDiscontinuedAsc).get(0).getDiscontinued(), LocalDate.of(2097, Month.JANUARY, 12));
+		Page pageDiscontinuedDesc = new Page("","discontinued-DESC",1,10);
+		assertEquals(computerDAO.getAll(pageDiscontinuedDesc).get(0).getDiscontinued(), LocalDate.of(2197, Month.JANUARY, 12));
+		Page pageCompanyAsc = new Page("","company_name-ASC",1,10);
+		assertEquals(computerDAO.getAll(pageCompanyAsc).get(0).getCompany().getName(), "la7emeCompany");
+		Page pageCompanyDesc = new Page("","company_name-DESC",1,10);
+		assertEquals(computerDAO.getAll(pageCompanyDesc).get(0).getCompany().getName(), "laCompanyCreole");
 	}
 
 	@Test
@@ -112,10 +131,12 @@ public class ComputerDAOTest extends DBTestCase {
 	}
 
 	@Test
-	public void testDelete() throws DataSetException, Exception {
+	public void testDelete() throws Exception {
 		String idStr = String.valueOf(ID);
 		computerDAO.deleteComputer(idStr);
-		assertNull(computerDAO.get(idStr));
+		refresh();
+		int nbRowsDataSet = getDataSet().getTable("computer").getRowCount();
+		assertEquals(2, nbRowsDataSet);
 		
 	}
 
@@ -127,16 +148,6 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testCountEntriesFilter() {
 		assertEquals(1, computerDAO.countEntries("Firts"));
-	}
-
-	@Test
-	public void testUpdate() {
-		assertTrue(true);
-		assertFalse(!true);
-		boolean notTrue = true;
-		assertFalse(!notTrue);
-		assertEquals(2, 1 + 1);
-
 	}
 
 	@Test

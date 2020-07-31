@@ -43,10 +43,8 @@ public class CompanyDAO extends DAO<Company> {
 		return query.from(qCompany).where(qCompany.id.eq(Long.valueOf(id))).fetchFirst();
 	}
 	@Transactional
-	public void delete(String id) {
-		
+	public void delete(String id) {		
 		entityManager.remove(get(id));
-
 	}
 
 }
